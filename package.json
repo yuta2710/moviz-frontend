@@ -20,6 +20,10 @@
     "react-hook-form": "^7.48.2"
   },
   "devDependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.18",
+    "@mui/material": "^5.14.18",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

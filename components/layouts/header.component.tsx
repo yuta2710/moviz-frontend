@@ -1,62 +1,32 @@
 "use client"
 
-import { HeaderProps } from '@/types'
+import { HeaderProps, User } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { use, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import _ from "lodash";
-// import { getColorName } from '@/utils'
-// import SplitType from 'split-type'
-import gsap from 'gsap';
-import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import { getMe } from '@/utils/clients.utils'
+import { Grid, Icon, Typography } from '@mui/material';
+import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
+interface DropdownProps {
+  icon: ReactNode;
+  text: string;
+}
 
 
 const Comp_Header = (header: HeaderProps) => {
-  const { logo, items, background, textColorPalette, height, fontLogo, fontItem } = header
-  const [customer, setCustomer] = useState(null);
+  const { logo, items, background, height, fontLogo, fontItem } = header
+  const [customer, setCustomer] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const { user, isAuthenticated } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // useEffect(() => {
-  //   const logo = document.querySelector(".logo");
-  //   const split = new SplitType(logo as HTMLElement);
-
-  //   gsap.set('.char', {
-  //     opacity: 0
-  //   })
-  //   gsap.to('.char', {
-  //     y: 0,
-  //     stagger: 0.25,
-  //     duration: .1,
-  //     opacity: 1
-  //   })
-  // }, [])
-
-  // useEffect(() => {
-  //   document.querySelectorAll(".custom-link-underline").forEach(underline => {
-  //     const item = new SplitType(underline as HTMLElement)
-  //     gsap.set('.char', {
-  //       opacity: 0
-  //     })
-  //     gsap.to('.char', {
-  //       y: 0,
-  //       stagger: 0.05,
-  //       duration: .05,
-  //       opacity: 1
-  //     })
-  //   })
-  // }, [])
-
-  // useEffect(() => {
-  //   document.querySelectorAll(".custom-link-underline").forEach(underline => {
-  //     const classNameObj = underline.className.split(" ")
-  //     const extra = getColorName(fontItem?.color as string);
-  //     classNameObj.push(extra);
-  //     underline.className = classNameObj.join(" ")
-  //   })
-  // }, [fontItem?.color])
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
 
   useEffect(() => {
     if (isAuthenticated() && user !== null) {
@@ -109,10 +79,37 @@ const Comp_Header = (header: HeaderProps) => {
           </ul>
         </div>
 
-        {customer !== null ? <Image className='rounded-full absolute right-0 md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image> : <button className=''>Login</button>}
+        <div className='flex flex-col absolute md:left-[100rem] left-[25rem] md:w-full w-full'>
+          {customer !== null
+            ? <div className='flex flex-row justify-center items-center relative md:w-full w-full md:left-[-50rem] gap-4 cursor-pointer'>
+              <Image className='rounded-full right-0 md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
+              <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
+            </div> : <button className=''>Login</button>}
+          {dropdownOpen && (
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[6rem] bg-white md:px-2 md:w-[180px] w-full rounded-sm' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+              { /* Render dropdown items here */}
+              <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 1' />
+              <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' />
+              <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' />
+
+              {/* Add more items as needed */}
+            </ul>
+          )}
+
+        </div>
       </nav>
     </header >
   )
+}
+
+function DropdownItem(props: DropdownProps) {
+  return (
+    <li className='dropdownItem md:w-full w-full relative md:mt-6'>
+      {props.icon}
+      <Link className='text-black dropdown-text md:ml-6 text-center' href={"#"}> {props.text} </Link>
+      {/* <div className='dropdown-line w-full md:w-[270px] absolute  md:top-[1.8rem]'></div> */}
+    </li>
+  );
 }
 
 export default Comp_Header
