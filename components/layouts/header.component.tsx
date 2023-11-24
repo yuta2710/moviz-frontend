@@ -86,7 +86,7 @@ const Comp_Header = (header: HeaderProps) => {
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
             </div> : <button className=''>Login</button>}
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[6rem] bg-white md:px-2 md:w-[180px] w-full rounded-sm' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[4rem] bg-white md:px-2 md:w-[180px] w-full rounded-sm' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
               <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 1' />
               <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' />
