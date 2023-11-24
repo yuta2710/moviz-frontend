@@ -76,3 +76,11 @@ export interface Movie {
   vote_average: number;
   vote_count: number;
 }
+
+export interface Review {
+  content: string;
+  createdAt: string;
+  id: string;
+  updatedAt: string;
+  url: string;
+}

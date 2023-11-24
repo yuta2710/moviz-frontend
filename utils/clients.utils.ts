@@ -1,4 +1,9 @@
-import { Movie, UserLoginProps, UserRegisterRequestProps } from "@/types";
+import {
+  Movie,
+  Review,
+  UserLoginProps,
+  UserRegisterRequestProps,
+} from "@/types";
 import axios from "axios";
 
 export const saveUser = async (userData: UserRegisterRequestProps) => {
@@ -63,3 +68,39 @@ export async function getMovies(pageNumber: number) {
     throw error; // Re-throw the error for the caller to handle
   }
 }
+
+export async function getReviews(pageNumber: number) {
+  const url =
+    "https://api.themoviedb.org/3/movie/615656/reviews?language=en-US&page=1";
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY",
+    },
+  };
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+
+    json.results.forEach((item: any) => {
+      delete item.author_details;
+      delete item.author;
+    });
+
+    console.log(json);
+
+    return json.results as Review[];
+  } catch (error) {
+    console.error("Error:", error);
+    throw error; // Re-throw the error for the caller to handle
+  }
+}
+
+interface AuthorDetail {}
