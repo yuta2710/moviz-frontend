@@ -1,3 +1,5 @@
+import { Letterboxd } from "letterboxd-api";
+
 export interface UserRegisterRequestProps {
   firstName: string;
   lastName: string;

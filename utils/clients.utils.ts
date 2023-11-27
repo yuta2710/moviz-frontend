@@ -70,8 +70,8 @@ export async function getMovies(pageNumber: number) {
 }
 
 export async function getReviews(pageNumber: number) {
-  const url =
-    "https://api.themoviedb.org/3/movie/615656/reviews?language=en-US&page=1";
+  // add movie_id as second param
+  const url = `https://api.themoviedb.org/3/movie/615656/reviews?language=en-US&page=${pageNumber}`;
   const options = {
     method: "GET",
     headers: {
@@ -89,10 +89,10 @@ export async function getReviews(pageNumber: number) {
 
     const json = await response.json();
 
-    json.results.forEach((item: any) => {
-      delete item.author_details;
-      delete item.author;
-    });
+    // json.results.forEach((item: any) => {
+    //   delete item.author_details;
+    //   delete item.author;
+    // });
 
     console.log(json);
 

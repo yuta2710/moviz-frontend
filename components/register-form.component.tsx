@@ -46,6 +46,8 @@ export const RegisterForm = () => {
       if (response.ok) {
         const responseData: DuoToken = await response.json();
         localStorage.setItem("accessToken", responseData.accessToken);
+
+        router.refresh();
       } else {
         console.error("Registration failed:", response.status);
       }

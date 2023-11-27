@@ -43,7 +43,7 @@ export default function RootLayout({
       </head>
       <body className='overflow-x-hidden md:overflow-x-hidden'>
         <AuthProvider>
-          <Comp_Header
+          {/* <Comp_Header
             logo={
               {
                 photo: "",
@@ -65,7 +65,7 @@ export default function RootLayout({
                 size: "text-5xl",
                 color: "text-white"
               }
-            }></Comp_Header>
+            }></Comp_Header> */}
           {children}
         </AuthProvider>
       </body>
