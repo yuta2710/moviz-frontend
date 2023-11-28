@@ -6,6 +6,7 @@ import { useAuth } from "./context/AuthContext";
 import { useEffect } from "react";
 import { reject } from "lodash";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const LoginForm = () => {
   const {
@@ -60,6 +61,10 @@ export const LoginForm = () => {
 
           <div className="mt-10">
             <input type="submit" value="Login" className="py-3 bg-green-500 text-white w-full rounded hover:bg-green-600" />
+          </div>
+
+          <div className="mt-10">
+            <Link href={"/login"} className="text-white font-semibold text-sm hover:opacity-60 hover:text-blue-600 transition">Don't have an account</Link>
           </div>
         </form>
       </div>
