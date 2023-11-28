@@ -1,8 +1,18 @@
 FROM node:alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
+# Copy only package.json and package-lock.json to take advantage of Docker cache
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the entire project
 COPY . .
-EXPOSE 3000 
-RUN npm install --save-dev
+
+COPY .next ./.next
+
+EXPOSE 3000
+
 CMD ["npm", "run", "dev"]
