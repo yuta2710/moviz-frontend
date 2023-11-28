@@ -23,6 +23,7 @@ export const RegisterForm = () => {
 
   const onSubmit = async (data: FieldValues) => {
     const userData: UserRegisterRequestProps = {
+      username: data.username,
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
@@ -31,7 +32,7 @@ export const RegisterForm = () => {
       gender: _.lowerCase(data.gender),
     };
 
-    // console.log("User = ", userData)
+    console.log("User = ", userData)
 
     try {
       const response = await fetch(`http://localhost:8080/api/v1/auth/register`, {
@@ -58,12 +59,12 @@ export const RegisterForm = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      router.push("/dashboard")
+      router.push("/profile")
     }
   }, [isAuthenticated])
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-spirit-lab">
+    <div className="flex justify-center items-center min-h-screen bg-black">
       <div className="bg-no-repeat bg-cover max-w-max overflow-hidden md:ml-48">
         <Image src={"https://sepm-bucket.s3.eu-west-1.amazonaws.com/movie-lab.png"} width={500} height={900} alt="movie-lab"></Image>
         <Image src={"https://sepm-bucket.s3.eu-west-1.amazonaws.com/marker.png"} width={500} height={500} alt=""></Image>
@@ -74,6 +75,10 @@ export const RegisterForm = () => {
           <h1 className=" text-white text-3xl font-semibold text-center font-poppins">Create an account</h1>
         </div>
         <form action="#" onSubmit={handleSubmit(onSubmit)} className="p-0">
+          <div className="mt-5">
+            <label form="username" className="text-white sc-bqyKva ePvcBv">Username</label>
+            <input {...register("username", { required: "Please enter a username" })} type="text" className="md:mt-4 block w-full p-2 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent " placeholder="Username" />
+          </div>
           <div className="mt-5">
             <label form="firstName" className="text-white sc-bqyKva ePvcBv">First Name</label>
             <input {...register("firstName", { required: "Please enter a first name" })} type="text" className="md:mt-4 block w-full p-2 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent " placeholder="First name" />

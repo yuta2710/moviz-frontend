@@ -3,17 +3,19 @@
 import { HeaderProps, User } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { MouseEventHandler, ReactNode, useEffect, useState } from 'react'
 import _ from "lodash";
 import { useAuth } from '../context/AuthContext'
 import { getMe } from '@/utils/clients.utils'
 import { Grid, Icon, Typography } from '@mui/material';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { useRouter } from 'next/navigation'
 
 interface DropdownProps {
   icon: ReactNode;
   text: string;
+  onClick: MouseEventHandler<HTMLAnchorElement>;
 }
 
 
@@ -21,8 +23,9 @@ const Comp_Header = (header: HeaderProps) => {
   const { logo, items, background, height, fontLogo, fontItem } = header
   const [customer, setCustomer] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const { user, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -44,13 +47,13 @@ const Comp_Header = (header: HeaderProps) => {
       fetchData();
     } else {
       setLoading(false);
-      // router.push("/login")
+      router.push("/login");
     }
   }, [isAuthenticated]);
 
   return (
     <header className={`md:w-full md:h-[${height}] absolute md:-left-[10rem] md:z-10 md:px-[16rem] md:py-[2rem] ${background}`}>
-      <nav className={`nav-container md:mx-auto flex justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
+      <nav className={`nav-container md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
         <Link href='/' className='flex justify-center items-center'>
           {logo?.photo && (
             <Image
@@ -80,17 +83,30 @@ const Comp_Header = (header: HeaderProps) => {
         </div>
 
         <div className='flex flex-col absolute md:left-[100rem] left-[25rem] md:w-full w-full'>
-          {customer !== null
-            ? <div className='flex flex-row justify-center items-center relative md:w-full w-full md:left-[-50rem] gap-4 cursor-pointer'>
+          {customer === null
+            ?
+            <button
+              className='text-white bg-red-500 py-2 px-6 text-sm z-10 absolute md:mt-[-16px] rounded-lg'
+              onClick={() => router.push("/login")}
+            >
+              Login
+            </button>
+            : <div className='flex flex-row justify-center items-center relative md:w-full w-full md:left-[-50rem] gap-4 cursor-pointer'>
               <Image className='rounded-full right-0 md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
-            </div> : <button className=''>Login</button>}
+            </div>
+          }
+
           {dropdownOpen && (
             <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[4rem] bg-white md:px-2 md:w-[180px] w-full rounded-sm' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
-              <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 1' />
-              <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' />
-              <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' />
+              <DropdownItem onClick={() => {
+                logout().then(() => {
+                  router.refresh();
+                });
+              }} icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Log out' />
+              {/* <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' />
+              <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' /> */}
 
               {/* Add more items as needed */}
             </ul>
@@ -106,7 +122,7 @@ function DropdownItem(props: DropdownProps) {
   return (
     <li className='dropdownItem md:w-full w-full relative md:mt-6'>
       {props.icon}
-      <Link className='text-black dropdown-text md:ml-6 text-center' href={"#"}> {props.text} </Link>
+      <Link className='cursor-pointer text-black dropdown-text md:ml-6 text-center' href={"#"} onClick={props.onClick}> {props.text} </Link>
       {/* <div className='dropdown-line w-full md:w-[270px] absolute  md:top-[1.8rem]'></div> */}
     </li>
   );

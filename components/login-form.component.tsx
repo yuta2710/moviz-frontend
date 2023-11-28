@@ -6,7 +6,6 @@ import { useAuth } from "./context/AuthContext";
 import { useEffect } from "react";
 import { reject } from "lodash";
 import { useRouter } from "next/navigation";
-// import { login } from "@/utils/clients.service";
 
 export const LoginForm = () => {
   const {
@@ -31,12 +30,12 @@ export const LoginForm = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      router.push("/dashboard")
+      router.push("/profile");
     }
   }, [isAuthenticated])
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-spirit-lab">
+    <div className="flex justify-center items-center min-h-screen bg-black">
       <div className="md:w-1/2 max-w-lg mx-auto my-24 px-4 py-5 shadow-none">
         <div className="text-left p-0 font-sans">
           <h1 className=" text-white text-3xl font-semibold text-center font-poppins">Login to become member</h1>

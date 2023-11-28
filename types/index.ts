@@ -1,6 +1,7 @@
 import { Letterboxd } from "letterboxd-api";
 
 export interface UserRegisterRequestProps {
+  username: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -24,6 +25,7 @@ const json = {
 };
 
 export interface User {
+  username: string;
   firstName: string;
   lastName: string;
   email: string;

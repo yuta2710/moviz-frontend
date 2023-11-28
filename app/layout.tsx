@@ -24,13 +24,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [customer, setCustomer] = useState(null);
+  // const [customer, setCustomer] = useState(null);
 
-  useEffect(() => {
-    getMe()
-      .then(res => setCustomer(res.data))
-      .catch((err) => console.log(err));
-  }, [])
+  // useEffect(() => {
+  //   getMe()
+  //     .then(res => setCustomer(res.data))
+  //     .catch((err) => console.log(err));
+  // }, [])
 
   return (
     <html lang="en">
@@ -43,7 +43,7 @@ export default function RootLayout({
       </head>
       <body className='overflow-x-hidden md:overflow-x-hidden'>
         <AuthProvider>
-          {/* <Comp_Header
+          <Comp_Header
             logo={
               {
                 photo: "",
@@ -54,18 +54,18 @@ export default function RootLayout({
             height='90px'
             fontItem={
               {
-                fam: "font-noto",
+                // fam: "font-noto",
                 size: "text-[0.7rem] md:text-sm",
                 color: "text-white"
               }
             }
             fontLogo={
               {
-                fam: "",
+                // fam: "",
                 size: "text-5xl",
                 color: "text-white"
               }
-            }></Comp_Header> */}
+            }></Comp_Header>
           {children}
         </AuthProvider>
       </body>

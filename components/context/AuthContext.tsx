@@ -8,7 +8,7 @@ import { AxiosResponse } from "axios";
 
 export interface AuthContextProps {
   login: (props: UserLoginProps) => Promise<AxiosResponse<any, any>>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: () => Boolean;
   setCustomerFromToken: () => void;
   user: UserResponse | null;
@@ -25,7 +25,7 @@ interface UserResponse {
 
 const AuthContextDefaultValue: AuthContextProps = {
   login: () => { return new Promise((resolve, reject) => { }) },
-  logout: () => { },
+  logout: () => { return new Promise((resolve, reject) => { }) },
   isAuthenticated: () => false,
   setCustomerFromToken: () => { },
   user: { _id: "", accessToken: "" } || null
@@ -73,15 +73,17 @@ export function AuthProvider({ children }: AuthProvideProps) {
     })
   }
 
-  const logout = () => {
+  const logout = async (): Promise<void> => {
     localStorage.removeItem("accessToken");
     setUser(null);
+    window.location.reload();
   }
 
   const isAuthenticated = () => {
     const token = localStorage.getItem("accessToken");
 
     if (!token) {
+      console.log("No token in here");
       return false;
     }
     const { exp } = jwtDecode(token);

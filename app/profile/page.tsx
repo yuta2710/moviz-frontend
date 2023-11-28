@@ -2,7 +2,6 @@
 
 import { ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getMe } from "@/utils/clients.utils";
@@ -41,17 +40,22 @@ export default function Page() {
 
   if (customer !== null) {
     html = (
-      <div className="flex justify-center items-center flex-col relative md:top-[20rem]">
-        <Image
-          className="text-white text-center rounded-full"
-          width={250}
-          height={250}
-          alt="Customer Photo"
-          src={customer.photo}
-        />
-        <h1 className="text-white text-center">{customer.email}</h1>
-        <h1 className="text-white text-center">${customer.firstName}</h1>
-        <h1 className="text-white text-center">{customer.lastName}</h1>
+      <div className="flex flex-col justify-center items-center relative md:top-[5rem]">
+        <h1 className="text-white relative md:top-[10rem] text-4xl font-semibold md:ml-4">Profile</h1>
+        <div className="flex justify-center items-center flex-row relative md:top-[15rem] bg-gray-700 p-24 rounded-xl">
+          <Image
+            className="text-white text-center rounded-full md:mr-36"
+            width={250}
+            height={250}
+            alt="Customer Photo"
+            src={customer.photo}
+          />
+          <div className="flex flex-col justify-center items-start md:mt-8">
+            <h1 className="text-white text-center md:mt-2">{customer.username}</h1>
+            <h1 className="text-white text-center md:mt-2">{customer.email}</h1>
+            <h1 className="text-white text-center md:mt-2">{customer.firstName} {customer.lastName}</h1>
+          </div>
+        </div>
       </div>
     );
   }
