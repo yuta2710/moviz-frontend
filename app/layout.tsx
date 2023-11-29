@@ -9,12 +9,12 @@ import { useEffect, useState } from 'react';
 export const config = {
   HEADER_ITEM_PATH: [
     {
-      APPLICATION_PATH: "/something",
-      KEY: "something",
+      APPLICATION_PATH: "/movies",
+      KEY: "movies",
     },
     {
-      APPLICATION_PATH: "/something2",
-      KEY: "something2",
+      APPLICATION_PATH: "/reviews",
+      KEY: "reviews",
     },
   ],
 };
@@ -24,13 +24,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // const [customer, setCustomer] = useState(null);
-
-  // useEffect(() => {
-  //   getMe()
-  //     .then(res => setCustomer(res.data))
-  //     .catch((err) => console.log(err));
-  // }, [])
 
   return (
     <html lang="en">
@@ -54,14 +47,12 @@ export default function RootLayout({
             height='90px'
             fontItem={
               {
-                // fam: "font-noto",
                 size: "text-[0.7rem] md:text-sm",
                 color: "text-white"
               }
             }
             fontLogo={
               {
-                // fam: "",
                 size: "text-5xl",
                 color: "text-white"
               }

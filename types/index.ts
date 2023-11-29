@@ -53,12 +53,10 @@ export interface HeaderProps {
   textColorPalette?: string;
   height?: string;
   fontItem?: {
-    fam?: string;
     color?: string;
     size?: string;
   };
   fontLogo?: {
-    fam?: string;
     color?: string;
     size?: string;
   };

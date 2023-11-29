@@ -64,7 +64,7 @@ const Comp_Header = (header: HeaderProps) => {
               className='object-contain'
             />
           )}
-          <span className={`self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-5xl font-semibold whitespace-nowrap logo block ${fontLogo?.fam} ${fontLogo?.size} ${fontLogo?.color}`}>
+          <span className={`self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-5xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
           </span>
 
@@ -73,7 +73,7 @@ const Comp_Header = (header: HeaderProps) => {
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
             {items.map(item => (
               <li className='z-10' key={item.KEY}>
-                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.fam} ${fontItem?.size} ${fontItem?.color}`}>
+                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
                   {_.startCase(item.KEY.split("-").join(" "))}
                 </Link>
               </li>
