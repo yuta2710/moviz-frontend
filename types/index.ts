@@ -86,3 +86,13 @@ export interface Review {
   updatedAt: string;
   url: string;
 }
+
+export interface PaginationProps {
+  // currentPage: number;
+  fetchData: () => void;
+  numberOfListPerPage: number;
+  lengthOfList: number;
+  setPaginate: (number: number) => void;
+}
+
+export interface CardMovieProps {}

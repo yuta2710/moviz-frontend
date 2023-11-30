@@ -64,7 +64,7 @@ export const LoginForm = () => {
           </div>
 
           <div className="mt-10">
-            <Link href={"/login"} className="text-white font-semibold text-sm hover:opacity-60 hover:text-blue-600 transition">Don't have an account</Link>
+            <Link href={"/register"} className="text-white font-semibold text-sm hover:opacity-60 hover:text-blue-600 transition">Don't have an account</Link>
           </div>
         </form>
       </div>

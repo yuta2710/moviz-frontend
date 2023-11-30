@@ -2,7 +2,7 @@
 
 import './globals.css'
 import { AuthProvider, useAuth } from '@/components/context/AuthContext'
-import Comp_Header from '@/components/layouts/header.component';
+import Header from '@/components/layouts/header.component';
 import { getMe } from '@/utils/clients.utils';
 import { useEffect, useState } from 'react';
 
@@ -36,11 +36,11 @@ export default function RootLayout({
       </head>
       <body className='overflow-x-hidden md:overflow-x-hidden'>
         <AuthProvider>
-          <Comp_Header
+          <Header
             logo={
               {
                 photo: "",
-                text: "SEPM"
+                text: "Moviz"
               }
             }
             items={config.HEADER_ITEM_PATH}
@@ -53,10 +53,10 @@ export default function RootLayout({
             }
             fontLogo={
               {
-                size: "text-5xl",
+                size: "text-4xl",
                 color: "text-white"
               }
-            }></Comp_Header>
+            }></Header>
           {children}
         </AuthProvider>
       </body>

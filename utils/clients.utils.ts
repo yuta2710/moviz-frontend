@@ -62,7 +62,9 @@ export async function getMovies(pageNumber: number) {
     }
 
     const json = await response.json();
-    return json.results as Movie[];
+
+    console.log("Json = ", json);
+    return json;
   } catch (error) {
     console.error("Error:", error);
     throw error; // Re-throw the error for the caller to handle

@@ -18,8 +18,7 @@ interface DropdownProps {
   onClick: MouseEventHandler<HTMLAnchorElement>;
 }
 
-
-const Comp_Header = (header: HeaderProps) => {
+const Header = (header: HeaderProps) => {
   const { logo, items, background, height, fontLogo, fontItem } = header
   const [customer, setCustomer] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
@@ -64,7 +63,8 @@ const Comp_Header = (header: HeaderProps) => {
               className='object-contain'
             />
           )}
-          <span className={`self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-5xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
+          <Image src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
+          <span className={`self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
           </span>
 
@@ -128,4 +128,4 @@ function DropdownItem(props: DropdownProps) {
   );
 }
 
-export default Comp_Header
+export default Header
