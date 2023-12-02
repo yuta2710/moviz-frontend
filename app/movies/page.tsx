@@ -51,7 +51,7 @@ export default function Page(): ReactElement {
               // <li className="text-white" key={movie.id}>{movie.title}</li>
 
               <li>
-                <Link href="#" className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                   <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={500} height={200} alt="" className="md:mx-auto"></Image>
                   <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.title}</h5>
                   <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.popularity}</h5>
