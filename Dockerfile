@@ -6,13 +6,14 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --save-dev
+
+RUN ls -d .next || npm run dev
 
 # Copy the entire project
 COPY . .
 
-COPY .next ./.next
-
 EXPOSE 3000
 
 CMD ["npm", "run", "dev"]
+

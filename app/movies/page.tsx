@@ -45,6 +45,7 @@ export default function Page(): ReactElement {
       {error && <p className="text-white">Error: {error.message}</p>}
       {!loading && !error && (
         <>
+          <h1 className="">Movie list</h1>
           <ul className="grid grid-cols-4 gap-4 relative md:top-[20rem]">
             {movies.map((movie) => (
               // <li className="text-white" key={movie.id}>{movie.title}</li>
