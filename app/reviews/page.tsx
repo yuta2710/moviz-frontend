@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { getMe, getMovies, getReviews } from "@/utils/clients.utils";
 import { Movie, Review, User } from "@/types";
@@ -28,8 +30,11 @@ function logItems(items: ReviewCustomization[]) {
 
 
 export default async function Page(): Promise<ReactElement> {
+  // const reviews = await letterboxd("akickedsandwich") as ReviewCustomization[];
   const reviews = await letterboxd("akickedsandwich") as ReviewCustomization[];
   logItems(reviews);
+
+  console.log("Reviews = ", reviews);
 
   return (
     <div>
@@ -50,7 +55,7 @@ export default async function Page(): Promise<ReactElement> {
 }
 
 // Extend the Letterboxd type
-type ReviewCustomization = Letterboxd & {
+export type ReviewCustomization = Letterboxd & {
   film: {
     title: string;
     year: string;

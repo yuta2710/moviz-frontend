@@ -1,3 +1,4 @@
+import { ReviewCustomization } from "@/app/reviews/page";
 import {
   Movie,
   Review,
@@ -5,6 +6,7 @@ import {
   UserRegisterRequestProps,
 } from "@/types";
 import axios from "axios";
+import letterboxd from "letterboxd-api";
 
 export const saveUser = async (userData: UserRegisterRequestProps) => {
   try {
@@ -103,6 +105,12 @@ export async function getReviews(pageNumber: number) {
     console.error("Error:", error);
     throw error; // Re-throw the error for the caller to handle
   }
+}
+
+export async function getCurrentReviewsFromLetterboxdServer(username: string) {
+  const currentReviews = (await letterboxd(username)) as ReviewCustomization[];
+
+  return currentReviews;
 }
 
 interface AuthorDetail {}

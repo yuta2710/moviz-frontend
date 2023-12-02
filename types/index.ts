@@ -1,3 +1,4 @@
+import { ReviewCustomization } from "@/app/reviews/page";
 import { Letterboxd } from "letterboxd-api";
 
 export interface UserRegisterRequestProps {
@@ -33,6 +34,7 @@ export interface User {
   role: string;
   gender: string;
   photo: string;
+  reviews: ReviewCustomization[];
   createdAt: string;
 }
 
