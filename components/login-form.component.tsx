@@ -5,6 +5,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { useAuth } from "./context/AuthContext";
 import { useEffect } from "react";
 import { reject } from "lodash";
+import { useState } from 'react';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -12,22 +13,43 @@ export const LoginForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm();
   const { login, logout, isAuthenticated, user, setCustomerFromToken } = useAuth(); // Destructure the login function from the context
   const router = useRouter();
-  const onSubmit = async (data: FieldValues) => {
+   const onSubmit = async (data: FieldValues) => {
+
+    setError("email", { type: "", message: "" });
+    setError("password", { type: "", message: "" });
+
     const loginData: UserLoginProps = {
       email: data.email,
-      password: data.password
+      password: data.password,
     };
 
-    // console.log(loginData);
-
-    login(loginData).then(res => {
+    try {
+      // Attempt to login
+      const res = await login(loginData);
       console.log(res);
-    }).catch(err => (reject(err)))
-  }
+
+      // Redirect on successful login
+      if (isAuthenticated()) {
+        router.push("/profile");
+      }
+    } catch (err) {
+      // Display error message
+      console.error(err);
+
+      // Set error messages based on your error response
+      setError("email", { type: "manual", message: "" });
+      setError("password", { type: "manual", message: "" });
+      setError("login", {
+        type: "manual",
+        message: "Incorrect email or password",
+      });
+    }
+  };
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -53,18 +75,37 @@ export const LoginForm = () => {
                 }
               })} type="text" className="md:mt-4 block w-full p-2 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent " placeholder="Email" />
           </div>
+          {errors.email && (
+            <div className="text-red-500 text-sm mt-2">{errors.email.message}</div>
+          )}
 
           <div className="mt-5">
             <label form="password" className="text-white sc-bqyKva ePvcBv">Password</label>
             <input type="password" {...register("password", { required: "Please enter a password" })} className="md:mt-4 block w-full p-2 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent" placeholder="Password" />
           </div>
+          {errors.password && (
+            <div className="text-red-500 text-sm mt-2">{errors.password.message}</div>
+          )}
+          
+          {errors.login && (
+            <div className="text-red-500 text-sm mt-2">{errors.login.message}</div>
+          )}
 
           <div className="mt-10">
-            <input type="submit" value="Login" className="py-3 bg-green-500 text-white w-full rounded hover:bg-green-600" />
+            <input
+              type="submit"
+              value="Login"
+              className="py-3 bg-green-500 text-white w-full rounded hover:bg-green-600"
+            />
           </div>
 
           <div className="mt-10">
-            <Link href={"/register"} className="text-white font-semibold text-sm hover:opacity-60 hover:text-blue-600 transition">Don't have an account</Link>
+            <Link
+              href={"/register"}
+              className="text-white font-semibold text-sm hover:opacity-60 hover:text-blue-600 transition"
+            >
+              Don't have an account
+            </Link>
           </div>
         </form>
       </div>
