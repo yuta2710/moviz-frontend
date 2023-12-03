@@ -37,7 +37,7 @@ export default function RootLayout({
       <body className='overflow-x-hidden md:overflow-x-hidden'>
         <AuthProvider>
           <Header
-            logo={
+            logo={  
               {
                 photo: "",
                 text: "Moviz"
