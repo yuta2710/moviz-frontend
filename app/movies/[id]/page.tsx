@@ -6,7 +6,7 @@ import { getMovie } from '@/utils/clients.utils';
 import Image from 'next/image';
 
 export default function Page() {
-  const [choice, setChoice] = useState(2);
+  const [choice, setChoice] = useState(1);
   const [movie, setMovie] = useState<Movie | null>(null);
   const path = usePathname();
   const id = path.replace('/movies/', '');
@@ -74,7 +74,9 @@ export default function Page() {
 
               </>)}
           </div>
-
+          <div>
+            <h1 className="text-lg font-bold">Popular Reviews</h1>
+          </div>          
         </div>
       </div>
     </div>
