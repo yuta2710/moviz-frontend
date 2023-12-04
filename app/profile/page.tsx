@@ -7,7 +7,7 @@ import Image from "next/image";
 import { getCurrentReviewsFromLetterboxdServer, getMe } from "@/utils/clients.utils";
 import { User } from "@/types";
 import letterboxd from "letterboxd-api";
-import { ReviewCustomization } from "../reviews/page";
+import { ReviewCustomization } from "../news/page";
 import axios from "axios";
 
 export default function Page() {

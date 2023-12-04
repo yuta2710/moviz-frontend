@@ -1,6 +1,6 @@
 "use client";
 
-import { ReviewCustomization } from "@/app/reviews/page";
+import { ReviewCustomization } from "@/app/news/page";
 import {
   Movie,
   Review,

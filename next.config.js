@@ -22,6 +22,18 @@ const nextConfig = {
         protocol: "https",
         hostname: "letterboxd.com",
       },
+      {
+        protocol: "https",
+        hostname: "api.nytimes.com",
+      },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "www.nytimes.com",
+      },
     ],
   },
   async headers() {
@@ -52,6 +64,9 @@ const nextConfig = {
         destination: "https://letterboxd.com/:path*", // replace with the actual URL
       },
     ];
+  },
+  env: {
+    NEW_YORK_TIMES_BEARER_TOKEN: process.env.NEW_YORK_TIMES_BEARER_TOKEN,
   },
 };
 
