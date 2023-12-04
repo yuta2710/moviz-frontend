@@ -1,10 +1,10 @@
 import { UserRegisterRequestProps } from "@/types";
-import { saveUser } from "@/utils/clients.utils";
+import { registerNewUser, saveUser } from "@/utils/clients.utils";
 import Image from "next/image";
 import React, { Fragment, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import _ from "lodash";
-import axios from "axios";
+import _, { reject } from "lodash";
+import axios, { AxiosResponse } from "axios";
 import { useAuth } from "./context/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -34,32 +34,35 @@ export const RegisterForm = () => {
 
     console.log("User = ", userData)
 
-    try {
-      const response = await fetch(`http://localhost:8080/api/v1/auth/register`, {
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-        method: "POST"
-      });
+    // try {
+    //   const response = await fetch(`http://localhost:8080/api/v1/auth/register`, {
+    //     headers: {
+    //       "Accept": "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(userData),
+    //     method: "POST"
+    //   });
 
-      if (response.ok) {
-        const responseData: DuoToken = await response.json();
-        localStorage.setItem("accessToken", responseData.accessToken);
+    // if (response.ok) {
+    //   const responseData: DuoToken = await response.json();
+    //   localStorage.setItem("accessToken", responseData.accessToken);
 
-        router.refresh();
-      } else {
-        console.error("Registration failed:", response.status);
-      }
-    } catch (error) {
-      console.error("Registration failed: ", error);
-    }
+    //   router.refresh();
+    // } else {
+    //   console.error("Registration failed:", response.status);
+    // }
+    // } catch (error) {
+    //   console.error("Registration failed: ", error);
+    // }
+    saveUser(userData);
   };
 
   useEffect(() => {
     if (isAuthenticated()) {
       router.push("/profile")
+    } else {
+      return;
     }
   }, [isAuthenticated])
 
