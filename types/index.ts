@@ -65,7 +65,7 @@ export interface HeaderProps {
 export interface Movie {
   adult: boolean;
   backdrop_path: string;
-  genre_ids: number[];
+  genres: { id: number; name: string }[];
   id: number;
   original_language: string;
   original_title: string;
@@ -96,3 +96,10 @@ export interface PaginationProps {
 }
 
 export interface CardMovieProps {}
+
+export interface Cast{
+  id: string;
+  name: string;
+  character: string;
+  profile_path: string;
+}

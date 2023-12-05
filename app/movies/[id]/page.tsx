@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Movie } from '@/types';
 import { getMovie } from '@/utils/clients.utils';
 import Image from 'next/image';
+import Casts from '@/components/casts';
 
 export default function Page() {
   const [choice, setChoice] = useState(1);
@@ -15,7 +16,6 @@ export default function Page() {
       const movieData = await getMovie(id) as Movie;
       setMovie(movieData);
     };
-
     fetchMovie();
   }, [id]);
   if (!movie) {
@@ -47,14 +47,14 @@ export default function Page() {
             {choice == 1 && (
               <>
                 <div className=''>
-                  <p>Hehe</p>
+                  <Casts id ={id}/>
                 </div>
 
               </>)}
               {choice == 2 && (
               <>
                 <div>
-                  {/* {movie.genre_ids.map((id) => (<p>{id.toString()}</p>))} */}
+                  {movie.genres.map((genre) => (<p>{genre.name}</p>))}
                 </div>
 
               </>)}
