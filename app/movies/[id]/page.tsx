@@ -5,6 +5,7 @@ import { Movie } from '@/types';
 import { getMovie } from '@/utils/clients.utils';
 import Image from 'next/image';
 import Casts from '@/components/casts';
+import Related from '@/components/related';
 
 export default function Page() {
   const [choice, setChoice] = useState(1);
@@ -74,9 +75,17 @@ export default function Page() {
 
               </>)}
           </div>
+
           <div>
             <h1 className="text-lg font-bold">Popular Reviews</h1>
-          </div>          
+          </div>
+
+          <div>
+            <h1 className="text-lg font-bold">Related</h1>
+            <Related id={id}></Related>
+
+          </div>
+
         </div>
       </div>
     </div>
