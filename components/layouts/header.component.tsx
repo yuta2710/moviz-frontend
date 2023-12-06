@@ -6,11 +6,11 @@ import Link from 'next/link'
 import React, { MouseEventHandler, ReactNode, useEffect, useState } from 'react'
 import _ from "lodash";
 import { useAuth } from '../context/AuthContext'
-import { getMe } from '@/utils/clients.utils'
+import { APPLICATION_PATH, getMe } from '../../utils/clients.utils'
 import { Grid, Icon, Typography } from '@mui/material';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 interface DropdownProps {
   icon: ReactNode;
@@ -25,6 +25,7 @@ const Header = (header: HeaderProps) => {
   const { user, logout, isAuthenticated } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
+  const path = usePathname();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -44,7 +45,14 @@ const Header = (header: HeaderProps) => {
       };
 
       fetchData();
-    } else {
+    }
+
+    console.log(APPLICATION_PATH, path)
+    if (APPLICATION_PATH.includes(path)) {
+      setLoading(false);
+      router.push(path);
+    }
+    else {
       setLoading(false);
       router.push("/login");
     }

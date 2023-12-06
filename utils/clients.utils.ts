@@ -1,3 +1,6 @@
+"use client";
+
+import { ReviewCustomization } from "@/app/news/page";
 import {
   Movie,
   Review,
@@ -5,12 +8,22 @@ import {
   UserRegisterRequestProps,
 } from "@/types";
 import axios from "axios";
+import letterboxd from "letterboxd-api";
+import { useRouter } from "next/navigation";
 
 export const saveUser = async (userData: UserRegisterRequestProps) => {
   try {
-    await axios
+    return await axios
       .post(`http://localhost:8080/api/v1/auth/register`, userData)
-      .then((response) => console.log(response));
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          localStorage.setItem("accessToken", response.data.accessToken);
+          window.location.reload();
+        } else {
+          console.error("Registration failed:", response.status);
+        }
+      });
   } catch (error) {
     throw error;
   }
@@ -25,6 +38,17 @@ export const getAuthConfig = () => ({
 export const login = async (props: UserLoginProps) => {
   try {
     return await axios.post(`http://localhost:8080/api/v1/auth/login`, props);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const registerNewUser = async (props: UserRegisterRequestProps) => {
+  try {
+    return await axios.post(
+      `http://localhost:8080/api/v1/auth/register`,
+      props
+    );
   } catch (error) {
     throw error;
   }
@@ -186,4 +210,12 @@ export async function getReviews(pageNumber: number) {
   }
 }
 
+export async function getCurrentReviewsFromLetterboxdServer(username: string) {
+  const currentReviews = (await letterboxd(username)) as ReviewCustomization[];
+
+  return currentReviews;
+}
+
 interface AuthorDetail {}
+
+export const APPLICATION_PATH = ["/register", "/movies", "/news"];
