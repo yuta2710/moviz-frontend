@@ -5,26 +5,35 @@ import { formatDate } from "@/utils/convert.utils";
 import { Pagination } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ReactElement, useEffect, useState } from "react";
 
-const NY_TIMES_ARTICLES_URL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?fq=section_name%3A%22Movies%22%20AND%20type_of_material%3A%22Review%22";
 export default function Page() {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page"));
+
+  console.log("Query result = ", page);
+
   const [news, setNews] = useState<ArticleProps[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(page || 1);
   const [numberOfArticlesPerPage] = useState(1);
   const router = useRouter();
+  const path = usePathname();
+
+
   useEffect(() => {
+    if (!page || currentPage === 1) {
+      router.push(`/news?page=${currentPage}`)
+    }
     const fetchData = async (pageNumber: number) => {
       const response = await fetch(
-        `http://localhost:8080/api/v1/articles/${pageNumber}`);
+        `http://localhost:8080/api/v1/articles?page=${pageNumber}`);
 
       const data = response.json();
 
       data.then(json => {
-        // console.log("Json = ", json);
         const data = json.data;
         if (data.status === "OK") {
           setNews(data.response.docs);
@@ -33,11 +42,15 @@ export default function Page() {
     }
 
     fetchData(currentPage);
-  }, [currentPage]);
+  }, [currentPage, router]);
 
   const indexOfLastArticle = currentPage * numberOfArticlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - numberOfArticlesPerPage;
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    router.push(`/news?page=${pageNumber}`)
+  };
+
 
   return <>
     <div className="container my-12 mx-auto px-4 md:px-12 relative md:top-[20rem]">
