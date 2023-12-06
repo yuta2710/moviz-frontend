@@ -136,3 +136,5 @@ export async function getCurrentReviewsFromLetterboxdServer(username: string) {
 }
 
 interface AuthorDetail {}
+
+export const APPLICATION_PATH = ["/register", "/movies", "/news"];

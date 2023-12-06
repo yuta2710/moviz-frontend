@@ -13,8 +13,8 @@ export const config = {
       KEY: "movies",
     },
     {
-      APPLICATION_PATH: "/reviews",
-      KEY: "reviews",
+      APPLICATION_PATH: "/news",
+      KEY: "news",
     },
   ],
 };

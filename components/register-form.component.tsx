@@ -6,7 +6,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import _, { reject } from "lodash";
 import axios, { AxiosResponse } from "axios";
 import { useAuth } from "./context/AuthContext";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface DuoToken {
   accessToken: string;
@@ -15,6 +15,7 @@ interface DuoToken {
 export const RegisterForm = () => {
   const { login, logout, isAuthenticated, user, setCustomerFromToken } = useAuth();
   const router = useRouter();
+  const path = usePathname();
   const {
     register,
     handleSubmit,
@@ -61,8 +62,6 @@ export const RegisterForm = () => {
   useEffect(() => {
     if (isAuthenticated()) {
       router.push("/profile")
-    } else {
-      return;
     }
   }, [isAuthenticated])
 
