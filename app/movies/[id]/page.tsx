@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation';
 import { Movie } from '@/types';
 import { getMovie } from '@/utils/clients.utils';
 import Image from 'next/image';
-import Casts from '@/components/casts';
-import Related from '@/components/related';
+import Casts from '@/components/casts.component';
+import Related from '@/components/related.component';
 
 export default function Page() {
   const [choice, setChoice] = useState(1);
@@ -26,11 +26,11 @@ export default function Page() {
 
 
   return (
-    <div className="relative flex-wrap md:top-[15rem]">
-      <div className="">
+    <div className="relative flex flex-wrap md:top-[15rem]">
+      <div className="flex-1">
         <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
       </div>
-      <div className="text-white">
+      <div className="flex-1 text-white">
         <div className="flex">
           <h1 className="text-lg font-bold pr-10">{movie.title}</h1>
           <p className="text-sm font-semibold px-10">{date.getFullYear()}</p>

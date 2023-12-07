@@ -31,11 +31,18 @@ const Casts = ({ id }: { id: string }) => {
   return (
     <div className='flex gap-3 flex-wrap'>
       {casts.map((cast) => (
-        <div>
+      // <div>
+      //   <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={100} height={150}></Image>
+      //   <h2>{cast.name}</h2>
+      //   <h2>{cast.character}</h2>
+      // </div>
+        cast.profile_path != null  && (
+          <div>
           <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={100} height={150}></Image>
           <h2>{cast.name}</h2>
           <h2>{cast.character}</h2>
-        </div>
+          </div>
+        )
       ))}
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { getMovies } from "@/utils/clients.utils";
 import { Movie } from "@/types";
@@ -11,39 +11,73 @@ import Link from "next/link";
 
 
 export default function Page(): ReactElement {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page"));
+
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(page || 1);
   const [numberOfMoviesPerPage] = useState(2);
+  const router = useRouter();
+  
 
-  const fetchData = async (pageNumber: number) => {
-    try {
-      const response = await getMovies(pageNumber);
-      setMovies(response.results as Movie[]);
-    } catch (error) {
-      setError(error as Error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  // const fetchData = async (pageNumber: number) => {
+  //   try {
+  //     const response = await getMovies(pageNumber);
+  //     setMovies(response.results as Movie[]);
+  //   } catch (error) {
+  //     setError(error as Error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+  // useEffect(() => {
+
+  //   fetchData(currentPage);
+  // }, [currentPage]);
+
+  // const indexLastMovie = currentPage * numberOfMoviesPerPage;
+  // const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
+  // const currentMovie = movies.slice(indexOfFirstMovie, indexLastMovie);
+  // const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // console.log(movies.length)
+
   useEffect(() => {
+    if (!page || currentPage === 1) {
+      router.push(`/movies?page=${currentPage}`)
+    }
+    const fetchData = async (pageNumber: number) => {
+      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}`);
+
+      const data = response.json();
+      data.then(json => {
+        const data = json.data;
+        console.log(data.results);
+        setMovies(data.results as Movie[]);
+      });
+    }
 
     fetchData(currentPage);
-  }, [currentPage]);
-
+  }, [currentPage, router]);
+  // const indexOfLastArticle = currentPage * numberOfArticlesPerPage;
+  // const indexOfFirstArticle = indexOfLastArticle - numberOfArticlesPerPage;
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
   const currentMovie = movies.slice(indexOfFirstMovie, indexLastMovie);
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    router.push(`/movies?page=${pageNumber}`)
+  };
 
-  console.log(movies.length)
-
+  console.log(movies);
+  
   return (
     <div>
       {loading && <p>Loading...</p>}
       {error && <p className="text-white">Error: {error.message}</p>}
-      {!loading && !error && (
+      {movies.length > 0 && (
         <>
           <h1 className="">Movie list</h1>
           <ul className="grid grid-cols-4 gap-4 relative md:top-[20rem]">

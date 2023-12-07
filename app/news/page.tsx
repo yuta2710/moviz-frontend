@@ -32,7 +32,6 @@ export default function Page() {
         `http://localhost:8080/api/v1/articles?page=${pageNumber}`);
 
       const data = response.json();
-
       data.then(json => {
         const data = json.data;
         if (data.status === "OK") {
