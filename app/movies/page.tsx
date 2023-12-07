@@ -20,7 +20,7 @@ export default function Page(): ReactElement {
   const [currentPage, setCurrentPage] = useState(page || 1);
   const [numberOfMoviesPerPage] = useState(2);
   const router = useRouter();
-  
+
 
   // const fetchData = async (pageNumber: number) => {
   //   try {
@@ -72,7 +72,7 @@ export default function Page(): ReactElement {
   };
 
   console.log(movies);
-  
+
   return (
     <div>
       {loading && <p>Loading...</p>}

@@ -69,26 +69,23 @@ export async function getMe() {
 }
 
 export async function getMovie(id: string) {
-  const url = `https://api.themoviedb.org/3/movie/${id}`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY",
-    },
-  };
-
+  const url = `http://localhost:8080/api/v1/movies/${id}`;
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
+    // const json = await response.json();
     const json = await response.json();
 
     console.log("Json = ", json);
-    return json;
+    // console.log("Json 2 = ", json2);
+    const movieData = json.data;
+
+    console.table({ movieData });
+
+    return movieData;
   } catch (error) {
     console.error("Error:", error);
     throw error; // Re-throw the error for the caller to handle

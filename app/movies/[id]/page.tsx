@@ -6,15 +6,24 @@ import { getMovie } from '@/utils/clients.utils';
 import Image from 'next/image';
 import Casts from '@/components/casts.component';
 import Related from '@/components/related.component';
+import { useRouter } from 'next/navigation';
+import fetch from 'node-fetch';
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
   const [choice, setChoice] = useState(1);
   const [movie, setMovie] = useState<Movie | null>(null);
   const path = usePathname();
-  const id = path.replace('/movies/', '');
+  // const id = path.replace('/movies/', '');
+  const id = params.id;
+  // const router = useRouter();
+
+  // console.log(params.id);
   useEffect(() => {
     const fetchMovie = async () => {
       const movieData = await getMovie(id) as Movie;
+      // const movieData2 = await fetch(`http://localhost:8080/api/v1/movies/${id}`);
+
+      // console.log()
       setMovie(movieData);
     };
     fetchMovie();
@@ -31,7 +40,7 @@ export default function Page() {
         <div className="pl-52">
           <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
         </div>
-        <div className= "text-white pr-52 content-center">
+        <div className="text-white pr-52 content-center">
           <div className="flex my-5">
             <h1 className="text-3xl font-bold pr-10">{movie.title}</h1>
             <p className="font-light text-gray-400 px-10">{date.getFullYear()}</p>
@@ -40,7 +49,7 @@ export default function Page() {
           <p className="text-sm text-gray-400 w-96 text-justify">{movie.overview}</p>
           <div className="">
             <div className="flex flex-row space-x-5 font-bold text-gray-400 my-5">
-              <h2 onClick={() => setChoice(1)}>Cast</h2> 
+              <h2 onClick={() => setChoice(1)}>Cast</h2>
               <h2 onClick={() => setChoice(2)}>Genres</h2>
               <h2 onClick={() => setChoice(3)}>Details</h2>
               <h2 onClick={() => setChoice(4)}>Release</h2>
@@ -49,18 +58,18 @@ export default function Page() {
               {choice == 1 && (
                 <>
                   <div className=''>
-                    <Casts id ={id}/>
+                    <Casts id={id} />
                   </div>
 
                 </>)}
-                {choice == 2 && (
+              {choice == 2 && (
                 <>
                   <div>
                     {movie.genres.map((genre) => (<p className='text-sm text-gray-400'>{genre.name}</p>))}
                   </div>
 
                 </>)}
-                {choice == 3 && (
+              {choice == 3 && (
                 <>
                   <div>
                     <h3 className='text-sm text-gray-400'>Original Title: {movie.original_title} </h3>
@@ -68,7 +77,7 @@ export default function Page() {
                   </div>
 
                 </>)}
-                {choice == 4 && (
+              {choice == 4 && (
                 <>
                   <div>
                     <p className='text-sm text-gray-400'>Release date: {movie.release_date}</p>
