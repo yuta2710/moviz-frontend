@@ -29,11 +29,11 @@ const Related = ({id} : {id: string}) => {
 
   console.log(movies);
     return (
-        <div className='flex flex-wrap gap-3'>
+        <div className='flex flex-wrap gap-5'>
             {movies.map((movie) => (
-                <Link href={`/movies/${movie.id}`}>
-                    <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={100} height={150} alt="" className="md:mx-auto"></Image>
-                    <h2>{movie.title}</h2>
+                <Link href={`/movies/${movie.id}`} className='w-52 content-center'>
+                    <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={300} alt="movie-poster" className="md:mx-auto"></Image>
+                    <h2 className='text-lg text-white font-semibold'>{movie.title}</h2>
                 </Link>
             ))}
         </div>
