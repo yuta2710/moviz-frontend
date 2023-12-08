@@ -148,6 +148,7 @@ export async function getRelatedMovies(id: string) {
 
 export async function getCasts(id: string) {
   const url = `https://api.themoviedb.org/3/movie/${id}/credits`;
+  const ENDPOINT = `http://localhost:8080/api/v1/movies/${id}/casts`;
   const options = {
     method: "GET",
     headers: {
@@ -158,15 +159,15 @@ export async function getCasts(id: string) {
   };
 
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(ENDPOINT);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const json = await response.json();
+    const casts = json.data;
 
-    console.log("Json = ", json);
-    return json;
+    return casts;
   } catch (error) {
     console.error("Error:", error);
     throw error; // Re-throw the error for the caller to handle

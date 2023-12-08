@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import {Cast} from '@/types';
+import { Cast } from '@/types';
 import { getCasts } from '@/utils/clients.utils';
 import Image from 'next/image';
 
@@ -11,7 +11,7 @@ const Casts = ({ id }: { id: string }) => {
     const fetchCasts = async () => {
       try {
         const castData = await getCasts(id);
-        const castArray: Cast[] = castData.cast; 
+        const castArray: Cast[] = castData.cast;
         setCasts(castArray);
       } catch (error) {
         console.error('Error fetching casts:', error);
@@ -27,20 +27,20 @@ const Casts = ({ id }: { id: string }) => {
 
   console.log(casts);
 
-  
+
   return (
     <div className='flex gap-3 flex-wrap'>
       {casts.map((cast) => (
-      // <div>
-      //   <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={100} height={150}></Image>
-      //   <h2>{cast.name}</h2>
-      //   <h2>{cast.character}</h2>
-      // </div>
-        cast.profile_path != null  && (
+        // <div>
+        //   <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={100} height={150}></Image>
+        //   <h2>{cast.name}</h2>
+        //   <h2>{cast.character}</h2>
+        // </div>
+        cast.profile_path !== null && (
           <div className='flex flex-col w-28 h-max'>
-          <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={100} height={150}></Image>
-          <h2 className='text-sm font-bold text-gray-400'>{cast.name}</h2>
-          <h2 className='text-sm font-light text-gray-400'>{cast.character}</h2>
+            <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={100} height={150}></Image>
+            <h2 className='text-sm font-bold text-gray-400'>{cast.name}</h2>
+            <h2 className='text-sm font-light text-gray-400'>{cast.character}</h2>
           </div>
         )
       ))}
