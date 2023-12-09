@@ -67,7 +67,6 @@ export const RegisterForm = () => {
     //   console.error("Registration failed: ", error);
     // }
     saveUser(userData);
-
   };
 
   useEffect(() => {
