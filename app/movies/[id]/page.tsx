@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Cast, Movie } from '@/types';
+import { Cast, CrewProps, Movie } from '@/types';
 import { getCasts, getMovie } from '../../../utils/clients.utils';
 import Image from 'next/image';
 import Casts from '@/components/casts.component';
@@ -13,6 +13,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [choice, setChoice] = useState(1);
   const [movie, setMovie] = useState<Movie | null>(null);
   const [casts, setCasts] = useState<Cast[] | null>(null);
+  const [crews, setCrews] = useState<CrewProps[] | null>(null);
   const id = params.id;
   const router = useRouter();
   useEffect(() => {
@@ -20,39 +21,37 @@ export default function Page({ params }: { params: { id: string } }) {
       const movieData = await getMovie(id) as Movie;
       setMovie(movieData);
     };
-
-    fetchMovie();
-
     const fetchCasts = async () => {
       try {
         const castData = await getCasts(id);
         const castArr: Cast[] = castData.cast;
+        const crewArr: CrewProps[] = castData.crew;
         setCasts(castArr);
+        setCrews(crewArr);
       } catch (error) {
         console.error('Error fetching casts:', error);
       }
     };
-
+    fetchMovie();
     fetchCasts();
   }, [id]);
   if (!movie) {
     return <div>Loading...</div>;
   }
   const date = new Date(movie.release_date);
-
-  console.log(casts);
+  const director = crews?.find(({ job }) => job === 'Director');
 
   return (
-    <div className="relative flex flex-row flex-wrap md:top-[15rem] justify-center">
+    <div className="relative flex flex-col flex-wrap md:top-[15rem] justify-center">
       <div className='grid grid-cols-2 gap-3 w-4/5'>
         <div className="pl-52">
           <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
         </div>
         <div className="text-white pr-52 content-center">
-          <div className="flex my-5">
+          <div className="flex my-5 md:w-[1200px]">
             <h1 className="text-3xl font-bold pr-10">{movie.title}</h1>
-            <p className="font-light text-gray-400 px-10">{date.getFullYear()}</p>
-            <p className="font-ligt text-gray-400 px-10">Directed by ...</p>
+            <p className="font-light text-gray-400 px-10 md:mt-2">{date.getFullYear()}</p>
+            <p className="font-ligt text-gray-400 px-10 md:mt-2">Directed by <span className='text-white font-bold'>{director?.name}</span></p>
           </div>
           <p className="text-sm text-gray-400 w-96 text-justify">{movie.overview}</p>
           <div className="">
@@ -119,7 +118,6 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className='flex flex-col my-10'>
         <h1 className="text-2xl font-bold text-gray-400">Recommended similar films</h1>
         <Related id={id}></Related>
-
       </div>
     </div>
   )

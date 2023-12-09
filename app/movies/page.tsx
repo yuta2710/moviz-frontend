@@ -78,21 +78,22 @@ export default function Page(): ReactElement {
       {loading && <p>Loading...</p>}
       {error && <p className="text-white">Error: {error.message}</p>}
       {movies.length > 0 && (
-        <>
-          <h1 className="">Movie list</h1>
-          <ul className="grid grid-cols-4 gap-4 relative md:top-[20rem]">
-            {movies.map((movie) => (
-              // <li className="text-white" key={movie.id}>{movie.title}</li>
-
-              <li>
-                <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                  <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={500} height={200} alt="" className="md:mx-auto"></Image>
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.title}</h5>
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.popularity}</h5>
-                  <p className="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-                </Link>
-              </li>
-            ))}
+        <div className="relative flex flex-col">
+          <div className="flex flex-row justify-center items-center absolute md:top-[18rem] md:left-[31rem]">
+            <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>
+          </div>
+          <ul className="inline-grid grid-cols-3 absolute gap-4 justify-center md:left-[30rem] md:top-[22rem]">
+            {[...movies]
+              .sort((a, b) => b.popularity - a.popularity)
+              .slice(0, 6)
+              .map((movie) => (
+                <li className="relative">
+                  <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow">
+                    <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                    {/* <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.popularity}</h5> */}
+                  </Link>
+                </li>
+              ))}
           </ul>
 
 
@@ -102,9 +103,9 @@ export default function Page(): ReactElement {
             onChange={(event, page) => paginate(page)}
             size="large"
             color="primary"
-            className="relative md:top-[25rem]"
+            className="relative md:top-[10rem]"
             style={{ color: "#000", background: "#fff" }} />
-        </>
+        </div>
       )}
     </div>
   );
