@@ -51,7 +51,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className="flex my-5 md:w-[1200px]">
             <h1 className="text-3xl font-bold pr-10">{movie.title}</h1>
             <p className="font-light text-gray-400 px-10 md:mt-2">{date.getFullYear()}</p>
-            <p className="font-ligt text-gray-400 px-10 md:mt-2">Directed by <span className='text-white font-bold'>{director?.name}</span></p>
+            <p className="font-light text-gray-400 px-10 md:mt-2">Directed by <span className='text-white font-bold'>{director?.name}</span></p>
           </div>
           <p className="text-sm text-gray-400 w-96 text-justify">{movie.overview}</p>
           <div className="">

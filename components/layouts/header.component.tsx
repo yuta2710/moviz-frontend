@@ -54,7 +54,7 @@ const Header = (header: HeaderProps) => {
     }
     else {
       setLoading(false);
-      router.push("/login");
+      // router.push("/login");
     }
   }, [isAuthenticated]);
 

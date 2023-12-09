@@ -65,9 +65,6 @@ const nextConfig = {
       },
     ];
   },
-  env: {
-    NEW_YORK_TIMES_BEARER_TOKEN: process.env.NEW_YORK_TIMES_BEARER_TOKEN,
-  },
 };
 
 module.exports = nextConfig;

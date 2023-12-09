@@ -9,7 +9,6 @@ import { Movie } from "@/types";
 import { Pagination } from "@mui/material";
 import Link from "next/link";
 
-
 export default function Page(): ReactElement {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page"));
@@ -19,30 +18,42 @@ export default function Page(): ReactElement {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(page || 1);
   const [numberOfMoviesPerPage] = useState(2);
+  const [year, setYear] = useState(2023);
+  const [rating, setRating] = useState("Highest");
+  const [popular, setPopular] = useState("All");
+  const [genre, setGenre] = useState("action");
   const router = useRouter();
 
+  const handleOnChangeYear = (event: any) => {
+    const year = event.target.value;
+    setYear(year);
+    // router.push(`/movies/decade/${year}`);
+    router.push(`/movies/decades/year/${year}`);
 
-  // const fetchData = async (pageNumber: number) => {
-  //   try {
-  //     const response = await getMovies(pageNumber);
-  //     setMovies(response.results as Movie[]);
-  //   } catch (error) {
-  //     setError(error as Error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-  // useEffect(() => {
+  };
 
-  //   fetchData(currentPage);
-  // }, [currentPage]);
+  const handleOnChangeRating = (event: any) => {
+    const rating = event.target.value;
+    setRating(rating);
 
-  // const indexLastMovie = currentPage * numberOfMoviesPerPage;
-  // const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
-  // const currentMovie = movies.slice(indexOfFirstMovie, indexLastMovie);
-  // const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+    if (popular === "Highest") {
+      router.push(`/movies/by/rating/highest/${rating}`);
+    }
+    if (popular === "Lowest") {
+      router.push(`/movies/by/rating/lowest/${rating}`);
+    }
+    // router.push(`/movies/decade/${rating}`);
+  };
 
-  // console.log(movies.length)
+  const handleOnChangePopular = (event: any) => {
+    const popular = event.target.value;
+    setPopular(popular);
+    // router.push(`/movies/decade/${year}`);
+  };
+
+  const handleOnChangeGenre = (event: any) => {
+    setGenre(event.target.value);
+  };
 
   useEffect(() => {
     if (!page || currentPage === 1) {
@@ -61,17 +72,73 @@ export default function Page(): ReactElement {
 
     fetchData(currentPage);
   }, [currentPage, router]);
-  // const indexOfLastArticle = currentPage * numberOfArticlesPerPage;
-  // const indexOfFirstArticle = indexOfLastArticle - numberOfArticlesPerPage;
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
-  const currentMovie = movies.slice(indexOfFirstMovie, indexLastMovie);
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     router.push(`/movies?page=${pageNumber}`)
   };
 
   console.log(movies);
+  const yearOptions = [
+    {
+      value: 2023,
+      label: "2023"
+    },
+    {
+      value: 2022,
+      label: "2022"
+    }, {
+      value: 2021,
+      label: "2021"
+    },
+    {
+      value: 2020,
+      label: "2020"
+    },
+    {
+      value: 2019,
+      label: "2019"
+    },
+    {
+      value: 2018,
+      label: "2018"
+    },
+  ];
+
+  const ratingOptions = [
+    {
+      value: "Highest",
+      label: "Highest"
+    },
+    {
+      value: "Lowest",
+      label: "Lowest"
+    }
+  ];
+
+  const popularOptions = [
+    {
+      value: "All",
+      label: "All"
+    },
+    {
+      value: "This Year",
+      label: "This Year"
+    },
+    {
+      value: "This Month",
+      label: "This Month"
+    },
+    {
+      value: "This Week",
+      label: "This Week"
+    },
+  ];
+
+  useEffect(() => {
+
+  }, [year])
 
   return (
     <div>
@@ -79,6 +146,24 @@ export default function Page(): ReactElement {
       {error && <p className="text-white">Error: {error.message}</p>}
       {movies.length > 0 && (
         <div className="relative flex flex-col">
+          <div className="flex flex-row justify-center items-center absolute md:top-[17.5rem] md:left-[50rem]">
+            <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block md:w-[150px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={year} onChange={handleOnChangeYear}>
+              {yearOptions.map((option) => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+
+            <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block md:w-[150px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={rating} onChange={handleOnChangeRating}>
+              {ratingOptions.map((option) => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+            <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block md:w-[150px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={popular} onChange={handleOnChangePopular}>
+              {popularOptions.map((option) => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
           <div className="flex flex-row justify-center items-center absolute md:top-[18rem] md:left-[31rem]">
             <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>
           </div>

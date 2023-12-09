@@ -9,6 +9,14 @@ import { useState } from 'react';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+interface LoginError {
+  email: {
+    message: ""
+  },
+  password: {
+    message: ""
+  }
+}
 export const LoginForm = () => {
   const {
     register,
@@ -18,7 +26,7 @@ export const LoginForm = () => {
   } = useForm();
   const { login, logout, isAuthenticated, user, setCustomerFromToken } = useAuth(); // Destructure the login function from the context
   const router = useRouter();
-   const onSubmit = async (data: FieldValues) => {
+  const onSubmit = async (data: FieldValues) => {
 
     setError("email", { type: "", message: "" });
     setError("password", { type: "", message: "" });
@@ -86,7 +94,7 @@ export const LoginForm = () => {
           {errors.password && (
             <div className="text-red-500 text-sm mt-2">{errors.password.message}</div>
           )}
-          
+
           {errors.login && (
             <div className="text-red-500 text-sm mt-2">{errors.login.message}</div>
           )}
