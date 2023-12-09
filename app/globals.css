@@ -30,3 +30,15 @@ html {
   white-space: nowrap; /* keeps the text in a single line */
   overflow: hidden; /* keeps the element from overflowing its parent */
 }
+
+.cast-container {
+  display: flex;
+  flex-direction: column;
+  width: 28rem; /* Đặt chiều rộng cố định cho container */
+}
+
+.cast-image {
+  object-fit: cover;
+  width: 80px;
+  height: 80px;
+}
