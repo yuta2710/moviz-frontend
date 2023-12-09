@@ -13,6 +13,9 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      backgroundColor: {
+        "green-dark": "#176B87",
+      },
       colors: {
         "dark-green": "#04364A",
         "spirit-lab": "#151027",
