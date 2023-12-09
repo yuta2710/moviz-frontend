@@ -1,12 +1,12 @@
 import { UserRegisterRequestProps } from "@/types";
-import { saveUser } from "@/utils/clients.utils";
+import { registerNewUser, saveUser } from "@/utils/clients.utils";
 import Image from "next/image";
 import React, { Fragment, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import _ from "lodash";
-import axios from "axios";
+import _, { reject } from "lodash";
+import axios, { AxiosResponse } from "axios";
 import { useAuth } from "./context/AuthContext";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface DuoToken {
   accessToken: string;
@@ -15,6 +15,7 @@ interface DuoToken {
 export const RegisterForm = () => {
   const { login, logout, isAuthenticated, user, setCustomerFromToken } = useAuth();
   const router = useRouter();
+  const path = usePathname();
   const {
     register,
     handleSubmit,
@@ -43,62 +44,30 @@ export const RegisterForm = () => {
 
     console.log("User = ", userData)
 
-    try {
-      const response = await fetch(`http://localhost:8080/api/v1/auth/register`, {
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-        method: "POST"
-      });
+    // try {
+    //   const response = await fetch(`http://localhost:8080/api/v1/auth/register`, {
+    //     headers: {
+    //       "Accept": "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(userData),
+    //     method: "POST"
+    //   });
 
-      if (response.ok) {
-        const responseData: DuoToken = await response.json();
-        localStorage.setItem("accessToken", responseData.accessToken);
+    // if (response.ok) {
+    //   const responseData: DuoToken = await response.json();
+    //   localStorage.setItem("accessToken", responseData.accessToken);
 
-        router.refresh();
-      } else {
-        console.error("Registration failed:", response.status);
-        try {
-          const errorData = await response.json();
-          setError("register", {
-            type: "manual",
-            message: errorData.message || "Registration failed",
-          });
-        } catch (error) {
-          setError("register", {
-            type: "manual",
-            message: "Registration failed. Please check your information and try again.",
-          });
-        }
-      }
-    } catch (error) {
-      setError("username", {
-        type: "manual",
-        message: "Registration failed. Please check your information and try again.",
-      });
-      setError("firstName", {
-        type: "manual",
-        message: "Registration failed. Please check your information and try again.",
-      });
-      setError("lastName", {
-        type: "manual",
-        message: "Registration failed. Please check your information and try again.",
-      });
-      setError("email", {
-        type: "manual",
-        message: "Registration failed. Please check your information and try again.",
-      });
-      setError("password", {
-        type: "manual",
-        message: "Registration failed. Please check your information and try again.",
-      });
-      setError("gender", {
-        type: "manual",
-        message: "Registration failed. Please check your information and try again.",
-      });
-    }
+
+    //   router.refresh();
+    // } else {
+    //   console.error("Registration failed:", response.status);
+    // }
+    // } catch (error) {
+    //   console.error("Registration failed: ", error);
+    // }
+    saveUser(userData);
+
   };
 
   useEffect(() => {

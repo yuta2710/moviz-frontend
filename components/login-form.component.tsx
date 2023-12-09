@@ -53,7 +53,7 @@ export const LoginForm = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      router.push("/profile");
+      router.push("/movies");
     }
   }, [isAuthenticated])
 

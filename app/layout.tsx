@@ -13,8 +13,8 @@ export const config = {
       KEY: "movies",
     },
     {
-      APPLICATION_PATH: "/reviews",
-      KEY: "reviews",
+      APPLICATION_PATH: "/news",
+      KEY: "news",
     },
   ],
 };
@@ -37,7 +37,7 @@ export default function RootLayout({
       <body className='overflow-x-hidden md:overflow-x-hidden'>
         <AuthProvider>
           <Header
-            logo={
+            logo={  
               {
                 photo: "",
                 text: "Moviz"

@@ -1,11 +1,13 @@
 "use client";
 
-import { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getMe } from "@/utils/clients.utils";
+import { getCurrentReviewsFromLetterboxdServer, getMe } from "@/utils/clients.utils";
 import { User } from "@/types";
+import letterboxd from "letterboxd-api";
+import axios from "axios";
 
 export default function Page() {
   const [customer, setCustomer] = useState<User | null>(null);
