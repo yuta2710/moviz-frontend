@@ -88,7 +88,7 @@ export const RegisterForm = () => {
           <h1 className=" text-white text-3xl font-semibold text-center font-poppins">Create an account</h1>
         </div>
         <form action="#" onSubmit={handleSubmit(onSubmit)} className="p-0">
-        {errors.register && (
+          {errors.register && (
             <div className="text-red-500 text-sm mt-2">{errors.register.message}</div>
           )}
           <div className="mt-5">
@@ -141,7 +141,7 @@ export const RegisterForm = () => {
               <option value="o">Others</option>
             </select>
           </div>
-          
+
           <div className="mt-10">
             <input type="submit" value="Sign up with email" className="py-3 bg-green-500 text-white w-full rounded hover:bg-green-600" />
           </div>
