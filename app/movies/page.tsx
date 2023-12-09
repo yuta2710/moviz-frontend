@@ -59,8 +59,7 @@ export default function Page(): ReactElement {
       router.push(`/movies?page=${currentPage}`)
     }
     const fetchData = async (pageNumber: number) => {
-      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}`);
-
+      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31`);
       const data = response.json();
       data.then(json => {
         const data = json.data;
