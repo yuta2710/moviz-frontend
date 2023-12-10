@@ -27,7 +27,8 @@ export default function Page(): ReactElement {
   const handleOnChangeYear = (event: any) => {
     const year = event.target.value;
     setYear(year);
-    router.push(`/movies/decades/year/${year}`);
+    // router.push(`/movies/decades/year/${year}`);
+    router.push(`/movies/decades/year/${year}/${page}`);
 
   };
 
@@ -74,7 +75,7 @@ export default function Page(): ReactElement {
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    router.push(`/movies?page=${pageNumber}`)
+    router.push(`/movies?page=${pageNumber}`);
   };
 
   console.log(movies);

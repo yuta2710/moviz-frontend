@@ -42,9 +42,9 @@ export default function Page() {
 
   if (customer !== null) {
     html = (
-      <div className="flex flex-col justify-center items-center relative md:top-[5rem]">
-        <h1 className="text-white relative md:top-[10rem] text-4xl font-semibold md:ml-4">Profile</h1>
-        <div className="flex justify-center items-center flex-row relative md:top-[15rem] bg-gray-700 p-24 rounded-xl">
+      <div className="flex flex-col items-center relative md:top-[-8rem]">
+        {/* <h1 className="text-white relative md:top-[10rem] text-4xl font-semibold md:ml-4">Profile</h1> */}
+        <div className="flex justify-center items-center flex-row relative md:top-[15rem] p-24 rounded-xl">
           <Image
             className="text-white text-center rounded-full md:mr-36"
             width={250}
@@ -52,11 +52,43 @@ export default function Page() {
             alt="Customer Photo"
             src={customer.photo}
           />
-          <div className="flex flex-col justify-center items-start md:mt-8">
-            <h1 className="text-white text-center md:mt-2">{customer.username}</h1>
-            <h1 className="text-white text-center md:mt-2">{customer.email}</h1>
-            <h1 className="text-white text-center md:mt-2">{customer.firstName} {customer.lastName}</h1>
+          <div className="flex flex-col justify-between items-start md:mt-8">
+            <h1 className="text-white text-center text-2xl relative md:top-[-1rem]">{customer.username}</h1>
+            {/* <h1 className="text-white text-center md:mt-2">{customer.email}</h1>
+            <h1 className="text-white text-center md:mt-2">{customer.firstName} {customer.lastName}</h1> */}
+            <div className="flex flex-row">
+              {/* <input className="" placeholder="First name" /> */}
+              {/* <input className="" placeholder="Last name" /> */}
+              <div className="mb-4">
+                {/* <label className="block text-white font-bold mb-2" htmlFor="username">
+                  First name
+                </label> */}
+                {/* <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username" /> */}
+                <div className="text-white font-semibold">{customer.firstName}</div>
+              </div>
+              <div className="mb-4 md:ml-24">
+                {/* <label className="block text-white text-sm font-bold mb-2" htmlFor="username">
+                  Last name
+                </label> */}
+                {/* <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username" /> */}
+                <div className="text-white font-semibold">{customer.lastName}</div>
+              </div>
+            </div>
+            <div className="flex flex-row md:mt-4">
+              <div className="mb-4">
+                {/* <label className="block text-white text-sm font-bold mb-2" htmlFor="username">
+                  Email
+                </label> */}
+                {/* <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username" /> */}
+                <div className="text-white font-semibold">{customer.email}</div>
+              </div>
+              <div className="mb-4 md:ml-24">
+                <h1 className="text-white font-bold md:text-sm">Review Tags</h1>
+              </div>
+            </div>
           </div>
+
+
         </div>
       </div>
     );

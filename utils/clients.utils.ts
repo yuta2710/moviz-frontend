@@ -1,6 +1,6 @@
 "use client";
 
-import { ReviewCustomization } from "@/types";
+import { FilmReviewProps, ReviewCustomization } from "@/types";
 import {
   Movie,
   Review,
@@ -217,3 +217,24 @@ export async function getCurrentReviewsFromLetterboxdServer(username: string) {
 interface AuthorDetail {}
 
 export const APPLICATION_PATH = ["/register", "/movies", "/news"];
+
+export const getReviewsByMovieId = async (movieId: number) => {
+  console.log("This is movieId = ", movieId);
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/v1/movies/${movieId}/reviews`
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    console.log("Reviews fetching is = ", data);
+
+    return data.data.results as FilmReviewProps[];
+  } catch (error) {
+    console.log(error);
+  }
+};
