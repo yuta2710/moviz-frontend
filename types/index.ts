@@ -188,3 +188,8 @@ export interface CrewProps {
   department: string;
   job: string;
 }
+
+export interface Genre{
+  id: number;
+  name: string;
+}
