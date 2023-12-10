@@ -8,6 +8,7 @@ import { getMovies } from "@/utils/clients.utils";
 import { Movie } from "@/types";
 import { Pagination } from "@mui/material";
 import Link from "next/link";
+import gsap from "gsap";
 
 export default function Page(): ReactElement {
   const searchParams = useSearchParams();
@@ -136,8 +137,18 @@ export default function Page(): ReactElement {
   ];
 
   useEffect(() => {
-
-  }, [year])
+    const movieQueriesDOM = Array.from(document.querySelectorAll(".movie-obj"));
+    gsap.set(movieQueriesDOM, {
+      opacity: 0,
+      y: -50
+    })
+    gsap.to(movieQueriesDOM, {
+      y: 0,
+      stagger: 0.2,
+      duration: 1,
+      opacity: 1
+    })
+  }, [movies.length > 0]);
 
   return (
     <div>
@@ -172,7 +183,7 @@ export default function Page(): ReactElement {
               .slice(0, 6)
               .map((movie) => (
                 <li className="relative hover:scale-110 duration-500">
-                  <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow">
+                  <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
                     <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
                     {/* <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.popularity}</h5> */}
                   </Link>

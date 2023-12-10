@@ -74,12 +74,16 @@ export default function Page({ params }: { params: { id: string } }) {
   return (
     <div className="relative flex flex-col flex-wrap md:top-[15rem] justify-center">
       <div className='grid grid-cols-2 gap-3 w-4/5'>
-        <div className="pl-52">
+        <div className="md:pl-52 flex flex-col">
           <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
+          <button
+            // onClick={() }
+            type="button"
+            className="relative bg-dark-green rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
         </div>
         <div className="text-white pr-52 content-center">
           <div className="flex my-5 md:w-[1200px]">
-            <h1 className="text-2xl font-bold pr-10">{movie.title}</h1>
+            <h1 className="text-2xl font-bold pr-10 md:w-[400px]">{movie.title}</h1>
             <p className="font-light text-gray-400 px-10 md:mt-2">{date.getFullYear()}</p>
             <p className="font-light text-gray-400 px-10 md:mt-2">Directed by <span className='text-white font-bold cursor-pointer hover:scale-120 duration-500' onClick={handleOpenDirectorInfo}>{director?.name}</span></p>
           </div>
@@ -139,7 +143,7 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold my-10 relative md:top-[2rem]">Popular Reviews</h1>
+            <h1 className="text-2xl font-bold my-10 relative md:top-[2rem]">Recent Reviews</h1>
             {reviews.length > 0 &&
               reviews
                 .slice(0, 4)

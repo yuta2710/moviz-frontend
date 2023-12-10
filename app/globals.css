@@ -173,3 +173,22 @@ html {
   white-space: nowrap; /* keeps the text in a single line */
   overflow: hidden; /* keeps the element from overflowing its parent */
 }
+
+.custom-link-underline::after {
+  content: "";
+  position: absolute;
+  height: 5px;
+  width: 0;
+  left: 0;
+  bottom: -10px;
+  transition: 0.3s;
+  border-radius: 8rem;
+}
+
+.custom-link-underline.white::after {
+  background-color: white;
+}
+
+.custom-link-underline:hover:after {
+  width: 100%;
+}

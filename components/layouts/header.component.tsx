@@ -11,6 +11,7 @@ import { Grid, Icon, Typography } from '@mui/material';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { usePathname, useRouter } from 'next/navigation'
+import gsap from "gsap";
 
 interface DropdownProps {
   icon: ReactNode;
@@ -30,6 +31,21 @@ const Header = (header: HeaderProps) => {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+
+  useEffect(() => {
+    const logoPhoto = document.querySelector(".logo-photo");
+    const logoText = document.querySelector(".logo-text");
+    gsap.set([logoPhoto, logoText], {
+      opacity: 0,
+      y: -50
+    })
+    gsap.to([logoPhoto, logoText], {
+      y: 0,
+      stagger: 0.2,
+      duration: 1,
+      opacity: 1
+    })
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated() && user !== null) {
@@ -62,7 +78,7 @@ const Header = (header: HeaderProps) => {
     <header className={`md:w-full md:h-[${height}] absolute md:-left-[10rem] md:z-10 md:px-[16rem] md:py-[2rem] ${background}`}>
       <nav className={`nav-container md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
         <Link href='/' className='flex justify-center items-center'>
-          {logo?.photo && (
+          {/* {logo?.photo && (
             <Image
               src={logo.photo}
               alt='logo'
@@ -70,9 +86,9 @@ const Header = (header: HeaderProps) => {
               height={50}
               className='object-contain'
             />
-          )}
-          <Image src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
-          <span className={`self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
+          )} */}
+          <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
+          <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
           </span>
 
@@ -81,7 +97,7 @@ const Header = (header: HeaderProps) => {
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
             {items.map(item => (
               <li className='z-10' key={item.KEY}>
-                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
+                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
                   {_.startCase(item.KEY.split("-").join(" "))}
                 </Link>
               </li>
