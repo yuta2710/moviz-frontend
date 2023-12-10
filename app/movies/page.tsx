@@ -4,8 +4,8 @@ import { ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { getMovies } from "@/utils/clients.utils";
-import { Movie } from "@/types";
+import { getGenres, getMovies } from "@/utils/clients.utils";
+import { Genre, Movie } from "@/types";
 import { Pagination } from "@mui/material";
 import Link from "next/link";
 import gsap from "gsap";
@@ -22,7 +22,8 @@ export default function Page(): ReactElement {
   const [year, setYear] = useState(2023);
   const [rating, setRating] = useState("Highest");
   const [popular, setPopular] = useState("All");
-  const [genre, setGenre] = useState("action");
+  //const [genre, setGenre] = useState("action");
+  const [genres, setGenres] = useState<Genre[]>([])
   const router = useRouter();
 
   const handleOnChangeYear = (event: any) => {
@@ -37,23 +38,23 @@ export default function Page(): ReactElement {
     const rating = event.target.value;
     setRating(rating);
 
-    if (popular === "Highest") {
-      router.push(`/movies/by/rating/highest/${rating}`);
+    if (rating === "Highest") {
+      router.push(`/movies/by/rating/highest/`);
     }
-    if (popular === "Lowest") {
-      router.push(`/movies/by/rating/lowest/${rating}`);
+    if (rating === "Lowest") {
+      router.push(`/movies/by/rating/lowest/`);
     }
     // router.push(`/movies/decade/${rating}`);
   };
 
   const handleOnChangePopular = (event: any) => {
     const popular = event.target.value;
-    setPopular(popular);
-    // router.push(`/movies/decade/${year}`);
+    router.push(`/movies/period/${popular}`);
   };
 
   const handleOnChangeGenre = (event: any) => {
-    setGenre(event.target.value);
+    const genre = event.target.value;
+    router.push(`/movies/genre/${genre}`);
   };
 
   useEffect(() => {
@@ -61,13 +62,26 @@ export default function Page(): ReactElement {
       router.push(`/movies?page=${currentPage}`)
     }
     const fetchData = async (pageNumber: number) => {
-      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31`);
+      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`);
       const data = response.json();
       data.then(json => {
         const data = json.data;
         console.log(data.results);
         setMovies(data.results as Movie[]);
       });
+
+      const options = {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY",
+        },
+      };
+      const genres = await getGenres();
+      setGenres(genres);
+      console.log(genres);
+
     }
 
     fetchData(currentPage);
@@ -123,15 +137,15 @@ export default function Page(): ReactElement {
       label: "All"
     },
     {
-      value: "This Year",
+      value: "this-year",
       label: "This Year"
     },
     {
-      value: "This Month",
+      value: "this-month",
       label: "This Month"
     },
     {
-      value: "This Week",
+      value: "this-week",
       label: "This Week"
     },
   ];
@@ -163,7 +177,8 @@ export default function Page(): ReactElement {
               ))}
             </select>
 
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" value={rating} onChange={handleOnChangeRating}>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeRating}>
+              <option value="" disabled selected className="text-center">Rating</option>
               {ratingOptions.map((option) => (
                 <option value={option.value} className="text-center">{option.label}</option>
               ))}
@@ -171,6 +186,12 @@ export default function Page(): ReactElement {
             <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" value={popular} onChange={handleOnChangePopular}>
               {popularOptions.map((option) => (
                 <option value={option.value} className="text-center">{option.label}</option>
+              ))}
+            </select>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeGenre}>
+              <option value="" disabled selected className="text-center">Genre</option>
+              {genres.map((genre) => (
+                <option value={genre.id} className="text-center">{genre.name}</option>
               ))}
             </select>
           </div>

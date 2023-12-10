@@ -26,6 +26,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const fetchMovie = async () => {
       const movieData = await getMovie(id) as Movie;
       setMovie(movieData);
+      console.log(movieData);
     };
     const fetchCasts = async () => {
       try {
