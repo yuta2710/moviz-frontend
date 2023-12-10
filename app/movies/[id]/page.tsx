@@ -25,6 +25,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const fetchMovie = async () => {
       const movieData = await getMovie(id) as Movie;
       setMovie(movieData);
+      console.log(movieData);
     };
     const fetchCasts = async () => {
       try {
@@ -67,7 +68,7 @@ export default function Page({ params }: { params: { id: string } }) {
     <div className="relative flex flex-col flex-wrap md:top-[15rem] justify-center">
       <div className='grid grid-cols-2 gap-3 w-4/5'>
         <div className="pl-52">
-          <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
+          {movie.poster_path !== null && <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>}
         </div>
         <div className="text-white pr-52 content-center">
           <div className="flex my-5 md:w-[1200px]">

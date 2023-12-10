@@ -10,7 +10,7 @@ import { getCast } from '@/utils/clients.utils';
 export default function Page() {
     const [cast, setCast] = useState<Cast|null>(null)
     const path = usePathname();
-    const id = path.replace('/casts/', '');
+    const id = path.replace('/cast/', '');
     
     useEffect(() => {
         const fetchData = async () => {
@@ -25,9 +25,10 @@ export default function Page() {
       }
 
     return (
-        <div className='relative flex'>
-            <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt="Profile picture"></Image>
+        <div className='relative flex text-white'>
+            <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt="Profile picture" width={300} height={500}></Image>
             <h1>{cast.name}</h1>
+            <h2>{cast.biography}</h2>
         </div>
     )
 }
