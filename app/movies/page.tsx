@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactElement, useEffect, useState } from "react";
-import { useAuth } from "../../components/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { getGenres, getMovies } from "@/utils/clients.utils";
@@ -31,7 +30,6 @@ export default function Page(): ReactElement {
     setYear(year);
     // router.push(`/movies/decades/year/${year}`);
     router.push(`/movies/decades/year/${year}/${page}`);
-
   };
 
   const handleOnChangeRating = (event: any) => {
@@ -163,6 +161,10 @@ export default function Page(): ReactElement {
       opacity: 1
     })
   }, [movies.length > 0]);
+
+  // const filter = new Filter();
+
+  // console.log(filter.clean("Don't be an ash0le"));
 
   return (
     <div>

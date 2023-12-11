@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function Page({ params }: { params: { genre: number } }) {
+export default function Page({ params }: { params: { genre: string } }) {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page"));
   const [movieFilteringByGenre, setMovieFilteringByGenre] = useState<Movie[]>([]);
@@ -17,7 +17,7 @@ export default function Page({ params }: { params: { genre: number } }) {
   const router = useRouter();
   useEffect(() => {
     const fetchData = async (pageNumber: number) => {
-      console.log("URL is ", `http://localhost:8080/api/v1/movies?page=${pageNumber}&include_video=false&language=en-US&sort_by=popularity.desc&primary_release_date.gte=2019-01-01&primary_release_date.lte=2019-12-31`)
+      // console.log("URL is ", `http://localhost:8080/api/v1/movies?page=${pageNumber}&include_video=false&language=en-US&sort_by=popularity.desc&primary_release_date.gte=2019-01-01&primary_release_date.lte=2019-12-31`)
       const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber + 1}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}&sort_by=popularity.desc&&with_genres=${params.genre}`);
 
       const data = response.json();

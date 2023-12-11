@@ -12,10 +12,12 @@ import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { usePathname, useRouter } from 'next/navigation'
 import gsap from "gsap";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 interface DropdownProps {
   icon: ReactNode;
   text: string;
+  url?: string;
   onClick: MouseEventHandler<HTMLAnchorElement>;
 }
 
@@ -78,15 +80,6 @@ const Header = (header: HeaderProps) => {
     <header className={`md:w-full md:h-[${height}] absolute md:-left-[10rem] md:z-10 md:px-[16rem] md:py-[2rem] ${background}`}>
       <nav className={`nav-container md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
         <Link href='/' className='flex justify-center items-center'>
-          {/* {logo?.photo && (
-            <Image
-              src={logo.photo}
-              alt='logo'
-              width={50}
-              height={50}
-              className='object-contain'
-            />
-          )} */}
           <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
           <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
@@ -124,15 +117,15 @@ const Header = (header: HeaderProps) => {
           {dropdownOpen && (
             <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[4rem] bg-white md:px-2 md:w-[180px] w-full rounded-sm' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
+              <DropdownItem
+                onClick={() => { }}
+                url='/profile'
+                icon={<AccountBoxIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AccountBoxIcon>} text='Profile' />
               <DropdownItem onClick={() => {
                 logout().then(() => {
                   router.refresh();
                 });
               }} icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Log out' />
-              {/* <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' />
-              <DropdownItem icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Item 2' /> */}
-
-              {/* Add more items as needed */}
             </ul>
           )}
 
@@ -146,7 +139,7 @@ function DropdownItem(props: DropdownProps) {
   return (
     <li className='dropdownItem md:w-full w-full relative md:mt-6'>
       {props.icon}
-      <Link className='cursor-pointer text-black dropdown-text md:ml-6 text-center' href={"#"} onClick={props.onClick}> {props.text} </Link>
+      <Link className='cursor-pointer text-black dropdown-text md:ml-6 text-center' href={`${props.url}`} onClick={props.onClick}> {props.text} </Link>
       {/* <div className='dropdown-line w-full md:w-[270px] absolute  md:top-[1.8rem]'></div> */}
     </li>
   );

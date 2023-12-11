@@ -11,6 +11,14 @@ html {
   /* font-family: "Poppins"; */
 }
 
+body {
+  position: relative;
+}
+
+header {
+  position: relative;
+}
+
 .util-box-shadow-light-mode {
   box-shadow: 0px 0px 70px 15px rgba(205, 205, 205, 0.35);
 }
