@@ -1,13 +1,13 @@
 "use client";
 
 import { ReactElement, useEffect, useState } from "react";
-import { useAuth } from "../../components/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { getGenres, getMovies } from "@/utils/clients.utils";
 import { Genre, Movie } from "@/types";
 import { Pagination } from "@mui/material";
 import Link from "next/link";
+import gsap from "gsap";
 
 export default function Page(): ReactElement {
   const searchParams = useSearchParams();
@@ -28,8 +28,8 @@ export default function Page(): ReactElement {
   const handleOnChangeYear = (event: any) => {
     const year = event.target.value;
     setYear(year);
-    router.push(`/movies/decades/year/${year}`);
-
+    // router.push(`/movies/decades/year/${year}`);
+    router.push(`/movies/decades/year/${year}/${page}`);
   };
 
   const handleOnChangeRating = (event: any) => {
@@ -88,7 +88,7 @@ export default function Page(): ReactElement {
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    router.push(`/movies?page=${pageNumber}`)
+    router.push(`/movies?page=${pageNumber}`);
   };
 
   console.log(movies);
@@ -148,11 +148,23 @@ export default function Page(): ReactElement {
     },
   ];
 
+  useEffect(() => {
+    const movieQueriesDOM = Array.from(document.querySelectorAll(".movie-obj"));
+    gsap.set(movieQueriesDOM, {
+      opacity: 0,
+      y: -50
+    })
+    gsap.to(movieQueriesDOM, {
+      y: 0,
+      stagger: 0.2,
+      duration: 1,
+      opacity: 1
+    })
+  }, [movies.length > 0]);
 
+  // const filter = new Filter();
 
-  // useEffect(() => {
-
-  // }, [year])
+  // console.log(filter.clean("Don't be an ash0le"));
 
   return (
     <div>
@@ -194,7 +206,7 @@ export default function Page(): ReactElement {
               .slice(0, 6)
               .map((movie) => (
                 <li className="relative hover:scale-110 duration-500">
-                  <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow">
+                  <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
                     <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
                     {/* <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.popularity}</h5> */}
                   </Link>

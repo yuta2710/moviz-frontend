@@ -11,6 +11,14 @@ html {
   /* font-family: "Poppins"; */
 }
 
+body {
+  position: relative;
+}
+
+header {
+  position: relative;
+}
+
 .util-box-shadow-light-mode {
   box-shadow: 0px 0px 70px 15px rgba(205, 205, 205, 0.35);
 }
@@ -166,4 +174,29 @@ html {
     rgba(100, 43, 115, 1) 0%,
     rgba(4, 0, 4, 1) 90%
   );
+}
+
+.ellipsis {
+  text-overflow: ellipsis; /* enables ellipsis */
+  white-space: nowrap; /* keeps the text in a single line */
+  overflow: hidden; /* keeps the element from overflowing its parent */
+}
+
+.custom-link-underline::after {
+  content: "";
+  position: absolute;
+  height: 5px;
+  width: 0;
+  left: 0;
+  bottom: -10px;
+  transition: 0.3s;
+  border-radius: 8rem;
+}
+
+.custom-link-underline.white::after {
+  background-color: white;
+}
+
+.custom-link-underline:hover:after {
+  width: 100%;
 }

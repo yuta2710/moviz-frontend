@@ -65,6 +65,8 @@ export const LoginForm = () => {
     }
   }, [isAuthenticated])
 
+  const formErrors = errors as any;
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-black">
       <div className="md:w-1/2 max-w-lg mx-auto my-24 px-4 py-5 shadow-none">
@@ -83,20 +85,20 @@ export const LoginForm = () => {
                 }
               })} type="text" className="md:mt-4 block w-full p-2 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent " placeholder="Email" />
           </div>
-          {errors.email && (
-            <div className="text-red-500 text-sm mt-2">{errors.email.message}</div>
+          {formErrors.email && (
+            <div className="text-red-500 text-sm mt-2">{formErrors.email.message}</div>
           )}
 
           <div className="mt-5">
             <label form="password" className="text-white sc-bqyKva ePvcBv">Password</label>
             <input type="password" {...register("password", { required: "Please enter a password" })} className="md:mt-4 block w-full p-2 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent" placeholder="Password" />
           </div>
-          {errors.password && (
-            <div className="text-red-500 text-sm mt-2">{errors.password.message}</div>
+          {formErrors.password && (
+            <div className="text-red-500 text-sm mt-2">{formErrors.password.message}</div>
           )}
 
-          {errors.login && (
-            <div className="text-red-500 text-sm mt-2">{errors.login.message}</div>
+          {formErrors.login && (
+            <div className="text-red-500 text-sm mt-2">{formErrors.login.message}</div>
           )}
 
           <div className="mt-10">

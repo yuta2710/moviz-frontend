@@ -19,6 +19,7 @@ const config: Config = {
       colors: {
         "dark-green": "#04364A",
         "spirit-lab": "#151027",
+        "ai4biz-green-quite-light": "#64CCC5",
       },
       fontFamily: {
         poppins: "'Poppins', sans-serif",

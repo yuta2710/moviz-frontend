@@ -167,7 +167,7 @@ export interface Cast {
   id: string;
   name: string;
   gender: number;
-  character:string;
+  character: string;
   biography: string;
   profile_path: string;
   birthday: string;
@@ -189,7 +189,24 @@ export interface CrewProps {
   job: string;
 }
 
-export interface Genre{
+interface AuthorDetails {
+  name: string;
+  username: string;
+  avatar_path: string;
+  rating: number;
+}
+
+export interface FilmReviewProps {
+  author: string;
+  author_details: AuthorDetails;
+  content: string;
+  created_at: string;
+  id: string;
+  updated_at: string;
+  url: string;
+}
+
+export interface Genre {
   id: number;
   name: string;
 }

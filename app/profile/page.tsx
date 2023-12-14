@@ -65,7 +65,7 @@ export default function Page() {
                 <h3 className="mb-3">Firstname</h3>
                 <div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
                   {customer.firstName}
-                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={()=>({})}>Edit</p>
+                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={() => ({})}>Edit</p>
                 </div>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default function Page() {
                 <h3 className="mb-3">Lastname</h3>
                 <span className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
                   {customer.lastName}
-                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={()=>({})}>Edit</p>
+                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={() => ({})}>Edit</p>
                 </span>
               </div>
             </div>
@@ -83,7 +83,7 @@ export default function Page() {
                 <h3 className="mb-3">Email</h3>
                 <span className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
                   {customer.email}
-                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={()=>({})}>Edit</p>
+                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={() => ({})}>Edit</p>
                 </span>
               </div>
             </div>
@@ -118,9 +118,9 @@ export default function Page() {
           </div>
         </div>
         <div className="flex flex-row gap-10 items-start border-2 border-black border-b-gray-500 py-2 ">
-          <h1 className={`${selected==1 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(1)}>Reviews</h1>
-          <h1 className={`${selected==2 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(2)}>Watchlist</h1>
-          <h1 className={`${selected==3 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(3)}>Like</h1>
+          <h1 className={`${selected == 1 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(1)}>Reviews</h1>
+          <h1 className={`${selected == 2 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(2)}>Watchlist</h1>
+          <h1 className={`${selected == 3 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(3)}>Like</h1>
         </div>
       </div>
     );

@@ -1,8 +1,8 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Cast, CrewProps, Movie } from '@/types';
-import { getCasts, getMovie } from '../../../utils/clients.utils';
+import { Cast, CrewProps, FilmReviewProps, Movie } from '@/types';
+import { getCasts, getMovie, getReviewsByMovieId } from '../../../utils/clients.utils';
 import Image from 'next/image';
 import Casts from '@/components/casts.component';
 import Related from '@/components/related.component';
@@ -15,6 +15,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [casts, setCasts] = useState<Cast[] | null>(null);
   const [crews, setCrews] = useState<CrewProps[] | null>(null);
+  const [reviews, setReviews] = useState<FilmReviewProps[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
   const id = params.id;
@@ -38,8 +39,15 @@ export default function Page({ params }: { params: { id: string } }) {
         console.error('Error fetching casts:', error);
       }
     };
+    const fetchReviewsByMovieId = async () => {
+      const reviewsData = await getReviewsByMovieId(Number(id)) as FilmReviewProps[];
+
+      console.log("Reviews data = ", reviewsData);
+      setReviews(reviewsData);
+    }
     fetchMovie();
     fetchCasts();
+    fetchReviewsByMovieId();
   }, [id]);
   if (!movie) {
     return <div>Loading...</div>;
@@ -67,12 +75,16 @@ export default function Page({ params }: { params: { id: string } }) {
   return (
     <div className="relative flex flex-col flex-wrap md:top-[15rem] justify-center">
       <div className='grid grid-cols-2 gap-3 w-4/5'>
-        <div className="pl-52">
-          {movie.poster_path !== null && <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>}
+        <div className="md:pl-52 flex flex-col">
+          <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
+          <button
+            // onClick={() }
+            type="button"
+            className="relative bg-dark-green rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
         </div>
         <div className="text-white pr-52 content-center">
           <div className="flex my-5 md:w-[1200px]">
-            <h1 className="text-2xl font-bold pr-10">{movie.title}</h1>
+            <h1 className="text-2xl font-bold pr-10 md:w-[400px]">{movie.title}</h1>
             <p className="font-light text-gray-400 px-10 md:mt-2">{date.getFullYear()}</p>
             <p className="font-light text-gray-400 px-10 md:mt-2">Directed by <span className='text-white font-bold cursor-pointer hover:scale-120 duration-500' onClick={handleOpenDirectorInfo}>{director?.name}</span></p>
           </div>
@@ -86,12 +98,12 @@ export default function Page({ params }: { params: { id: string } }) {
             </div>
             <div className="flex flex-col space-x-3">
               {choice == 1 && (
-                <div className='flex flex-row justify-center items-center relative md:left-[11.5rem]'>
+                <div className='flex flex-row justify-center items-center relative md:left-[10rem] md:top-[1rem]'>
                   <div className='flex gap-3'>
                     {/* <Casts id={id} /> */}
                     {casts?.slice(0, 6).map((cast, index) => {
                       if (cast.profile_path !== null) {
-                        return <div className='flex flex-col w-28 h-max'>
+                        return <div className='flex flex-col md:w-28 h-max'>
                           <Image className='object-contains' src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={80} height={80}></Image>
                           <div className='relative md:mt-4 md:w-[400px]'>
                             <h2 className='text-[0.7rem] font-medium text-white md:w-full'>{cast.name}</h2>
@@ -132,7 +144,16 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold my-10">Popular Reviews</h1>
+            <h1 className="text-2xl font-bold my-10 relative md:top-[2rem]">Recent Reviews</h1>
+            {reviews.length > 0 &&
+              reviews
+                .slice(0, 4)
+                .map((review: FilmReviewProps) => (
+                  <div className='flex flex-col md:w-[500px] h-max'>
+                    <h2 className='text-sm font-bold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span></h2>
+                    <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
+                  </div>
+                ))}
           </div>
 
         </div>
