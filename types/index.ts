@@ -200,9 +200,9 @@ export interface FilmReviewProps {
   author: string;
   author_details: AuthorDetails;
   content: string;
-  created_at: string;
+  createdAt: string;
   id: string;
-  updated_at: string;
+  updatedAt: string;
   url: string;
 }
 

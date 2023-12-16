@@ -286,6 +286,8 @@ export const getReviewsByMovieId = async (movieId: number) => {
       `http://localhost:8080/api/v1/movies/${movieId}/reviews`
     );
 
+    // console.log(response)
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -294,7 +296,7 @@ export const getReviewsByMovieId = async (movieId: number) => {
 
     console.log("Reviews fetching is = ", data);
 
-    return data.data.results as FilmReviewProps[];
+    return data.data as FilmReviewProps[];
   } catch (error) {
     console.log(error);
   }
