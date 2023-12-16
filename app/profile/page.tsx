@@ -32,7 +32,7 @@ export default function Page() {
       fetchData();
     } else {
       setLoading(false);
-      router.push("/login")
+      router.push("/login");
     }
   }, [isAuthenticated]);
 
@@ -62,7 +62,7 @@ export default function Page() {
             </div>
             <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col mr-5">
-                <h3 className="mb-3">Firstname</h3>
+                <h3 className="mb-3">First Name</h3>
                 <div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
                   {customer.firstName}
                   <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={() => ({})}>Edit</p>
@@ -71,7 +71,7 @@ export default function Page() {
             </div>
             <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col">
-                <h3 className="mb-3">Lastname</h3>
+                <h3 className="mb-3">Last Name</h3>
                 <span className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
                   {customer.lastName}
                   <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={() => ({})}>Edit</p>
