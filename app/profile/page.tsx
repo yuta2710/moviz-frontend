@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -39,6 +39,38 @@ export default function Page() {
     }
   }, [isAuthenticated]);
 
+  const handleAvatarClick = () => {
+    // Trigger click on the hidden file input
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
+  };
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    console.log(file);
+    console.log("token token " + localStorage.getItem("accessToken"));
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/photo`, formData, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          
+        });
+        const json = response.data;
+        console.log(json);
+        console.log(formData);
+        
+      } catch (error) {
+        console.error('Error updating profile picture:', error);
+      }
+    }
+
+  };
+
   let html: ReactElement<any, any> = <div className="text-white">Loading...</div>;
   if (loading) {
     html = <div className="text-white"> Loading...</div>;
@@ -50,12 +82,14 @@ export default function Page() {
         <div className="grid grid-cols-3 items-center">
           <div className="">
             <Image
-              className="text-white text-center rounded-full md:mr-36"
+              className="text-white text-center rounded-full md:mr-36 hover:cursor-pointer"
               width={250}
               height={250}
               alt="Customer Photo"
               src={customer.photo}
+              onClick={handleAvatarClick}
             />
+            <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
           </div>
           <div className="grid col-span-2 grid-rows-4 gap-5 w2/3">
             <div className="col-span-4 justify-center items-center text-3xl font-medium my-auto">
@@ -158,3 +192,5 @@ export default function Page() {
 
   return html;
 }
+
+
