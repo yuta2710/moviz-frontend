@@ -7,8 +7,8 @@
 
 html {
   background-color: #000;
-  font-family: "Noto Sans";
-  /* font-family: "Poppins"; */
+  /* font-family: "Noto Sans"; */
+  font-family: "Poppins";
 }
 
 body {
@@ -199,4 +199,32 @@ header {
 
 .custom-link-underline:hover:after {
   width: 100%;
+}
+
+.review-form-bg {
+  background: linear-gradient(225deg, #85236a 3.14%, #241d34 40.49%);
+}
+
+.button-linear-gradient-red {
+  /* background: linear-gradient(315deg, #ff4d67 -0.12%, #fd788c 99.88%); */
+  background: linear-gradient(315deg, #e82c47 -0.12%, #196076 99.88%);
+}
+
+.gojo-six-eye-bg {
+  background: linear-gradient(
+    270deg,
+    #072434 3.17%,
+    #000 50.35%,
+    #072434 97.53%
+  );
+}
+
+.three_content {
+  position: relative;
+  width: 100%;
+  /* height: 100vh; */
+  background: #000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* background-image: url("https://images.unsplash.com/photo-1675937338222-b834fce80ba5?q=80&w=3420&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); */
 }

@@ -45,29 +45,6 @@ export const RegisterForm = () => {
     };
 
     console.log("User = ", userData)
-
-    // try {
-    //   const response = await fetch(`http://localhost:8080/api/v1/auth/register`, {
-    //     headers: {
-    //       "Accept": "application/json",
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(userData),
-    //     method: "POST"
-    //   });
-
-    // if (response.ok) {
-    //   const responseData: DuoToken = await response.json();
-    //   localStorage.setItem("accessToken", responseData.accessToken);
-
-
-    //   router.refresh();
-    // } else {
-    //   console.error("Registration failed:", response.status);
-    // }
-    // } catch (error) {
-    //   console.error("Registration failed: ", error);
-    // }
     saveUser(userData);
   };
 
