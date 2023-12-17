@@ -13,6 +13,7 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { useAuth } from '../../../components/context/AuthContext';
 import CloseIcon from "@mui/icons-material/Close";
 import gsap from 'gsap';
+import { formatHistoryDate } from '@/utils/convert.utils';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [choice, setChoice] = useState(1);
@@ -102,12 +103,13 @@ export default function Page({ params }: { params: { id: string } }) {
   const ISO_DATE = new Date().toISOString();
 
   const onSubmit = (data: FieldValues) => {
-    setError("reviewContent", { type: "", message: "" });
+    setError("content", { type: "", message: "" });
     setError("tag", { type: "", message: "" });
     setError("rating", { type: "", message: "" });
 
+    console.log("Alo alo hehe = ", data.content)
     const reviewData: FilmReviewProps = {
-      content: data.reviewContent,
+      content: data.content,
       author: customer !== null ? customer.username : "",
       author_details: {
         name: customer !== null ? customer.firstName + " " + customer.lastName : "",
@@ -125,11 +127,7 @@ export default function Page({ params }: { params: { id: string } }) {
     saveReviewsByMovieId(id, reviewData).then(() => {
       handleClosePostReviewForm();
       window.location.reload();
-    }).catch(error => {
-      console.log(error.response.data.message);
-      setWarningMessage(error.response.data.message);
-      handleOpenToastWarning();
-    });
+    })
   }
 
   useEffect(() => {
@@ -345,7 +343,8 @@ export default function Page({ params }: { params: { id: string } }) {
                 .map((review: FilmReviewProps) => (
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
                     <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
-                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating} / 10</span></h2>
+                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
+
                     <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
                   </div>
                 ))}
@@ -448,7 +447,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 <div className="mt-5">
                   <label htmlFor='review' className='text-white text-[0.8rem]'>Your review content</label>
                   <textarea
-                    {...register("reviewContent", { required: "Review cannot be empty" })}
+                    {...register("content", { required: "Review cannot be empty" })}
                     style={{
                       borderRadius: "8px",
                       border: "none",
