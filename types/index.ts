@@ -201,9 +201,12 @@ export interface FilmReviewProps {
   author_details: AuthorDetails;
   content: string;
   createdAt: string;
-  id: string;
+  tag?: string;
+  movie: string;
+  // id: string;
   updatedAt: string;
-  url: string;
+  // rating: number;
+  // url: string;
 }
 
 export interface Genre {

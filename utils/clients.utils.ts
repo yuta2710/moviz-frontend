@@ -301,3 +301,29 @@ export const getReviewsByMovieId = async (movieId: number) => {
     console.log(error);
   }
 };
+
+export const saveReviewsByMovieId = async (
+  movieId: string,
+  props: FilmReviewProps
+) => {
+  try {
+    console.log("Film props = ", props);
+    return axios
+      .post(`http://localhost:8080/api/v1/reviews/${movieId}`, props, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          console.log(response);
+        } else {
+          console.error("Registration failed:", response.status);
+        }
+      });
+  } catch (error) {
+    throw error;
+  }
+};

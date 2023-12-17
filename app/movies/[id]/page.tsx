@@ -1,14 +1,16 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Cast, CrewProps, FilmReviewProps, Movie } from '@/types';
-import { getCasts, getMovie, getReviewsByMovieId } from '../../../utils/clients.utils';
+import { Cast, CrewProps, FilmReviewProps, Movie, User } from '@/types';
+import { getCasts, getMe, getMovie, getReviewsByMovieId, saveReviewsByMovieId } from '../../../utils/clients.utils';
 import Image from 'next/image';
 import Casts from '@/components/casts.component';
 import Related from '@/components/related.component';
 import { useRouter } from 'next/navigation';
 import fetch from 'node-fetch';
 import { Box, FormControl, Grid, Input, InputLabel, Modal, TextField, TextareaAutosize, Typography } from '@mui/material';
+import { FieldValues, useForm } from 'react-hook-form';
+import { useAuth } from '../../../components/context/AuthContext';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [choice, setChoice] = useState(1);
@@ -19,9 +21,20 @@ export default function Page({ params }: { params: { id: string } }) {
   const [openDirectorInfo, setOpenDirectorInfo] = useState<boolean>(false);
   const [openPostReviewForm, setPostReviewForm] = useState<boolean>(false);
   const [reviewInput, setReviewInput] = React.useState("");
+  const [customer, setCustomer] = useState<User | null>(null);
+  const { user, isAuthenticated } = useAuth();
+  const [loading, setLoading] = useState(true);
 
   const id = params.id;
   const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors }
+  } = useForm();
+  const formErrors = errors as any;
 
   const handleOpenDirectorInfo = () => setOpenDirectorInfo(true);
   const handleCloseDirectorInfo = () => setOpenDirectorInfo(false);
@@ -36,37 +49,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const hanndleOnChangeRatingSelector = (event: any) => {
     console.log("Hello = ", event.target.value);
   }
-
-  useEffect(() => {
-    const fetchMovie = async () => {
-      const movieData = await getMovie(id) as Movie;
-      setMovie(movieData);
-      console.log(movieData);
-    };
-    const fetchCasts = async () => {
-      try {
-        const castData = await getCasts(id);
-        const castArr: Cast[] = castData.cast;
-        const crewArr: CrewProps[] = castData.crew;
-        setCasts(castArr);
-        setCrews(crewArr);
-      } catch (error) {
-        console.error('Error fetching casts:', error);
-      }
-    };
-    const fetchReviewsByMovieId = async () => {
-      const reviewsData = await getReviewsByMovieId(Number(id)) as FilmReviewProps[];
-      console.log("Reviews data = ", reviewsData);
-      setReviews(reviewsData);
-    }
-    fetchMovie();
-    fetchCasts();
-    fetchReviewsByMovieId();
-  }, [id]);
-  if (!movie) {
-    return <div>Loading...</div>;
-  }
-  const date = new Date(movie.release_date);
   const director = crews?.find(({ job }) => job === 'Director');
   const RATING_CONSTANTS = [
     1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
@@ -96,6 +78,84 @@ export default function Page({ params }: { params: { id: string } }) {
     overflow: "auto",
   };
 
+  const ISO_DATE = new Date().toISOString();
+
+  const onSubmit = (data: FieldValues) => {
+
+    const reviewData: FilmReviewProps = {
+      content: data.reviewContent,
+      author: customer !== null ? customer.username : "",
+      author_details: {
+        name: customer !== null ? customer.firstName + " " + customer.lastName : "",
+        username: customer !== null ? customer.username : "",
+        avatar_path: customer !== null ? customer.photo : "",
+        rating: Number(data.rating),
+      },
+      movie: id,
+      tag: data.tag,
+      createdAt: ISO_DATE,
+      updatedAt: ISO_DATE
+    };
+    console.log("reviewData = ", reviewData);
+
+    saveReviewsByMovieId(id, reviewData).then(() => {
+      handleClosePostReviewForm();
+      window.location.reload();
+    });
+  }
+
+  useEffect(() => {
+    if (isAuthenticated() && user !== null) {
+      const fetchData = async () => {
+        try {
+          const json = await getMe();
+          setCustomer(json.data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    } else {
+      setLoading(false);
+      router.push("/login")
+    }
+  }, [isAuthenticated]);
+
+
+  useEffect(() => {
+    const fetchMovie = async () => {
+      const movieData = await getMovie(id) as Movie;
+      setMovie(movieData);
+      console.log(movieData);
+    };
+    const fetchCasts = async () => {
+      try {
+        const castData = await getCasts(id);
+        const castArr: Cast[] = castData.cast;
+        const crewArr: CrewProps[] = castData.crew;
+        setCasts(castArr);
+        setCrews(crewArr);
+      } catch (error) {
+        console.error('Error fetching casts:', error);
+      }
+    };
+    const fetchReviewsByMovieId = async () => {
+      const reviewsData = await getReviewsByMovieId(Number(id)) as FilmReviewProps[];
+      console.log("Reviews data = ", reviewsData);
+      setReviews(reviewsData);
+    }
+    fetchMovie();
+    fetchCasts();
+    fetchReviewsByMovieId();
+  }, [id]);
+
+  if (!movie) {
+    return <div>Loading...</div>;
+  }
+  const date = new Date(movie.release_date);
   return (
     <div className="relative flex flex-col flex-wrap md:top-[15rem] justify-center">
       <div className='grid grid-cols-2 gap-3 w-4/5'>
@@ -175,7 +235,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                 .map((review: FilmReviewProps) => (
                   <div className='flex flex-col md:w-[500px] h-max'>
-                    <h2 className='text-sm font-bold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span></h2>
+                    <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span></h2>
                     <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
                   </div>
                 ))}
@@ -260,43 +320,50 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className='z-10 relative md:mx-auto flex flex-row justify-around items-center'>
             <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} className='relative object-contain md:mt-12' width={300} height={500} alt={movie.title}></Image>
 
-            <FormControl className='relative'>
-              <p className='text-white font-regular text-sm opacity-70'>Create review, then create a new bonding</p>
-              <h1 className='text-white md:text-2xl font-bold italic md:mt-2'>"{movie.title}"</h1>
-              <div className='flex justify-center items-center relative md:mt-8'>
-                <h3 className='text-sm text-white'>Rating: </h3>
-                <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[80px] md:py-1 bg-[#262A33] dark:placeholder-gray-400 dark:text-white" onChange={hanndleOnChangeRatingSelector}>
-                  {RATING_CONSTANTS.map((ratingValue) => (
-                    <option value={ratingValue} className="text-center" style={{ color: "#9095A0" }}>{ratingValue}</option>
-                  ))}
-                </select>
-                <span className='text-white text-sm md:ml-2'>/ 10</span>
-              </div>
-              <div className="mt-5">
-                <label htmlFor='review' className='text-white text-[0.8rem]'>Your review content</label>
-                <textarea style={{
-                  borderRadius: "8px",
-                  border: "none",
-                  background: "rgba(222, 225, 230, 0.20)",
-                  color: "white",
-                  opacity: "100%",
-                }} className="md:mt-2 block md:text-sm md:w-[350px] p-2 border rounded border-gray-300 focus:outline-none px-8 py-8" placeholder="What do you think about this film ?"></textarea>
-              </div>
-              <div className="mt-5">
-                <label htmlFor='tag' className='text-white text-[0.8rem]'>Your tags</label>
-                <input style={{
-                  borderRadius: "8px",
-                  border: "none",
-                  background: "rgba(222, 225, 230, 0.20)",
-                  color: "white",
-                  opacity: "100%",
-                }} className="md:mt-2 block md:text-[0.8rem] md:w-[350px] p-2 border rounded border-gray-300 focus:outline-none px-4 py-2.5" placeholder="What do you think about this film ?"></input>
-              </div>
-              <button
-                onClick={() => console.log("Clicked")}
-                type="button"
-                className="relative button-linear-gradient-red  rounded-lg md:top-[0rem] md:w-full focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-2 me-2 mb-2 hover:scale-105 duration-500 md:mt-8">Post</button>
-            </FormControl>
+            <form action={"#"} onSubmit={handleSubmit(onSubmit)}>
+              <FormControl className='relative'>
+                <p className='text-white font-regular text-sm opacity-70'>Create review, then create a new bonding</p>
+                <h1 className='text-white md:text-2xl font-bold italic md:mt-2'>"{movie.title}"</h1>
+                <div className='flex justify-center items-center relative md:mt-8'>
+                  <h3 className='text-sm text-white'>Rating: </h3>
+                  <select {...register("rating", { required: "Please select a rating" })} className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[80px] md:py-1 bg-[#262A33] dark:placeholder-gray-400 dark:text-white" onChange={hanndleOnChangeRatingSelector}>
+                    {RATING_CONSTANTS.map((ratingValue) => (
+                      <option value={ratingValue} className="text-center" style={{ color: "#9095A0" }}>{ratingValue}</option>
+                    ))}
+                  </select>
+                  <span className='text-white text-sm md:ml-2'>/ 10</span>
+                </div>
+                <div className="mt-5">
+                  <label htmlFor='review' className='text-white text-[0.8rem]'>Your review content</label>
+                  <textarea
+                    {...register("reviewContent", { required: "Review cannot be empty" })}
+                    style={{
+                      borderRadius: "8px",
+                      border: "none",
+                      background: "rgba(222, 225, 230, 0.20)",
+                      color: "white",
+                      opacity: "100%",
+                    }} className="md:mt-2 block md:text-sm md:w-[350px] p-2 border rounded border-gray-300 focus:outline-none px-8 py-8" placeholder="What do you think about this film ?"></textarea>
+                </div>
+                <div className="mt-5">
+                  <label htmlFor='tag' className='text-white text-[0.8rem]'>Your tags</label>
+                  <input
+                    {...register("tag")}
+                    style={{
+                      borderRadius: "8px",
+                      border: "none",
+                      background: "rgba(222, 225, 230, 0.20)",
+                      color: "white",
+                      opacity: "100%",
+                    }}
+                    className="md:mt-2 block md:text-[0.8rem] md:w-[350px] p-2 border rounded border-gray-300 focus:outline-none px-4 py-2.5" placeholder="Ex. neflix or homecinema"></input>
+                </div>
+                <button
+                  // onClick={() => console.log("Clicked")}
+                  type="submit"
+                  className="relative button-linear-gradient-red  rounded-lg md:top-[0rem] md:w-full focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-2 me-2 mb-2 hover:scale-105 duration-500 md:mt-8">Post</button>
+              </FormControl>
+            </form>
           </div>
 
         </Box>

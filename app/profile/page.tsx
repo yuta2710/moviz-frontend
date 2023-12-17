@@ -14,6 +14,9 @@ export default function Page() {
   const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(1);
+  const [isEditingFirstname, setIsEditingFirstname] = useState(false);
+  const [isEditingLastname, setIsEditingLastname] = useState(false);
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,7 +35,7 @@ export default function Page() {
       fetchData();
     } else {
       setLoading(false);
-      router.push("/login");
+      router.push("/login")
     }
   }, [isAuthenticated]);
 
@@ -63,28 +66,55 @@ export default function Page() {
             <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">First Name</h3>
-                <div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
-                  {customer.firstName}
-                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={() => ({})}>Edit</p>
-                </div>
+                {!isEditingFirstname &&
+                  (<div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                    {customer.firstName}
+                    <p className={`${isEditingEmail || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingFirstname(true))}>Edit</p>
+                  </div>)}
+                {isEditingFirstname &&
+                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                    <input type="text" className="border-none bg-transparent w-auto" id="fname" placeholder={`${customer.firstName}`}></input>
+                    <div className="flex gap-3">
+                      <button className="text-sm text-gray-500" type="submit" onSubmit={() => { }}>Save</button>
+                      <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingFirstname(false)}>Cancel</button>
+                    </div>
+                  </form>)}
               </div>
             </div>
             <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col">
                 <h3 className="mb-3">Last Name</h3>
-                <span className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
-                  {customer.lastName}
-                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={() => ({})}>Edit</p>
-                </span>
+                {!isEditingLastname &&
+                  (<div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                    {customer.lastName}
+                    <p className={`${isEditingEmail || isEditingFirstname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingLastname(true))}>Edit</p>
+                  </div>)}
+                {isEditingLastname &&
+                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                    <input type="text" className="border-none bg-transparent w-auto" id="fname" placeholder={`${customer.lastName}`}></input>
+                    <div className="flex gap-3">
+                      <button className="text-sm text-gray-500" type="submit" onSubmit={() => { }}>Save</button>
+                      <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingLastname(false)}>Cancel</button>
+                    </div>
+                  </form>)}
               </div>
             </div>
             <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">Email</h3>
-                <span className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
-                  {customer.email}
-                  <p className="text-sm text-gray-500 hover:cursor-pointer" onClick={() => ({})}>Edit</p>
-                </span>
+                {!isEditingEmail &&
+                  (<div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                    {customer.email}
+                    <p className={`${isEditingFirstname || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingEmail(true))}>Edit</p>
+                  </div>)}
+                {isEditingEmail &&
+                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                    <input type="text" className="border-none bg-transparent w-auto" id="fname" placeholder={`${customer.email}`}></input>
+                    <div className="flex gap-3">
+                      <button className="text-sm text-gray-500" type="submit" onSubmit={() => { }}>Save</button>
+                      <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingEmail(false)}>Cancel</button>
+                    </div>
+                  </form>)}
               </div>
             </div>
             <div className="col-span-2 justify-center items-center">
