@@ -44,12 +44,16 @@ export default function Page() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.click();
   };
+  const isFileValidType = (file: File) => {
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    return allowedTypes.includes(file.type);
+  };
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     console.log(file);
     console.log("token token " + localStorage.getItem("accessToken"));
-    if (file) {
+    if (file && isFileValidType(file)) {
       const formData = new FormData();
       formData.append('file', file);
       try {
@@ -63,10 +67,13 @@ export default function Page() {
         const json = response.data;
         console.log(json);
         console.log(formData);
+        window.location.reload();
         
       } catch (error) {
         console.error('Error updating profile picture:', error);
       }
+    }else {
+      alert("Invalid file type!");
     }
 
   };
