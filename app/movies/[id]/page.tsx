@@ -100,7 +100,9 @@ export default function Page({ params }: { params: { id: string } }) {
     overflow: "auto",
   };
 
-  const ISO_DATE = new Date().toISOString();
+  const ISO_DATE = new Date().toISOString().toString();
+
+  // console.log(ISO)
 
   const onSubmit = (data: FieldValues) => {
     setError("content", { type: "", message: "" });
@@ -256,6 +258,8 @@ export default function Page({ params }: { params: { id: string } }) {
       </IconButton>
     </React.Fragment>
   );
+
+  console.log(reviews);
   return (
     <div className="relative flex flex-col flex-wrap md:top-[15rem] justify-center">
       <div className='grid grid-cols-2 gap-3 w-4/5'>
@@ -339,7 +343,6 @@ export default function Page({ params }: { params: { id: string } }) {
             {reviews.length > 0 &&
               reviews
                 .slice(0, 4)
-                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                 .map((review: FilmReviewProps) => (
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
                     <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>

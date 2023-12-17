@@ -8,6 +8,8 @@ import { Genre, Movie } from "@/types";
 import { Pagination } from "@mui/material";
 import Link from "next/link";
 import gsap from "gsap";
+import * as THREE from "../../build/three.module";
+import { map } from "lodash";
 
 export default function Page(): ReactElement {
   const searchParams = useSearchParams();
@@ -162,12 +164,71 @@ export default function Page(): ReactElement {
     })
   }, [movies.length > 0]);
 
+  useEffect(() => {
+    const container = document.querySelector(".three_bg");
+    console.log("This is container = ", container)
+
+
+    const loader = new THREE.TextureLoader();
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGL1Renderer();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container?.appendChild(renderer.domElement);
+
+    const geometry = new THREE.BoxGeometry(5, 3, 1);
+    const material = new THREE.MeshBasicMaterial({
+      map: loader.load("https://images.unsplash.com/photo-1688413708993-39da5ee59315?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    const count = geometry.attributes.position.count;
+    const clock = new THREE.Clock();
+
+    const cleanup = () => {
+      // Dispose of resources when the component is unmounted
+      renderer.domElement.remove();
+      renderer.dispose();
+    };
+
+    const animate = () => {
+      const time = clock.getElapsedTime();
+
+      for (let i = 0; i < count; i++) {
+        const x = geometry.attributes.position.getX(i);
+        const y = geometry.attributes.position.getY(i);
+
+        const anim1 = 0.25 * Math.sin(x + time * 0.3);
+        const anim2 = 0.35 * Math.sin(x * 1 + time * 0.3);
+        const anim3 = 0.1 * Math.sin(y * 15 + time * 0.3);
+
+        geometry.attributes.position.setZ(
+          i,
+          anim1 + anim2 + anim3
+        );
+        geometry.computeVertexNormals();
+        geometry.attributes.position.needsUpdate = true;
+      }
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+
+    camera.position.z = 1;
+    animate()
+
+    return cleanup;
+  })
+
+
   // const filter = new Filter();
 
   // console.log(filter.clean("Don't be an ash0le"));
 
   return (
-    <div>
+    <div className="md:h-[100vh]">
+      <div className="three_bg z-0 absolute opacity-30 bg-no-repeat"></div>
       {loading && <p>Loading...</p>}
       {error && <p className="text-white">Error: {error.message}</p>}
       {movies.length > 0 && (
