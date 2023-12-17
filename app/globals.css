@@ -209,3 +209,12 @@ header {
   /* background: linear-gradient(315deg, #ff4d67 -0.12%, #fd788c 99.88%); */
   background: linear-gradient(315deg, #e82c47 -0.12%, #196076 99.88%);
 }
+
+.gojo-six-eye-bg {
+  background: linear-gradient(
+    270deg,
+    #072434 3.17%,
+    #000 50.35%,
+    #072434 97.53%
+  );
+}

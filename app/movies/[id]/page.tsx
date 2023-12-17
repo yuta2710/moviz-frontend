@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactElement, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { Cast, CrewProps, FilmReviewProps, Movie, User } from '@/types';
 import { getCasts, getMe, getMovie, getReviewsByMovieId, saveReviewsByMovieId } from '../../../utils/clients.utils';
@@ -8,9 +8,11 @@ import Casts from '@/components/casts.component';
 import Related from '@/components/related.component';
 import { useRouter } from 'next/navigation';
 import fetch from 'node-fetch';
-import { Box, FormControl, Grid, Input, InputLabel, Modal, TextField, TextareaAutosize, Typography } from '@mui/material';
+import { Box, Button, FormControl, Grid, IconButton, Input, InputLabel, Modal, Snackbar, TextField, TextareaAutosize, Typography } from '@mui/material';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useAuth } from '../../../components/context/AuthContext';
+import CloseIcon from "@mui/icons-material/Close";
+import gsap from 'gsap';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [choice, setChoice] = useState(1);
@@ -24,6 +26,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const [customer, setCustomer] = useState<User | null>(null);
   const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [warningMessage, setWarningMessage] = useState("");
+  const modalRef = useRef();
 
   const id = params.id;
   const router = useRouter();
@@ -41,6 +45,23 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const handleOpenPostReviewForm = () => setPostReviewForm(true);
   const handleClosePostReviewForm = () => setPostReviewForm(false);
+
+  const [openToastWarning, setOpenToastWarning] = useState(false);
+
+  const handleOpenToastWarning = () => {
+    setOpenToastWarning(true);
+  };
+
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenToastWarning(false);
+  };
 
   const handleChange = (event: any) => {
     setReviewInput(event.target.value);
@@ -81,6 +102,9 @@ export default function Page({ params }: { params: { id: string } }) {
   const ISO_DATE = new Date().toISOString();
 
   const onSubmit = (data: FieldValues) => {
+    setError("reviewContent", { type: "", message: "" });
+    setError("tag", { type: "", message: "" });
+    setError("rating", { type: "", message: "" });
 
     const reviewData: FilmReviewProps = {
       content: data.reviewContent,
@@ -101,6 +125,10 @@ export default function Page({ params }: { params: { id: string } }) {
     saveReviewsByMovieId(id, reviewData).then(() => {
       handleClosePostReviewForm();
       window.location.reload();
+    }).catch(error => {
+      console.log(error.response.data.message);
+      setWarningMessage(error.response.data.message);
+      handleOpenToastWarning();
     });
   }
 
@@ -152,10 +180,84 @@ export default function Page({ params }: { params: { id: string } }) {
     fetchReviewsByMovieId();
   }, [id]);
 
+  useEffect(() => {
+    if (reviews.length > 0) {
+      const reviewsSection = Array.from(document.querySelectorAll(".review-section"));
+      console.log(reviewsSection)
+      gsap.set(reviewsSection, {
+        opacity: 0,
+        y: -50
+      })
+      gsap.to(reviewsSection, {
+        y: 0,
+        stagger: 0.2,
+        duration: 0.75,
+        opacity: 1
+      })
+    }
+  }, [reviews.length > 0, choice])
+
+  useEffect(() => {
+    if (choice === 1) {
+      const castKeys = Array.from(document.querySelectorAll(".cast-key"));
+      gsap.set(castKeys, {
+        opacity: 0,
+        y: -50
+      })
+      gsap.to(castKeys, {
+        y: 0,
+        stagger: 0.1,
+        duration: 0.5,
+        opacity: 1
+      })
+    }
+    if (choice === 2) {
+      const labelsConvertToArr = Array.from(document.querySelectorAll(".genre-label"));
+      gsap.set(labelsConvertToArr, {
+        opacity: 0,
+        y: -50
+      })
+      gsap.to(labelsConvertToArr, {
+        y: 0,
+        stagger: 0.1,
+        duration: 0.5,
+        opacity: 1
+      })
+    }
+
+    if (choice === 3 || choice === 4) {
+      const detailKeys = Array.from(document.querySelectorAll(".details-key"));
+
+      gsap.set(detailKeys, {
+        opacity: 0,
+        x: -50
+      })
+      gsap.to(detailKeys, {
+        x: 0,
+        stagger: 0.2,
+        duration: 0.8,
+        opacity: 1
+      })
+
+    }
+  }, [choice]);
+
   if (!movie) {
     return <div>Loading...</div>;
   }
   const date = new Date(movie.release_date);
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="error"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="large" className='hover-scale-105 duration-500' />
+      </IconButton>
+    </React.Fragment>
+  );
   return (
     <div className="relative flex flex-col flex-wrap md:top-[15rem] justify-center">
       <div className='grid grid-cols-2 gap-3 w-4/5'>
@@ -172,22 +274,23 @@ export default function Page({ params }: { params: { id: string } }) {
             <p className="font-light text-gray-400 px-10 md:mt-2">{date.getFullYear()}</p>
             <p className="font-light text-gray-400 px-10 md:mt-2">Directed by <span className='text-white font-bold cursor-pointer hover:scale-120 duration-500' onClick={handleOpenDirectorInfo}>{director?.name}</span></p>
           </div>
-          <p className="text-[0.75rem] text-gray-400 md:w-96 text-justify">{movie.overview}</p>
+          <p className="text-[0.75rem] text-gray-400 md:max-w-6xl text-justify leading-6">{movie.overview}</p>
           <div className="">
             <div className="flex flex-row space-x-5 font-bold text-gray-400 my-5">
-              <h2 className='text-[0.75rem]' onClick={() => setChoice(1)}>Cast</h2>
-              <h2 className='text-[0.75rem]' onClick={() => setChoice(2)}>Genres</h2>
-              <h2 className='text-[0.75rem]' onClick={() => setChoice(3)}>Details</h2>
-              <h2 className='text-[0.75rem]' onClick={() => setChoice(4)}>Release</h2>
+              <h2 className='text-[0.75rem] hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(1)}>Cast</h2>
+              <h2 className='text-[0.75rem] hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(2)}>Genres</h2>
+              <h2 className='text-[0.75rem] hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(3)}>Details</h2>
+              <h2 className='text-[0.75rem] hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(4)}>Release</h2>
             </div>
             <div className="flex flex-col space-x-3">
               {choice == 1 && (
+
                 <div className='flex flex-row justify-center items-center relative md:left-[10rem] md:top-[1rem]'>
                   <div className='flex gap-3'>
                     {/* <Casts id={id} /> */}
                     {casts?.slice(0, 6).map((cast, index) => {
                       if (cast.profile_path !== null) {
-                        return <div className='flex flex-col md:w-28 h-max'>
+                        return <div className='flex flex-col md:w-28 h-max cast-key'>
                           <Image className='object-contains' src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={80} height={80}></Image>
                           <div className='relative md:mt-4 md:w-[400px]'>
                             <h2 className='text-[0.7rem] font-medium text-white md:w-full'>{cast.name}</h2>
@@ -205,22 +308,28 @@ export default function Page({ params }: { params: { id: string } }) {
               {choice == 2 && (
                 <>
                   <div>
-                    {movie.genres.map((genre) => (<p className='text-sm text-gray-400'>{genre.name}</p>))}
+                    <div className="grid grid-cols-5 gap-2">
+                      {movie.genres.map((genre) => (
+                        <button className="genre-label bg-dark-green rounded-lg py-[0.25rem] text-[0.75rem]">
+                          {genre.name}
+                        </button>))}
+                    </div>
                   </div>
 
                 </>)}
               {choice == 3 && (
                 <>
                   <div>
-                    <h3 className='text-sm text-gray-400'>Original Title: {movie.original_title} </h3>
-                    <h3 className='text-sm text-gray-400'>Original Language: {movie.original_language}</h3>
+                    <h3 className='text-sm font-semibold tracking-wide md:mt-2 details-key' style={{ color: "#64CCC5" }}>Original Title: <span className='md:ml-2 font-medium text-white details-value'>{movie.original_title}</span> </h3>
+                    <h3 className='text-sm font-semibold tracking-wide md:mt-2 details-key' style={{ color: "#64CCC5" }}>Original Language: <span className='md:ml-2 font-medium text-white details-value'>{movie.original_language}</span></h3>
                   </div>
 
                 </>)}
               {choice == 4 && (
                 <>
                   <div>
-                    <p className='text-sm text-gray-400'>Release date: {movie.release_date}</p>
+                    <h3 className='text-sm font-semibold tracking-wide md:mt-2 details-key' style={{ color: "#64CCC5" }}>Release Date: <span className='md:ml-2 font-medium text-white details-value'>{movie.release_date}</span> </h3>
+
                   </div>
 
                 </>)}
@@ -234,8 +343,9 @@ export default function Page({ params }: { params: { id: string } }) {
                 .slice(0, 4)
                 .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                 .map((review: FilmReviewProps) => (
-                  <div className='flex flex-col md:w-[500px] h-max'>
-                    <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span></h2>
+                  <div className='flex flex-col md:w-[500px] h-max review-section'>
+                    <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
+                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating} / 10</span></h2>
                     <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
                   </div>
                 ))}
@@ -299,24 +409,26 @@ export default function Page({ params }: { params: { id: string } }) {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={{
-          position: 'absolute' as 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 884,
-          height: 600,
-          bgcolor: 'background.paper',
-          border: 'none',
-          borderRadius: "0.5rem",
-          boxShadow: 24,
-          p: 4,
-          outline: 'none',
-          overflow: "auto",
-        }} width={600} style={{
-          // backgroundImage:
-          //   "radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );"
-        }} className="review-form-bg">
+        <Box
+
+          sx={{
+            position: 'absolute' as 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 884,
+            height: 600,
+            bgcolor: 'background.paper',
+            border: 'none',
+            borderRadius: "0.5rem",
+            boxShadow: 24,
+            p: 4,
+            outline: 'none',
+            overflow: "auto",
+          }} width={600} style={{
+            // backgroundImage:
+            //   "radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );"
+          }} className="review-form-bg kophaigu">
           <div className='z-10 relative md:mx-auto flex flex-row justify-around items-center'>
             <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} className='relative object-contain md:mt-12' width={300} height={500} alt={movie.title}></Image>
 
@@ -368,6 +480,30 @@ export default function Page({ params }: { params: { id: string } }) {
 
         </Box>
       </Modal>
+
+      <Snackbar
+        style={{
+
+        }}
+        open={openToastWarning}
+        anchorOrigin={{ vertical: "top", "horizontal": "center" }}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={warningMessage}
+        action={action}
+        ContentProps={{
+          sx: {
+            paddingX: "4rem",
+            paddingY: "2rem",
+            borderRadiusL: "8px",
+            background: "linear-gradient(270deg, #072434 3.17%, #000 50.35%, #072434 97.53%)",
+            color: "#FF6D60",
+            fontFamily: "Poppins",
+            fontWeight: "bold",
+            fontSize: "1.2rem",
+          }
+        }}
+      />
 
       {/* <div className="glowing">
 
