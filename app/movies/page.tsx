@@ -168,16 +168,15 @@ export default function Page(): ReactElement {
     const container = document.querySelector(".three_bg");
     console.log("This is container = ", container)
 
-
     const loader = new THREE.TextureLoader();
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera: any = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGL1Renderer();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     container?.appendChild(renderer.domElement);
 
-    const geometry = new THREE.BoxGeometry(5, 3, 1);
+    const geometry: any = new THREE.BoxGeometry(5, 3, 1);
     const material = new THREE.MeshBasicMaterial({
       map: loader.load("https://images.unsplash.com/photo-1688413708993-39da5ee59315?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
     });
@@ -220,6 +219,7 @@ export default function Page(): ReactElement {
 
     return cleanup;
   })
+  // PUT {firstName, lastName} PATCH {a}
 
 
   // const filter = new Filter();
