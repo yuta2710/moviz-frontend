@@ -28,7 +28,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
   const [warningMessage, setWarningMessage] = useState("");
-  const modalRef = useRef();
 
   const id = params.id;
   const router = useRouter();
@@ -62,10 +61,6 @@ export default function Page({ params }: { params: { id: string } }) {
     }
 
     setOpenToastWarning(false);
-  };
-
-  const handleChange = (event: any) => {
-    setReviewInput(event.target.value);
   };
 
   const hanndleOnChangeRatingSelector = (event: any) => {
@@ -310,9 +305,9 @@ export default function Page({ params }: { params: { id: string } }) {
               {choice == 2 && (
                 <>
                   <div>
-                    <div className="grid grid-cols-5 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       {movie.genres.map((genre) => (
-                        <button className="genre-label bg-dark-green rounded-lg py-[0.25rem] text-[0.75rem]">
+                        <button className="genre-label ocean-linear-bg rounded-lg py-[0.25rem] text-[0.75rem]" style={{}}>
                           {genre.name}
                         </button>))}
                     </div>
@@ -412,7 +407,6 @@ export default function Page({ params }: { params: { id: string } }) {
       >
 
         <Box
-
           sx={{
             position: 'absolute' as 'absolute',
             top: '50%',
@@ -506,46 +500,6 @@ export default function Page({ params }: { params: { id: string } }) {
           }
         }}
       />
-
-      {/* <div className="glowing">
-
-        <span className="--i:1;"></span>
-
-        <span className="--i:2;"></span>
-
-        <span className="--i:3;"></span>
-
-      </div>
-
-      <div className="glowing">
-
-        <span className="--i:1;"></span>
-
-        <span className="--i:2;"></span>
-
-        <span className="--i:3;"></span>
-
-      </div>
-
-      <div className="glowing">
-
-        <span className="--i:1;"></span>
-
-        <span className="--i:2;"></span>
-
-        <span className="--i:3;"></span>
-
-      </div>
-
-      <div className="glowing">
-
-        <span className="--i:1;"></span>
-
-        <span className="--i:2;"></span>
-
-        <span className="--i:3;"></span>
-
-      </div> */}
     </div>
   )
 }
