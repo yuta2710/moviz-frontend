@@ -7,8 +7,16 @@
 
 html {
   background-color: #000;
-  font-family: "Noto Sans";
-  /* font-family: "Poppins"; */
+  /* font-family: "Noto Sans"; */
+  font-family: "Poppins";
+}
+
+body {
+  position: relative;
+}
+
+header {
+  position: relative;
 }
 
 .util-box-shadow-light-mode {
@@ -41,4 +49,187 @@ html {
   object-fit: cover;
   width: 80px;
   height: 80px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+  overflow: hidden;
+} */
+
+.glowing {
+  position: relative;
+  min-width: 700px;
+  height: 550px;
+  margin: -150px;
+  transform-origin: right;
+  animation: colorChange 5s linear infinite;
+}
+
+.glowing:nth-child(even) {
+  transform-origin: left;
+}
+
+@keyframes colorChange {
+  0% {
+    filter: hue-rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.glowing span {
+  position: absolute;
+  top: calc(80px * var(--i));
+  left: calc(80px * var(--i));
+  bottom: calc(80px * var(--i));
+  right: calc(80px * var(--i));
+}
+
+.glowing span::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  width: 15px;
+  height: 15px;
+  background: #f00;
+  border-radius: 50%;
+}
+
+.glowing span:nth-child(3n + 1)::before {
+  background: rgba(134, 255, 0, 1);
+  box-shadow: 0 0 20px rgba(134, 255, 0, 1), 0 0 40px rgba(134, 255, 0, 1),
+    0 0 60px rgba(134, 255, 0, 1), 0 0 80px rgba(134, 255, 0, 1),
+    0 0 0 8px rgba(134, 255, 0, 0.1);
+}
+
+.glowing span:nth-child(3n + 2)::before {
+  background: rgba(255, 214, 0, 1);
+  box-shadow: 0 0 20px rgba(255, 214, 0, 1), 0 0 40px rgba(255, 214, 0, 1),
+    0 0 60px rgba(255, 214, 0, 1), 0 0 80px rgba(255, 214, 0, 1),
+    0 0 0 8px rgba(255, 214, 0, 0.1);
+}
+
+.glowing span:nth-child(3n + 3)::before {
+  background: rgba(0, 226, 255, 1);
+  box-shadow: 0 0 20px rgba(0, 226, 255, 1), 0 0 40px rgba(0, 226, 255, 1),
+    0 0 60px rgba(0, 226, 255, 1), 0 0 80px rgba(0, 226, 255, 1),
+    0 0 0 8px rgba(0, 226, 255, 0.1);
+}
+
+.glowing span:nth-child(3n + 1) {
+  animation: animate 10s alternate infinite;
+}
+
+.glowing span:nth-child(3n + 2) {
+  animation: animate-reverse 3s alternate infinite;
+}
+
+.glowing span:nth-child(3n + 3) {
+  animation: animate 8s alternate infinite;
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(180deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes animate-reverse {
+  0% {
+    transform: rotate(360deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.linear-reusable {
+  background-image: radial-gradient(
+    circle farthest-corner at 10% 20%,
+    rgba(100, 43, 115, 1) 0%,
+    rgba(4, 0, 4, 1) 90%
+  );
+}
+
+.ellipsis {
+  text-overflow: ellipsis; /* enables ellipsis */
+  white-space: nowrap; /* keeps the text in a single line */
+  overflow: hidden; /* keeps the element from overflowing its parent */
+}
+
+.custom-link-underline::after {
+  content: "";
+  position: absolute;
+  height: 5px;
+  width: 0;
+  left: 0;
+  bottom: -10px;
+  transition: 0.3s;
+  border-radius: 8rem;
+}
+
+.custom-link-underline.white::after {
+  background-color: white;
+}
+
+.custom-link-underline:hover:after {
+  width: 100%;
+}
+
+.review-form-bg {
+  background: linear-gradient(225deg, #85236a 3.14%, #241d34 40.49%);
+}
+
+.button-linear-gradient-red {
+  /* background: linear-gradient(315deg, #ff4d67 -0.12%, #fd788c 99.88%); */
+  background: linear-gradient(315deg, #e82c47 -0.12%, #196076 99.88%);
+}
+
+.gojo-six-eye-bg {
+  background: linear-gradient(
+    270deg,
+    #072434 3.17%,
+    #000 50.35%,
+    #072434 97.53%
+  );
+}
+
+.three_content {
+  position: relative;
+  width: 100%;
+  /* height: 100vh; */
+  background: #000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* background-image: url("https://images.unsplash.com/photo-1675937338222-b834fce80ba5?q=80&w=3420&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); */
+}
+
+.ocean-linear-bg {
+  background-image: linear-gradient(15deg, #13547a 0%, #339e91 100%);
+  backdrop-filter: blur(11.6px);
 }

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Cast } from '@/types';
 import { getCasts } from '@/utils/clients.utils';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Casts = ({ id }: { id: string }) => {
   const [casts, setCasts] = useState<Cast[]>([]);
@@ -37,11 +38,11 @@ const Casts = ({ id }: { id: string }) => {
         //   <h2>{cast.character}</h2>
         // </div>
         cast.profile_path !== null && (
-          <div className='flex flex-col w-28 h-max'>
+          <Link href={`/cast/${cast.id}`} className='flex flex-col w-28 h-max'>
             <Image src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={100} height={150}></Image>
             <h2 className='text-sm font-bold text-gray-400'>{cast.name}</h2>
             <h2 className='text-sm font-light text-gray-400'>{cast.character}</h2>
-          </div>
+          </Link>
         )
       ))}
     </div>

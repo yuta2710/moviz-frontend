@@ -67,6 +67,7 @@ export interface Movie {
   adult: boolean;
   backdrop_path: string;
   genres: { id: number; name: string }[];
+  genre_ids: [];
   id: number;
   original_language: string;
   original_title: string;
@@ -165,8 +166,13 @@ export interface CardMovieProps {}
 export interface Cast {
   id: string;
   name: string;
+  gender: number;
   character: string;
+  biography: string;
   profile_path: string;
+  birthday: string;
+  place_of_birth: string;
+  deathday: string;
 }
 
 export interface CrewProps {
@@ -181,4 +187,29 @@ export interface CrewProps {
   credit_id: string;
   department: string;
   job: string;
+}
+
+interface AuthorDetails {
+  name: string;
+  username: string;
+  avatar_path: string;
+  rating: number;
+}
+
+export interface FilmReviewProps {
+  author: string;
+  author_details: AuthorDetails;
+  content: string;
+  createdAt: string;
+  tag?: string;
+  movie: string;
+  // id: string;
+  updatedAt: string;
+  // rating: number;
+  // url: string;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }
