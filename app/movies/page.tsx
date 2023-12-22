@@ -9,7 +9,8 @@ import { Pagination } from "@mui/material";
 import Link from "next/link";
 import gsap from "gsap";
 import * as THREE from "../../build/three.module";
-import { map } from "lodash";
+import { delay, map } from "lodash";
+import { useInView } from "react-intersection-observer";
 
 export default function Page(): ReactElement {
   const searchParams = useSearchParams();
@@ -26,6 +27,7 @@ export default function Page(): ReactElement {
   //const [genre, setGenre] = useState("action");
   const [genres, setGenres] = useState<Genre[]>([])
   const router = useRouter();
+  const [ref, inView] = useInView();
 
   const handleOnChangeYear = (event: any) => {
     const year = event.target.value;
@@ -58,34 +60,58 @@ export default function Page(): ReactElement {
   };
 
   useEffect(() => {
-    if (!page || currentPage === 1) {
-      router.push(`/movies?page=${currentPage}`)
-    }
+    // if (!page || currentPage === 1) {
+    //   router.push(`/movies?page=${currentPage}`)
+    // }
     const fetchData = async (pageNumber: number) => {
       const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`);
       const data = response.json();
+      // data.then(json => {
+      //   const data = json.data;
+      //   console.log(data.results);
+      //   setMovies(data.results as Movie[]);
+      // });
       data.then(json => {
         const data = json.data;
         console.log(data.results);
-        setMovies(data.results as Movie[]);
-      });
-
-      const options = {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY",
-        },
-      };
+        //setMovies((prevMovies: Movie[]) =>  [...prevMovies, ...data.results]);
+        setMovies((prevMovies: Movie[]) => {
+          // Assuming that each Movie object has a unique 'id' property
+          const uniqueMovies = data.results.filter((newMovie: Movie) =>
+            !prevMovies.some(prevMovie => prevMovie.id === newMovie.id)
+          );
+          return [...prevMovies, ...uniqueMovies];
+        });
+    })
+      // const options = {
+      //   method: "GET",
+      //   headers: {
+      //     accept: "application/json",
+      //     Authorization:
+      //       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY",
+      //   },
+      // };
       const genres = await getGenres();
       setGenres(genres);
-      console.log(genres);
-
+      console.log("Movies list: ", movies);
     }
-
     fetchData(currentPage);
   }, [currentPage, router]);
+
+  useEffect(() => {
+    if(inView){
+      const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      const loadMore = async () => {
+        await delay(1000);
+        const current = currentPage;
+        const next = current + 1;
+        setCurrentPage(next);
+        console.log("last in view")
+      }
+      loadMore();
+    }
+  },[inView]);
+
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
   const paginate = (pageNumber: number) => {
@@ -263,8 +289,8 @@ export default function Page(): ReactElement {
           </div>
           <ul className="inline-grid grid-cols-3 absolute gap-4 justify-center md:left-[30rem] md:top-[22rem]">
             {[...movies]
-              .sort((a, b) => b.popularity - a.popularity)
-              .slice(0, 6)
+              // .sort((a, b) => b.popularity - a.popularity)
+              //.slice(0, 9)
               .map((movie) => (
                 <li className="relative hover:scale-110 duration-500">
                   <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
@@ -273,8 +299,9 @@ export default function Page(): ReactElement {
                   </Link>
                 </li>
               ))}
+              <p ref={ref}>Loading...</p>
           </ul>
-
+          
           {/* 
           <Pagination
             count={Math.ceil(movies.length / numberOfMoviesPerPage)}

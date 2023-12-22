@@ -328,3 +328,14 @@ export const saveReviewsByMovieId = async (
     throw error;
   }
 };
+
+
+export async function fetchMovies(pageNumber: number){
+  try{
+    const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`);
+    const data = await response.json();
+    return data;
+  }catch(e){
+    console.log("Error fetching movies: ", e);
+  }
+};
