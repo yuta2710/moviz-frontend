@@ -176,9 +176,9 @@ export default function Page(): ReactElement {
     renderer.setSize(window.innerWidth, window.innerHeight);
     container?.appendChild(renderer.domElement);
 
-    const geometry: any = new THREE.BoxGeometry(5, 3, 1);
+    const geometry: any = new THREE.BoxGeometry(5, 4, 1);
     const material = new THREE.MeshBasicMaterial({
-      map: loader.load("https://images.unsplash.com/photo-1688413708993-39da5ee59315?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+      map: loader.load("https://images.unsplash.com/photo-1661090790202-2f9173c66362?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
     });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
@@ -219,16 +219,14 @@ export default function Page(): ReactElement {
 
     return cleanup;
   })
-  // PUT {firstName, lastName} PATCH {a}
-
 
   // const filter = new Filter();
 
   // console.log(filter.clean("Don't be an ash0le"));
 
   return (
-    <div className="md:h-[100vh]">
-      <div className="three_bg z-0 absolute opacity-30 bg-no-repeat"></div>
+    <div className="">
+      <div className="three_bg absolute opacity-30 bg-no-repeat"></div>
       {loading && <p>Loading...</p>}
       {error && <p className="text-white">Error: {error.message}</p>}
       {movies.length > 0 && (
