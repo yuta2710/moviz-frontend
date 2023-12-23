@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -39,6 +39,81 @@ export default function Page() {
     }
   }, [isAuthenticated]);
 
+  const handleAvatarClick = () => {
+    // Trigger click on the hidden file input
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
+  };
+  const isFileValidType = (file: File) => {
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    return allowedTypes.includes(file.type);
+  };
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    console.log(file);
+    console.log("token token " + localStorage.getItem("accessToken"));
+    if (file && isFileValidType(file)) {
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/photo`, formData, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          
+        });
+        const json = response.data;
+        console.log(json);
+        console.log(formData);
+        window.location.reload();
+        
+      } catch (error) {
+        console.error('Error updating profile picture:', error);
+      }
+    }else {
+      alert("Invalid file type!");
+    }
+
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  
+    // Retrieve updated values from the form fields
+    const updatedFirstName = (document.getElementById('fname') as HTMLInputElement)?.value;
+    const updatedLastName = (document.getElementById('lname') as HTMLInputElement)?.value;
+    const updatedEmail = (document.getElementById('email') as HTMLInputElement)?.value;
+    // Repeat similar steps for lastname and email
+  
+    const data = {
+      firstName: updatedFirstName || customer?.firstName,
+      lastName: updatedLastName || customer?.lastName,
+      email: updatedEmail || customer?.email,
+    };
+  
+    try {
+      const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/update-profile`, JSON.stringify(data), {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const json = response.data;
+      console.log(json);
+      console.log(data);
+  
+      // Assuming a successful update, you might want to update the local state here
+      window.location.reload();
+      setIsEditingFirstname(false); // Assuming this should be set to false after a successful update
+    } catch (error) {
+      console.error('Error updating profile information:', error);
+    }
+  };
+  
+
   let html: ReactElement<any, any> = <div className="text-white">Loading...</div>;
   if (loading) {
     html = <div className="text-white"> Loading...</div>;
@@ -50,12 +125,14 @@ export default function Page() {
         <div className="grid grid-cols-3 items-center">
           <div className="">
             <Image
-              className="text-white text-center rounded-full md:mr-36"
+              className="text-white text-center rounded-full md:mr-36 hover:cursor-pointer"
               width={250}
               height={250}
               alt="Customer Photo"
               src={customer.photo}
+              onClick={handleAvatarClick}
             />
+            <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
           </div>
           <div className="grid col-span-2 grid-rows-4 gap-5 w2/3">
             <div className="col-span-4 justify-center items-center text-3xl font-medium my-auto">
@@ -72,10 +149,10 @@ export default function Page() {
                     <p className={`${isEditingEmail || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingFirstname(true))}>Edit</p>
                   </div>)}
                 {isEditingFirstname &&
-                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between" onSubmit={handleSubmit}>
                     <input type="text" className="border-none bg-transparent w-auto" id="fname" placeholder={`${customer.firstName}`}></input>
                     <div className="flex gap-3">
-                      <button className="text-sm text-gray-500" type="submit" onSubmit={() => { }}>Save</button>
+                      <button className="text-sm text-gray-500" type="submit" >Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingFirstname(false)}>Cancel</button>
                     </div>
                   </form>)}
@@ -90,10 +167,10 @@ export default function Page() {
                     <p className={`${isEditingEmail || isEditingFirstname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingLastname(true))}>Edit</p>
                   </div>)}
                 {isEditingLastname &&
-                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
-                    <input type="text" className="border-none bg-transparent w-auto" id="fname" placeholder={`${customer.lastName}`}></input>
+                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between" onSubmit={handleSubmit}>
+                    <input type="text" className="border-none bg-transparent w-auto" id="lname" placeholder={`${customer.lastName}`}></input>
                     <div className="flex gap-3">
-                      <button className="text-sm text-gray-500" type="submit" onSubmit={() => { }}>Save</button>
+                      <button className="text-sm text-gray-500" type="submit">Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingLastname(false)}>Cancel</button>
                     </div>
                   </form>)}
@@ -108,10 +185,10 @@ export default function Page() {
                     <p className={`${isEditingFirstname || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingEmail(true))}>Edit</p>
                   </div>)}
                 {isEditingEmail &&
-                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
-                    <input type="text" className="border-none bg-transparent w-auto" id="fname" placeholder={`${customer.email}`}></input>
+                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between" onSubmit={handleSubmit}>
+                    <input type="text" className="border-none bg-transparent w-auto" id="email" placeholder={`${customer.email}`}></input>
                     <div className="flex gap-3">
-                      <button className="text-sm text-gray-500" type="submit" onSubmit={() => { }}>Save</button>
+                      <button className="text-sm text-gray-500" type="submit">Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingEmail(false)}>Cancel</button>
                     </div>
                   </form>)}
@@ -158,3 +235,5 @@ export default function Page() {
 
   return html;
 }
+
+
