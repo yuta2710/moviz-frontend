@@ -62,17 +62,17 @@ export default function Page() {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             'Content-Type': 'multipart/form-data',
           },
-          
+
         });
         const json = response.data;
         console.log(json);
         console.log(formData);
         window.location.reload();
-        
+
       } catch (error) {
         console.error('Error updating profile picture:', error);
       }
-    }else {
+    } else {
       alert("Invalid file type!");
     }
 
@@ -80,19 +80,19 @@ export default function Page() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     // Retrieve updated values from the form fields
     const updatedFirstName = (document.getElementById('fname') as HTMLInputElement)?.value;
     const updatedLastName = (document.getElementById('lname') as HTMLInputElement)?.value;
     const updatedEmail = (document.getElementById('email') as HTMLInputElement)?.value;
     // Repeat similar steps for lastname and email
-  
+
     const data = {
       firstName: updatedFirstName || customer?.firstName,
       lastName: updatedLastName || customer?.lastName,
       email: updatedEmail || customer?.email,
     };
-  
+
     try {
       const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/update-profile`, JSON.stringify(data), {
         headers: {
@@ -100,11 +100,11 @@ export default function Page() {
           'Content-Type': 'application/json',
         },
       });
-  
+
       const json = response.data;
       console.log(json);
       console.log(data);
-  
+
       // Assuming a successful update, you might want to update the local state here
       window.location.reload();
       setIsEditingFirstname(false); // Assuming this should be set to false after a successful update
@@ -112,7 +112,7 @@ export default function Page() {
       console.error('Error updating profile information:', error);
     }
   };
-  
+
 
   let html: ReactElement<any, any> = <div className="text-white">Loading...</div>;
   if (loading) {

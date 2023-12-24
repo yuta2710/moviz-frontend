@@ -329,13 +329,36 @@ export const saveReviewsByMovieId = async (
   }
 };
 
-
-export async function fetchMovies(pageNumber: number){
-  try{
-    const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`);
+export async function fetchMovies(pageNumber: number) {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`
+    );
     const data = await response.json();
     return data;
-  }catch(e){
+  } catch (e) {
     console.log("Error fetching movies: ", e);
   }
-};
+}
+
+export async function searchMovies(query: string) {
+  if (query) {
+    const url = `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=d95a8926ef62fc2a5c3ca22b8a95b91b`;
+    try {
+      const response = await fetch(url);
+      const response2 = await axios.get(url);
+      const movies = await (await response2).data;
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      console.log(movies);
+
+      return movies;
+    } catch (error) {
+      console.error("Error:", error);
+      throw error; // Re-throw the error for the caller to handle
+    }
+  }
+}

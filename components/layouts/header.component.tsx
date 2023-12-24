@@ -1,18 +1,23 @@
 "use client"
 
-import { HeaderProps, User } from '@/types'
+import { HeaderProps, Movie, User } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { MouseEventHandler, ReactNode, useEffect, useState } from 'react'
+import React, { MouseEventHandler, ReactNode, useEffect, useRef, useState } from 'react'
 import _ from "lodash";
 import { useAuth } from '../context/AuthContext'
-import { APPLICATION_PATH, getMe } from '../../utils/clients.utils'
-import { Grid, Icon, Typography } from '@mui/material';
+import { APPLICATION_PATH, getMe, searchMovies } from '../../utils/clients.utils'
+import { Autocomplete, Box, Button, Grid, Icon, IconButton, InputBase, TextField, Typography, alpha, styled } from '@mui/material';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { usePathname, useRouter } from 'next/navigation'
 import gsap from "gsap";
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import SearchIcon from '@mui/icons-material/Search';
+import Fuse from "fuse.js";
+import { SearchBar } from '../common/search-bar.component'
+import AddIcon from '@mui/icons-material/Add';
+// import fetch from 'node-fetch'
 
 interface DropdownProps {
   icon: ReactNode;
@@ -29,6 +34,12 @@ const Header = (header: HeaderProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
   const path = usePathname();
+  // const [inputValue, setInputValue] = useState("");
+  // const [searchQuery, setSearchQuery] = useState('')
+  // const searchRef = useRef<typeof InputBase>();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [totalSearchResults, setTotalSearchResults] = useState<number>(0);
+  const [suggestions, setSuggestions] = useState<Movie[]>([]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -76,6 +87,25 @@ const Header = (header: HeaderProps) => {
     }
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    handleSearchMovie(searchQuery);
+  }, [searchQuery])
+
+  const handleSearchMovie = async (query: string) => {
+    if (query) {
+      const searchResults = await searchMovies(query);
+      const moviesDatum = searchResults.results as Movie[];
+      const totalResults = searchResults.total_results as number;
+      setSuggestions(moviesDatum);
+      setTotalSearchResults(totalResults);
+    }
+  }
+
+  useEffect(() => {
+    setSearchQuery("");
+    setTotalSearchResults(0);
+  }, [path])
+
   return (
     <header className={`md:w-full md:h-[${height}] absolute md:-left-[10rem] md:z-10 md:px-[16rem] md:py-[2rem] ${background}`}>
       <nav className={`nav-container md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
@@ -86,6 +116,7 @@ const Header = (header: HeaderProps) => {
           </span>
 
         </Link>
+
         <div className="w-[1000px] absolute left-[8rem] md:left-[80rem] mt-[3.5rem] md:mt-auto md:block md:w-full">
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
             {items.map(item => (
@@ -98,6 +129,62 @@ const Header = (header: HeaderProps) => {
             ))}
           </ul>
         </div>
+        <div className='flex flex-col relative md:left-[-20rem] z-10'>
+          {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
+          <form>
+            <TextField
+              id="search-bar"
+              className="text-[0.75rem]'"
+              style={{ color: "#fff", background: "#31304D", borderRadius: "8px", outline: "none", border: "none" }}
+              onInput={(e: any) => {
+                setSearchQuery(e.target.value);
+              }}
+              sx={{ input: { color: '#fff' } }}
+              // label="Enter a movie name"
+              variant="outlined"
+              placeholder="Enter the movie name..."
+              size="small"
+            />
+            <IconButton type="submit" aria-label="search">
+              <SearchIcon style={{ fill: "white" }} />
+            </IconButton>
+          </form>
+          {searchQuery &&
+            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl linear-reusable-ocean-green'>
+              <h1 className='text-white text-sm font-medium text-center md:w-full'>Founded <span className='font-bold' style={{ color: "#45FFCA" }}>{totalSearchResults}</span> results</h1>
+              {suggestions
+                .slice(0, 5)
+                .sort((a: Movie, b: Movie) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime())
+                .map((suggestion, index) => suggestion.poster_path !== null && (
+                  <li
+                    className={"flex flex-col justify-start items-center hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"}
+                    onClick={() => router.push(`/movies/${suggestion.id}`)
+                    }
+                    key={index}>
+                    <div className='flex flex-row justify-start items-center md:mt-4 rounded-xl'>
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w500/${suggestion.poster_path}`}
+                        width={50}
+                        height={50}
+                        className='rounded-sm'
+                        alt="Random Picture"
+                      ></Image>
+                      <p className='text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4'> {suggestion.title}</p>
+                    </div>
+                    {index < 4 && <div className='md:w-full bg-white md:h-[2px] md:mt-2 opacity-50'></div>}
+                  </li>
+
+                ))}
+
+              <Box textAlign='center' marginTop={4}>
+                <Button
+                  variant="contained"
+                  className='md:m-auto hover:opacity-60' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />}>
+                  More
+                </Button>
+              </Box>
+            </ul>}
+        </div>
 
         <div className='flex flex-col absolute md:left-[100rem] left-[25rem] md:w-full w-full'>
           {customer === null
@@ -109,6 +196,7 @@ const Header = (header: HeaderProps) => {
               Login
             </button>
             : <div className='flex flex-row justify-center items-center relative md:w-full w-full md:left-[-50rem] gap-4 cursor-pointer'>
+
               <Image className='rounded-full right-0 md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
             </div>
