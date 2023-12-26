@@ -303,6 +303,26 @@ export const getReviewsByMovieId = async (movieId: number) => {
   }
 };
 
+export const getAllReviews = async () => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/v1/reviews`);
+
+    // console.log(response)
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    console.log("All Reviews fetching is = ", data);
+
+    return data.data as FilmReviewProps[];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const saveReviewsByMovieId = async (
   movieId: string,
   props: FilmReviewProps

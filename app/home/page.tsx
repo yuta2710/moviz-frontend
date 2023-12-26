@@ -1,21 +1,22 @@
 "use client";
 
 import { ReactElement, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { getGenres, getMovies } from "@/utils/clients.utils";
-import { Genre, Movie } from "@/types";
+import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovies, getReviews } from "@/utils/clients.utils";
+import { FilmReviewProps, Genre, Movie, User } from "@/types";
 import { Pagination } from "@mui/material";
 import Link from "next/link";
 import gsap from "gsap";
 import * as THREE from "../../build/three.module";
 import { delay, map } from "lodash";
 import { useInView } from "react-intersection-observer";
+import { useAuth } from "../../components/context/AuthContext";
+import { formatHistoryDate } from "@/utils/convert.utils";
 
 export default function Page(): ReactElement {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page"));
-
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
@@ -24,10 +25,14 @@ export default function Page(): ReactElement {
   const [year, setYear] = useState(2023);
   const [rating, setRating] = useState("Highest");
   const [popular, setPopular] = useState("All");
+  const [reviews, setReviews] = useState<FilmReviewProps[]>([]);
   //const [genre, setGenre] = useState("action");
   const [genres, setGenres] = useState<Genre[]>([])
   const router = useRouter();
   const [ref, inView] = useInView();
+  const [customer, setCustomer] = useState<User | null>(null);
+  const { user, logout, isAuthenticated } = useAuth();
+  const path = usePathname();
 
   const handleOnChangeYear = (event: any) => {
     const year = event.target.value;
@@ -58,6 +63,32 @@ export default function Page(): ReactElement {
     const genre = event.target.value;
     router.push(`/movies/genre/${genre}`);
   };
+
+  useEffect(() => {
+    if (isAuthenticated() && user !== null) {
+      const fetchData = async () => {
+        try {
+          const json = await getMe();
+          setCustomer(json.data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+    if (APPLICATION_PATH.includes(path)) {
+      setLoading(false);
+      router.push(path);
+    }
+    else {
+      setLoading(false);
+      // router.push("/login");
+    }
+  }, [isAuthenticated]);
+
 
   useEffect(() => {
     // if (!page || currentPage === 1) {
@@ -111,6 +142,21 @@ export default function Page(): ReactElement {
       loadMore();
     }
   }, [inView]);
+
+  useEffect(() => {
+    const fetchAllReviews = async () => {
+      try {
+        const reviewsJson = await getAllReviews() as FilmReviewProps[];
+        setReviews(reviewsJson);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllReviews();
+  }, [])
 
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
@@ -252,11 +298,15 @@ export default function Page(): ReactElement {
 
   return (
     <div className="">
-      <div className="three_bg absolute opacity-30 bg-no-repeat"></div>
+      <div className="three_bg absolute opacity-30 bg-no-repeat z-11"></div>
       {loading && <p>Loading...</p>}
       {error && <p className="text-white">Error: {error.message}</p>}
-      {movies.length > 0 && (
+      {/* {movies.length > 0 && (
+
         <div className="relative flex flex-col">
+          <h1 className="text-white text-center z-10 relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+          </h1>
+
           <div className="flex flex-row justify-center items-center absolute md:top-[17.8rem] md:left-[50rem]">
             <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
               {yearOptions.map((option) => (
@@ -282,25 +332,48 @@ export default function Page(): ReactElement {
               ))}
             </select>
           </div>
+
           <div className="flex flex-row justify-center items-center absolute md:top-[18rem] md:left-[31rem]">
             <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>
           </div>
           <ul className="inline-grid grid-cols-3 absolute gap-4 justify-center md:left-[30rem] md:top-[22rem]">
             {[...movies]
-              // .sort((a, b) => b.popularity - a.popularity)
-              //.slice(0, 9)
               .map((movie) => (
                 <li className="relative hover:scale-110 duration-500">
                   <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
                     <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-                    {/* <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.popularity}</h5> */}
                   </Link>
                 </li>
               ))}
             <p ref={ref}>Loading...</p>
           </ul>
+        </div>
+      )} */}
 
-          {/* 
+      <div className="flex flex-col justify-center items-center relative md:top-[18rem]">
+        <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Review On This Week</h1>
+        <ul className="inline-grid grid-cols-3 relative justify-center items-center top-0 mx-auto">
+          {reviews.length > 0 &&
+            reviews
+              .slice(0, 4)
+              .map((review: FilmReviewProps) => (
+                <li className='flex flex-col h-max review-section'>
+                  <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
+                    <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
+
+                  <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
+                </li>
+              ))}
+          <p ref={ref}>Loading...</p>
+        </ul>
+      </div>
+    </div>
+  );
+
+}
+
+
+{/* 
           <Pagination
             count={Math.ceil(movies.length / numberOfMoviesPerPage)}
             page={currentPage}
@@ -309,9 +382,3 @@ export default function Page(): ReactElement {
             color="primary"
             className="relative md:top-[10rem]"
             style={{ color: "#000", background: "#fff" }} /> */}
-        </div>
-      )}
-    </div>
-  );
-
-}

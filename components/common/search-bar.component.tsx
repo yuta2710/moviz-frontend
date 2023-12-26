@@ -5,8 +5,15 @@ export const SearchBar = ({ searchQuery, setSearchQuery }: any) => (
   <form>
     <TextField
       id="search-bar"
-      className="text-[0.75rem]'"
-      style={{ color: "#fff", background: "#31304D", borderRadius: "8px", outline: "none", border: "none" }}
+      className="text-[0.75rem]"
+      style={{
+        color: "#fff",
+        borderRadius: "8px",
+        background: "rgba(15, 14, 71, 0.3)",
+        boxShadow: "rgba(255, 255, 255, 0.2) 0px 0px 0px 0",
+        outline: "none",
+        border: "none"
+      }}
       onInput={(e: any) => {
         setSearchQuery(e.target.value);
       }}

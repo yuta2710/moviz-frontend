@@ -107,8 +107,8 @@ const Header = (header: HeaderProps) => {
   }, [path])
 
   return (
-    <header className={`md:w-full md:h-[${height}] absolute md:-left-[10rem] md:z-10 md:px-[16rem] md:py-[2rem] ${background}`}>
-      <nav className={`nav-container md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
+    <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] ${background}`}>
+      <nav className={`nav-container md:w-full md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
         <Link href='/' className='flex justify-center items-center'>
           <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
           <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
@@ -131,11 +131,18 @@ const Header = (header: HeaderProps) => {
         </div>
         <div className='flex flex-col relative md:left-[-20rem] z-10'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
-          <form>
+          <form className='' style={{
+            // backdropFilter: "blur(1rem)",
+            // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
+          }}>
             <TextField
               id="search-bar"
-              className="text-[0.75rem]'"
-              style={{ color: "#fff", background: "#31304D", borderRadius: "8px", outline: "none", border: "none" }}
+              className="text-[0.75rem] glass"
+              style={{
+                color: "#fff",
+                // backgroundColor: "rgba(225, 225, 225, 0.1)",
+                borderRadius: "8px", outline: "none", border: "none",
+              }}
               onInput={(e: any) => {
                 setSearchQuery(e.target.value);
               }}
