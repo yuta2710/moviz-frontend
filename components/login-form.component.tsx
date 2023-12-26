@@ -43,7 +43,7 @@ export const LoginForm = () => {
 
       // Redirect on successful login
       if (isAuthenticated()) {
-        router.push("/profile");
+        router.push("/home");
       }
     } catch (err) {
       // Display error message
@@ -61,7 +61,7 @@ export const LoginForm = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      router.push("/movies");
+      router.push("/home");
     }
   }, [isAuthenticated])
 
