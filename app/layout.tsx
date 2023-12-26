@@ -9,6 +9,10 @@ import { useEffect, useState } from 'react';
 export const config = {
   HEADER_ITEM_PATH: [
     {
+      APPLICATION_PATH: "/home",
+      KEY: "home",
+    },
+    {
       APPLICATION_PATH: "/movies",
       KEY: "movies",
     },
@@ -44,6 +48,7 @@ export default function RootLayout({
               }
             }
             items={config.HEADER_ITEM_PATH}
+            // background='apple-linear-black'
             height='90px'
             fontItem={
               {
