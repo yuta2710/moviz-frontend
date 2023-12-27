@@ -237,7 +237,7 @@ const Header = (header: HeaderProps) => {
         </div>
         
         <div className="col-span-2">
-          <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
+          <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0 hidden lg:flex">
             {items.map(item => (
               <li className='col-span-1' key={item.KEY}>
                 <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
