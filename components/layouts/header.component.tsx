@@ -107,9 +107,11 @@ const Header = (header: HeaderProps) => {
   }, [path])
 
   return (
-    <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] ${background}`}>
-      <nav className={`nav-container md:w-full md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
-        <Link href='/' className='flex justify-center items-center'>
+    <header className={`py-5 ${background}`}>
+      
+      <nav className={` grid grid-cols-12 nav-container md:w-full md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
+        
+        <Link href='/' className='lg:flex col-span-2 justify-center items-center hidden'>
           <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
           <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
@@ -117,21 +119,62 @@ const Header = (header: HeaderProps) => {
 
         </Link>
 
-        <div className="w-[1000px] absolute left-[8rem] md:left-[80rem] mt-[3.5rem] md:mt-auto md:block md:w-full">
-          <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
-            {items.map(item => (
-              <li className='z-10' key={item.KEY}>
-                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
-                  {_.startCase(item.KEY.split("-").join(" "))}
-                </Link>
-              </li>
-
-            ))}
-          </ul>
+        
+  
+        <div className="lg:hidden">
+            <button id="burger-btn" className="text-white focus:outline-none">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
         </div>
-        <div className='flex flex-col relative md:left-[-20rem] z-10'>
+
+        <div id="burger-menu" className="lg:hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-50 ">
+          <div className="flex justify-end p-4">
+              <button id="close-burger-btn" className="text-white">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+              </button>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <ul>
+              {items.map(item => (
+                  <li className='col-span-1' key={item.KEY}>
+                    <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
+                      {_.startCase(item.KEY.split("-").join(" "))}
+                    </Link>
+                  </li>
+
+                ))}
+              </ul>
+          </div>
+        </div>
+
+        {/*<script>
+          const burgerBtn = document.getElementById('burger-btn') as HTMLButtonElement | null;
+          const closeBurgerBtn = document.getElementById('close-burger-btn') as HTMLButtonElement | null;
+          const burgerMenu = document.getElementById('burger-menu') as HTMLElement | null;
+
+          if (burgerBtn && closeBurgerBtn && burgerMenu) {
+              burgerBtn.addEventListener('click', () => {
+                  burgerMenu.classList.toggle('hidden');
+              });
+
+              closeBurgerBtn.addEventListener('click', () => {
+                  burgerMenu.classList.add('hidden');
+              });
+            </script>*/}
+
+        <div className='col-span-2'></div>
+        <div className='col-span-4 flex flex-col relative '>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
-          <form className='' style={{
+          <form className='flex justify-center' style={{
             // backdropFilter: "blur(1rem)",
             // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
           }}>
@@ -192,8 +235,22 @@ const Header = (header: HeaderProps) => {
               </Box>
             </ul>}
         </div>
+        <div className='col-span-1'></div>
+        <div className="col-span-2">
+          <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
+            {items.map(item => (
+              <li className='col-span-1' key={item.KEY}>
+                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
+                  {_.startCase(item.KEY.split("-").join(" "))}
+                </Link>
+              </li>
 
-        <div className='flex flex-col absolute md:left-[100rem] left-[25rem] md:w-full w-full'>
+            ))}
+          </ul>
+        </div>
+        
+
+        <div className='flex flex-col col-span-1 md:w-full w-full'>
           {customer === null
             ?
             <button
