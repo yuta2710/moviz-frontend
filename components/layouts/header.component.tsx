@@ -235,7 +235,7 @@ const Header = (header: HeaderProps) => {
               </Box>
             </ul>}
         </div>
-        <div className='col-span-1'></div>
+        
         <div className="col-span-2">
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
             {items.map(item => (
@@ -249,7 +249,7 @@ const Header = (header: HeaderProps) => {
           </ul>
         </div>
         
-
+        <div className='col-span-1'></div>
         <div className='flex flex-col col-span-1 md:w-full w-full'>
           {customer === null
             ?
