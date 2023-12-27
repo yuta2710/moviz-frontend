@@ -111,7 +111,7 @@ const Header = (header: HeaderProps) => {
       
       <nav className={` grid grid-cols-12 nav-container md:w-full md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
         
-        <Link href='/' className='lg:flex col-span-2 justify-center items-center hidden'>
+        <Link href='/home' className='lg:flex col-span-2 justify-center items-center hidden'>
           <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
           <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
@@ -125,7 +125,7 @@ const Header = (header: HeaderProps) => {
             <button id="burger-btn" className="text-white focus:outline-none">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                         d="M4 6h16M4 12h16m-7 6h7"></path>
                 </svg>
             </button>
@@ -136,7 +136,7 @@ const Header = (header: HeaderProps) => {
               <button id="close-burger-btn" className="text-white">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                           d="M6 18L18 6M6 6l12 12"></path>
                   </svg>
               </button>
@@ -250,7 +250,7 @@ const Header = (header: HeaderProps) => {
         </div>
         
         <div className='col-span-1'></div>
-        <div className='flex flex-col col-span-1 md:w-full w-full'>
+        <div className='flex flex-col col-span-1'>
           {customer === null
             ?
             <button
