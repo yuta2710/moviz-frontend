@@ -14,6 +14,7 @@ import { useAuth } from '../../../components/context/AuthContext';
 import CloseIcon from "@mui/icons-material/Close";
 import gsap from 'gsap';
 import { formatHistoryDate } from '@/utils/convert.utils';
+import axios from 'axios';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [choice, setChoice] = useState(1);
@@ -126,6 +127,27 @@ export default function Page({ params }: { params: { id: string } }) {
       window.location.reload();
     })
   }
+
+  const handleAddToWatchlist = async () => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8080/api/v1/users/${id}/watchlists`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      const json = response.data;
+      console.log(json);
+    } catch (error) {
+      console.error('Error adding to watchlist:', error);
+    }
+  };
+  
 
   useEffect(() => {
     if (isAuthenticated() && user !== null) {
@@ -264,6 +286,10 @@ export default function Page({ params }: { params: { id: string } }) {
             onClick={handleOpenPostReviewForm}
             type="button"
             className="relative bg-dark-green rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
+            <button
+            onClick={handleAddToWatchlist}
+            type="button"
+            className="relative bg-dark-green rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Add to Watchlist</button>
         </div>
         <div className="text-white pr-52 content-center">
           <div className="flex my-5 md:w-[1200px]">

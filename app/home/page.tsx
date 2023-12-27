@@ -353,7 +353,7 @@ export default function Page(): ReactElement {
       <div className="flex flex-col justify-center items-center relative md:top-[18rem]">
         <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Review On This Week</h1>
         <ul className="inline-grid grid-cols-3 relative justify-center items-center top-0 mx-auto">
-          {reviews.length > 0 &&
+          {/* {reviews.length > 0 &&
             reviews
               .slice(0, 4)
               .map((review: FilmReviewProps) => (
@@ -364,7 +364,7 @@ export default function Page(): ReactElement {
                   <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
                 </li>
               ))}
-          <p ref={ref}>Loading...</p>
+          <p ref={ref}>Loading...</p> */}
         </ul>
       </div>
     </div>

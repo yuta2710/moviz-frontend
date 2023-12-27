@@ -8,6 +8,7 @@ import { getCurrentReviewsFromLetterboxdServer, getMe } from "@/utils/clients.ut
 import { User } from "@/types";
 import letterboxd from "letterboxd-api";
 import axios from "axios";
+import MovieList from "@/components/movie-list.component";
 
 export default function Page() {
   const [customer, setCustomer] = useState<User | null>(null);
@@ -33,6 +34,9 @@ export default function Page() {
       };
 
       fetchData();
+      console.log("Watchlist: " , customer?.watchLists);
+      console.log("customer id: ",  customer?._id)
+      console.log("customer name: ", customer?.lastName);
     } else {
       setLoading(false);
       router.push("/login")
@@ -229,7 +233,24 @@ export default function Page() {
           <h1 className={`${selected == 2 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(2)}>Watchlist</h1>
           <h1 className={`${selected == 3 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(3)}>Like</h1>
         </div>
+        {selected == 1 && (
+        <div>
+
+        </div>
+        )}
+        {selected == 2 && (
+        <div>
+          <MovieList ids={customer.watchLists}/>
+        </div>
+        )}
+        {selected == 3 && (
+        <div>
+
+        </div>
+        )}
+
       </div>
+      
     );
   }
 

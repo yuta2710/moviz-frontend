@@ -36,6 +36,7 @@ export interface User {
   photo: string;
   reviews: ReviewCustomization[];
   createdAt: string;
+  watchLists: string[];
 }
 
 export interface HeaderProps {
