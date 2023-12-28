@@ -107,7 +107,7 @@ const Header = (header: HeaderProps) => {
   }, [path])
 
   return (
-    <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] bg-transparent glass rounded-sm`}>
+    <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] bg-transparent rounded-sm`}>
       <nav className={`nav-container md:w-full md:mx-auto relative flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
         <Link href='/' className='flex justify-center items-center'>
           <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
@@ -160,7 +160,7 @@ const Header = (header: HeaderProps) => {
             </IconButton>
           </form>
           {searchQuery &&
-            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl apple-linear-glass'>
+            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl glass-effect '>
               <h1 className='text-white text-sm font-medium text-center md:w-full'>Founded <span className='font-bold' style={{ color: "#45FFCA" }}>{totalSearchResults}</span> results</h1>
               {suggestions
                 .slice(0, 5)

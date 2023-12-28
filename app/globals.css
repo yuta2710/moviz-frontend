@@ -12,11 +12,15 @@
 }
 
 html {
+  position: relative;
   font-family: "Noto Sans";
   font-family: "Poppins";
+  /* background: #000; */
 }
 
 body {
+  margin: 0;
+  padding: 0;
   position: relative;
   background: radial-gradient(
     73.19% 111.55% at 93.07% 74.31%,
@@ -27,6 +31,8 @@ body {
     0px 20px 100px 0px rgba(74, 57, 127, 0.7);
   background-repeat: no-repeat;
   background-origin: border-box;
+  width: 100vw;
+  min-height: 100vh;
 }
 
 header {
@@ -80,11 +86,11 @@ button:focus {
 .apple-linear-glass {
   /* From https://css.glass */
   background: rgba(243, 243, 243, 0.056);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  /* border-radius: 16px; */
+  /* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); */
   backdrop-filter: blur(4.6px);
   -webkit-backdrop-filter: blur(4.6px);
-  border: 1px solid rgba(201, 201, 201, 0.25);
+  border: 1px solid rgba(91, 91, 91, 0.25);
 }
 
 .linear-reusable-ocean-green {
@@ -309,4 +315,86 @@ button:focus {
 ::placeholder {
   font-size: 0.85rem;
   font-family: "Poppins";
+}
+
+.blob {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(
+    180deg,
+    rgba(37, 212, 192, 0.42) 31.77%,
+    #a73418 100%
+  );
+  mix-blend-mode: color-dodge;
+  -webkit-animation: move 25s infinite alternate;
+  animation: move 25s infinite alternate;
+  transition: 2s cubic-bezier(0.07, 0.8, 0.16, 1);
+  filter: blur(30px);
+  box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.6),
+    inset 100px 100px 0 0px #fa709a, inset 200px 200px 0 0px #784ba8,
+    inset 300px 300px 0 0px #2bb6c5;
+}
+
+.blob-linear-green-blue {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(
+    180deg,
+    rgba(37, 212, 192, 0.42) 31.77%,
+    #177e3e 100%
+  );
+  mix-blend-mode: color-dodge;
+  -webkit-animation: move 25s infinite alternate;
+  animation: move 15s infinite alternate;
+  transition: 2s cubic-bezier(0.07, 0.8, 0.16, 1);
+  filter: blur(30px);
+  box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.6),
+    inset 100px 100px 0 0px #0a959c, inset 200px 200px 0 0px #784ba8,
+    inset 300px 300px 0 0px #27d492;
+}
+
+@-webkit-keyframes move {
+  from {
+    transform: translate(-100px, -50px) rotate(-90deg);
+    border-radius: 24% 76% 35% 65% / 27% 36% 64% 73%;
+  }
+
+  to {
+    transform: translate(500px, 100px) rotate(-10deg);
+    border-radius: 76% 24% 33% 67% / 68% 55% 45% 32%;
+  }
+}
+
+@keyframes move {
+  from {
+    transform: translate(-20px, -50px) rotate(-90deg);
+    border-radius: 24% 76% 35% 65% / 27% 36% 64% 73%;
+  }
+
+  to {
+    transform: translate(1000px, 100px) rotate(-10deg);
+    border-radius: 76% 24% 33% 67% / 68% 55% 45% 32%;
+  }
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(18px);
+}
+
+.text-gradient-cyan-blue {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: brightness(1.85);
+  background-image: linear-gradient(
+    109.6deg,
+    rgba(48, 207, 208, 1) 11.2%,
+    rgb(29, 90, 203) 92.5%
+  );
 }

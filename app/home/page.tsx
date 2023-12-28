@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovies, getReviews } from "@/utils/clients.utils";
@@ -302,8 +302,13 @@ export default function Page(): ReactElement {
 
   // console.log(filter.clean("Don't be an ash0le"));
 
-  return (
-    <div className="">
+  return <React.Fragment>
+    <div className="flex flex-row">
+      <div className="blob relative"></div>
+      {/* <div className="blob-linear-green-blue relative"></div> */}
+    </div>
+
+    <div className="background-custom-body" style={{ height: "fit-content" }}>
       {/* <div className="absolute opacity-30 bg-no-repeat z-11"></div> */}
       {loading && <p>Loading...</p>}
       {error && <p className="text-white">Error: {error.message}</p>}
@@ -314,7 +319,7 @@ export default function Page(): ReactElement {
 
       { /** Reviews List */}
       {reviews.length > 0 && (
-        <div className="flex flex-col justify-center items-center relative md:mt-24">
+        <div className="flex flex-col justify-center items-center relative md:mt-12">
           <h1 className="text-white text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
           <ul className="inline-grid grid-cols-2 relative justify-center items-center top-0 mx-auto">
             {
@@ -322,21 +327,21 @@ export default function Page(): ReactElement {
                 .sort((a: FilmReviewProps, b: FilmReviewProps) =>
                   new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                 .slice(0, 4).map((review: FilmReviewProps) => (
-                  <li className="apple-linear-glass flex flex-row justify-between items-center review-section md:px-2 md:py-8 md:ml-4 md:mt-8" key={review.author}>
+                  <li className="apple-linear-glass rounded-2xl util-box-shadow-light-mode flex flex-row justify-between review-section md:px-2 md:py-8 md:ml-4 md:mt-8" key={review.author}>
                     <Image
                       src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
-                      width={150}
+                      width={200}
                       height={150}
                       alt=""
-                      className="md:ml-2"
+                      className="relative object-cover md:ml-2"
                     >
-
                     </Image>
                     <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
-                      <h2 className="text-sm font-aold text-white md:mt-6">
+                      <h1 className="text-xl font-semibold text-white md:mt-6  md:w-[300px] text-gradient-cyan-blue">{movies.find(movie => movie.id === Number(review.movie))?.title}</h1>
+                      <span className="text-white text-left opacity-50 text-sm md:mt-2">{formatHistoryDate(review.createdAt)}</span>
+                      <h2 className="text-sm font-bold text-white md:mt-6">
                         Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
-                        <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="md:ml-2">{review.author_details.rating} / 10</span>
-                        <span className="text-white opacity-50 text-[0.7rem] md:ml-4">{formatHistoryDate(review.createdAt)}</span>
+                        <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
                       </h2>
                       <h2 className="text-sm font-light text-gray-400 md:mt-2 relative md:w-[300px]">{review.content}</h2>
                     </div>
@@ -349,28 +354,28 @@ export default function Page(): ReactElement {
 
       { /** Movie List */}
       {movies.length > 0 && (
-        <div className="relative flex flex-col">
-
-          { /** Filter by year, rating, genre */}
-          <div className="flex flex-row justify-center items-center absolute md:top-[17.8rem] md:left-[50rem]">
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
+        <div className="flex flex-col justify-center relative md:mt-16">
+          <h1 className="text-white text-2xl font-semibold relative text-center">Popular Movies On This Week</h1>
+          <div className="flex flex-row justify-center items-center relative md:mt-12">
+            <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
               {yearOptions.map((option) => (
                 <option value={option.value} className="text-center">{option.label}</option>
               ))}
             </select>
 
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeRating}>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeRating}>
               <option value="" disabled selected className="text-center">Rating</option>
               {ratingOptions.map((option) => (
                 <option value={option.value} className="text-center">{option.label}</option>
               ))}
             </select>
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" value={popular} onChange={handleOnChangePopular}>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={popular} onChange={handleOnChangePopular}>
               {popularOptions.map((option) => (
                 <option value={option.value} className="text-center">{option.label}</option>
               ))}
             </select>
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeGenre}>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeGenre}>
               <option value="" disabled selected className="text-center">Genre</option>
               {genres.map((genre) => (
                 <option value={genre.id} className="text-center">{genre.name}</option>
@@ -378,25 +383,24 @@ export default function Page(): ReactElement {
             </select>
           </div>
 
-          <div className="flex flex-row justify-center items-center absolute md:top-[18rem] md:left-[31rem]">
+          {/* <div className="flex flex-row justify-center items-center relative">
             <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>
-          </div>
-          <ul className="inline-grid grid-cols-3 absolute gap-4 justify-center md:left-[30rem] md:top-[22rem]">
+          </div> */}
+          <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center">
             {[...movies]
+              .slice(0, 6)
               .map((movie) => (
-                <li className="relative hover:scale-110 duration-500">
+                <li className="hover:scale-110 duration-500">
                   <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
                     <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
                   </Link>
                 </li>
               ))}
-            <p ref={ref}>Loading...</p>
           </ul>
         </div>
       )}
     </div>
-
-  );
+  </React.Fragment>
 
 }
 
