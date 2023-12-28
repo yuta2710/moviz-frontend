@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovies, getReviews } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
-import { Pagination } from "@mui/material";
+import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
 import gsap from "gsap";
 import * as THREE from "../../build/three.module";
@@ -298,23 +298,21 @@ export default function Page(): ReactElement {
     return cleanup;
   })
 
-  // const filter = new Filter();
-
-  // console.log(filter.clean("Don't be an ash0le"));
-
-  return <React.Fragment>
-    <div className="flex flex-row">
-      <div className="blob relative"></div>
-      {/* <div className="blob-linear-green-blue relative"></div> */}
-    </div>
+  return <div className="relative top-0">
 
     <div className="background-custom-body" style={{ height: "fit-content" }}>
       {/* <div className="absolute opacity-30 bg-no-repeat z-11"></div> */}
-      {loading && <p>Loading...</p>}
+      {loading
+        ? <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>
+        : <div className="relative flex flex-col top-0">
+          <h1 className="text-white text-center relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+          </h1>
+        </div>
+      }
       {error && <p className="text-white">Error: {error.message}</p>}
-      <div className="relative flex flex-col">
-        <h1 className="text-white text-center z-10 relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
-        </h1>
+      <div className="flex flex-row">
+        <div className="blob relative"></div>
+        {/* <div className="blob-linear-green-blue relative"></div> */}
       </div>
 
       { /** Reviews List */}
@@ -327,7 +325,7 @@ export default function Page(): ReactElement {
                 .sort((a: FilmReviewProps, b: FilmReviewProps) =>
                   new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                 .slice(0, 4).map((review: FilmReviewProps) => (
-                  <li className="apple-linear-glass rounded-2xl util-box-shadow-light-mode flex flex-row justify-between review-section md:px-2 md:py-8 md:ml-4 md:mt-8" key={review.author}>
+                  <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:ml-4 md:mt-8" key={review.author}>
                     <Image
                       src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
                       width={200}
@@ -343,7 +341,7 @@ export default function Page(): ReactElement {
                         Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
                         <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
                       </h2>
-                      <h2 className="text-sm font-light text-gray-400 md:mt-2 relative md:w-[300px]">{review.content}</h2>
+                      <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] text-justify">{review.content}</h2>
                     </div>
                   </li>
                 ))
@@ -386,11 +384,15 @@ export default function Page(): ReactElement {
           {/* <div className="flex flex-row justify-center items-center relative">
             <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>
           </div> */}
-          <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center">
+          <div className="flex flex-row">
+            {/* <div className="blob relative"></div> */}
+            <div className="blob-linear-yellow-blue relative"></div>
+          </div>
+          <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
             {[...movies]
               .slice(0, 6)
               .map((movie) => (
-                <li className="hover:scale-110 duration-500">
+                <li className="hover:scale-105 duration-500 rotate_3d m-0 rounded-2xl">
                   <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
                     <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
                   </Link>
@@ -400,7 +402,7 @@ export default function Page(): ReactElement {
         </div>
       )}
     </div>
-  </React.Fragment>
+  </div>
 
 }
 

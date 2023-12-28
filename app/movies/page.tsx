@@ -16,7 +16,10 @@ export default function Page(): ReactElement {
 
   return (
     <div className="">
-
+      <div className="flex flex-row">
+        {/* <div className="blob relative"></div> */}
+        <div className="blob-linear-yellow-blue relative"></div>
+      </div>
     </div>
   );
 

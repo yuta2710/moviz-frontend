@@ -8,6 +8,8 @@ import { getCurrentReviewsFromLetterboxdServer, getMe } from "@/utils/clients.ut
 import { User } from "@/types";
 import letterboxd from "letterboxd-api";
 import axios from "axios";
+import { CircularProgress } from "@mui/material";
+import MovieList from "@/components/movies-list.component";
 
 export default function Page() {
   const [customer, setCustomer] = useState<User | null>(null);
@@ -114,14 +116,19 @@ export default function Page() {
   };
 
 
-  let html: ReactElement<any, any> = <div className="text-white">Loading...</div>;
+  let html: ReactElement<any, any> = <></>;
   if (loading) {
-    html = <div className="text-white"> Loading...</div>;
+    html = <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>;
   }
 
   if (customer !== null) {
     html = (
+
       <div className="flex flex-col justify-center  relative md:top-[10rem] w-3/5 mx-auto text-white">
+        <div className="flex flex-row">
+          {/* <div className="blob relative"></div> */}
+          <div className="blob-linear-green-blue relative"></div>
+        </div>
         <div className="grid grid-cols-3 items-center">
           <div className="">
             <Image
@@ -144,13 +151,13 @@ export default function Page() {
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">First Name</h3>
                 {!isEditingFirstname &&
-                  (<div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                  (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
                     {customer.firstName}
                     <p className={`${isEditingEmail || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingFirstname(true))}>Edit</p>
                   </div>)}
                 {isEditingFirstname &&
-                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="border-none bg-transparent w-auto" id="fname" placeholder={`${customer.firstName}`}></input>
+                  (<form className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between" onSubmit={handleSubmit}>
+                    <input type="text" className="text-sm border-none bg-transparent w-auto" id="fname" placeholder={`${customer.firstName}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit" >Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingFirstname(false)}>Cancel</button>
@@ -162,13 +169,13 @@ export default function Page() {
               <div className="flex flex-col">
                 <h3 className="mb-3">Last Name</h3>
                 {!isEditingLastname &&
-                  (<div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                  (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
                     {customer.lastName}
                     <p className={`${isEditingEmail || isEditingFirstname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingLastname(true))}>Edit</p>
                   </div>)}
                 {isEditingLastname &&
-                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="border-none bg-transparent w-auto" id="lname" placeholder={`${customer.lastName}`}></input>
+                  (<form className="flex flex-row py-2 justify-between" onSubmit={handleSubmit}>
+                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="lname" placeholder={`${customer.lastName}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit">Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingLastname(false)}>Cancel</button>
@@ -180,13 +187,13 @@ export default function Page() {
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">Email</h3>
                 {!isEditingEmail &&
-                  (<div className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between">
+                  (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
                     {customer.email}
                     <p className={`${isEditingFirstname || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingEmail(true))}>Edit</p>
                   </div>)}
                 {isEditingEmail &&
-                  (<form className="flex flex-row border-2 border-black border-b-gray-500 py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="border-none bg-transparent w-auto" id="email" placeholder={`${customer.email}`}></input>
+                  (<form className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between" onSubmit={handleSubmit}>
+                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="email" placeholder={`${customer.email}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit">Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingEmail(false)}>Cancel</button>
@@ -224,12 +231,28 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className="flex flex-row gap-10 items-start border-2 border-black border-b-gray-500 py-2 ">
+        <div className="flex flex-row gap-10 items-start">
           <h1 className={`${selected == 1 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(1)}>Reviews</h1>
           <h1 className={`${selected == 2 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(2)}>Watchlist</h1>
           <h1 className={`${selected == 3 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(3)}>Like</h1>
         </div>
+        {selected == 1 && (
+          <div>
+
+          </div>
+        )}
+        {selected == 2 && (
+          <div>
+            <MovieList ids={customer.watchLists} />
+          </div>
+        )}
+        {selected == 3 && (
+          <div>
+
+          </div>
+        )}
       </div>
+
     );
   }
 

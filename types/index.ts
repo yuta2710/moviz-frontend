@@ -25,7 +25,7 @@ const json = {
 };
 
 export interface User {
-  _id:string;
+  _id: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -35,6 +35,7 @@ export interface User {
   gender: string;
   photo: string;
   reviews: ReviewCustomization[];
+  watchLists: string[];
   createdAt: string;
 }
 

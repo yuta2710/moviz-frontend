@@ -40,6 +40,15 @@ const Header = (header: HeaderProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [totalSearchResults, setTotalSearchResults] = useState<number>(0);
   const [suggestions, setSuggestions] = useState<Movie[]>([]);
+  const [isHoveringSearchResult, setIsHoveringSearchResult] = useState(false);
+
+  const handleMouseOver = () => {
+    setIsHoveringSearchResult(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHoveringSearchResult(false);
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -106,6 +115,28 @@ const Header = (header: HeaderProps) => {
     setTotalSearchResults(0);
   }, [path])
 
+  // Search HTML 
+  let searchResultHTML = (suggestion: Movie, index: number) =>
+    <li
+      className={"flex flex-col hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      onClick={() => router.push(`/movies/${suggestion.id}`)
+      }
+      key={suggestion.id}>
+      <div className='flex flex-row justify-start items-center md:mt-4 rounded-xl'>
+        <Image
+          src={`https://image.tmdb.org/t/p/w500/${suggestion.poster_path}`}
+          width={50}
+          height={50}
+          className='rounded-sm'
+          alt="Random Picture"
+        ></Image>
+        <p className='text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4'> {suggestion.title}</p>
+      </div>
+      {index < 4 && <div className='md:w-full bg-white md:h-[2px] md:mt-2 opacity-50'></div>}
+    </li>
+
   return (
     <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] bg-transparent rounded-sm`}>
       <nav className={`nav-container md:w-full md:mx-auto relative flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
@@ -160,7 +191,7 @@ const Header = (header: HeaderProps) => {
             </IconButton>
           </form>
           {searchQuery &&
-            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl glass-effect '>
+            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl glass-effect z-10'>
               <h1 className='text-white text-sm font-medium text-center md:w-full'>Founded <span className='font-bold' style={{ color: "#45FFCA" }}>{totalSearchResults}</span> results</h1>
               {suggestions
                 .slice(0, 5)
@@ -168,22 +199,13 @@ const Header = (header: HeaderProps) => {
                 .map((suggestion, index) => suggestion.poster_path !== null && (
                   <li
                     className={"flex flex-col hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"}
+                    onMouseOver={handleMouseOver}
+                    onMouseOut={handleMouseOut}
                     onClick={() => router.push(`/movies/${suggestion.id}`)
                     }
                     key={index}>
-                    <div className='flex flex-row justify-start items-center md:mt-4 rounded-xl'>
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w500/${suggestion.poster_path}`}
-                        width={50}
-                        height={50}
-                        className='rounded-sm'
-                        alt="Random Picture"
-                      ></Image>
-                      <p className='text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4'> {suggestion.title}</p>
-                    </div>
-                    {index < 4 && <div className='md:w-full bg-white md:h-[2px] md:mt-2 opacity-50'></div>}
+                    {searchResultHTML(suggestion, index)}
                   </li>
-
                 ))}
 
               <Box textAlign='center' marginTop={4}>
