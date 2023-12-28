@@ -35,7 +35,6 @@ export interface User {
   gender: string;
   photo: string;
   reviews: ReviewCustomization[];
-  watchLists: string[];
   createdAt: string;
   watchLists: string[];
 }

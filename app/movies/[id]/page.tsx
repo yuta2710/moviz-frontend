@@ -30,6 +30,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
   const [warningMessage, setWarningMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
 
   const id = params.id;
 
@@ -50,9 +52,14 @@ export default function Page({ params }: { params: { id: string } }) {
   const handleClosePostReviewForm = () => setPostReviewForm(false);
 
   const [openToastWarning, setOpenToastWarning] = useState(false);
+  const [openToastSuccesss, setOpenToastSuccess] = useState(false);
 
   const handleOpenToastWarning = () => {
     setOpenToastWarning(true);
+  };
+
+  const handleOpenToastSuccess = () => {
+    setOpenToastSuccess(true);
   };
 
   const handleClose = (
@@ -64,6 +71,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
 
     setOpenToastWarning(false);
+    setOpenToastSuccess(false);
   };
 
   const hanndleOnChangeRatingSelector = (event: any) => {
@@ -71,6 +79,7 @@ export default function Page({ params }: { params: { id: string } }) {
   };
 
   const handleAddToWatchlist = async () => {
+    setIsInWatchlist(true);
     try {
       const response = await axios.patch(
         `http://localhost:8080/api/v1/users/${id}/watchlists`,
@@ -82,11 +91,27 @@ export default function Page({ params }: { params: { id: string } }) {
           },
         }
       );
-
-      const json = response.data;
-      console.log(json);
+      
+      setOpenToastSuccess(true);
+      setSuccessMessage(response.data.message);
     } catch (error) {
-      console.error('Error adding to watchlist:', error);
+      // Check if the error is an AxiosError and has a response property
+      if (axios.isAxiosError(error) && error.response) {
+        const { status, data } = error.response;
+  
+        if (status === 404) {
+          setOpenToastWarning(true);
+          setWarningMessage(data.message);
+          // Handle the 404 error here, and access the error message from data.message
+        } else {
+          setOpenToastWarning(true);
+          setWarningMessage(error.response.data);
+          // Handle other errors here
+        }
+      } else {
+        setOpenToastWarning(true);
+        setWarningMessage("Unknown error!");
+      }
     }
   };
 
@@ -178,6 +203,9 @@ export default function Page({ params }: { params: { id: string } }) {
         try {
           const json = await getMe();
           setCustomer(json.data);
+          if (customer?.watchLists.includes(id)){
+            setIsInWatchlist(true);
+          }
         } catch (error) {
           console.log(error);
         } finally {
@@ -367,11 +395,19 @@ export default function Page({ params }: { params: { id: string } }) {
             onClick={handleOpenPostReviewForm}
             type="button"
             className="relative linear-purple-pink rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
-          <button
+          
+          {isInWatchlist && (
+              <button
+              type="button"
+              className="relative bg-gradient-to-r from-red-400 to-pink-500 rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Remove from watchlist</button>
+          )}
+          {!isInWatchlist && (
+            <button
             onClick={handleAddToWatchlist}
             type="button"
             className="relative linear-blue rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
-        </div>
+          )}
+        </div> 
         <div className="text-white pr-52 content-center">
           <div className="flex my-5 md:w-[1200px]">
             <h1 className="text-2xl font-bold pr-10 md:w-[400px]">{movie.title}</h1>
@@ -607,6 +643,33 @@ export default function Page({ params }: { params: { id: string } }) {
           }
         }}
       />
+
+      <Snackbar
+        style={{
+          
+        }}
+        open={openToastSuccesss}
+        anchorOrigin={{ vertical: "top", "horizontal": "center" }}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={successMessage}
+        action={action}
+        ContentProps={{
+          sx: {
+            paddingX: "4rem",
+            paddingY: "2rem",
+            borderRadiusL: "8px",
+            background: "linear-gradient(270deg, #072434 3.17%, #000 50.35%, #072434 97.53%)",
+            color: "#09b311",
+            fontFamily: "Poppins",
+            fontWeight: "bold",
+            fontSize: "1.2rem",
+          }
+        }}
+      />
+
+
+      
     </div>
   )
 }
