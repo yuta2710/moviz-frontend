@@ -95,18 +95,47 @@ export default function Page({ params }: { params: { id: string } }) {
       setOpenToastSuccess(true);
       setSuccessMessage(response.data.message);
     } catch (error) {
-      // Check if the error is an AxiosError and has a response property
       if (axios.isAxiosError(error) && error.response) {
         const { status, data } = error.response;
   
         if (status === 404) {
           setOpenToastWarning(true);
           setWarningMessage(data.message);
-          // Handle the 404 error here, and access the error message from data.message
         } else {
           setOpenToastWarning(true);
           setWarningMessage(error.response.data);
-          // Handle other errors here
+        }
+      } else {
+        setOpenToastWarning(true);
+        setWarningMessage("Unknown error!");
+      }
+    }
+  };
+
+  const handleRemoveFromWatchlist = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/v1/users/${id}/un-watchlists`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      
+      setOpenToastSuccess(true);
+      setSuccessMessage(response.data.message);
+      setIsInWatchlist(false);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const { status, data } = error.response;
+  
+        if (status === 404) {
+          setOpenToastWarning(true);
+          setWarningMessage(data.message);
+        } else {
+          setOpenToastWarning(true);
+          setWarningMessage(error.response.data);
         }
       } else {
         setOpenToastWarning(true);
@@ -397,9 +426,10 @@ export default function Page({ params }: { params: { id: string } }) {
             className="relative linear-purple-pink rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
           
           {isInWatchlist && (
-              <button
-              type="button"
-              className="relative bg-gradient-to-r from-red-400 to-pink-500 rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Remove from watchlist</button>
+            <button
+            onClick={handleRemoveFromWatchlist}
+            type="button"
+            className="relative bg-gradient-to-r from-red-400 to-pink-500 rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Remove from watchlist</button>
           )}
           {!isInWatchlist && (
             <button
