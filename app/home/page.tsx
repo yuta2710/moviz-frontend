@@ -1,11 +1,11 @@
 "use client";
 
-import { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovies, getReviews } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
-import { Pagination } from "@mui/material";
+import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
 import gsap from "gsap";
 import * as THREE from "../../build/three.module";
@@ -64,6 +64,7 @@ export default function Page(): ReactElement {
     router.push(`/movies/genre/${genre}`);
   };
 
+  // Handle authentication
   useEffect(() => {
     if (isAuthenticated() && user !== null) {
       const fetchData = async () => {
@@ -90,6 +91,7 @@ export default function Page(): ReactElement {
   }, [isAuthenticated]);
 
 
+  // Fetch all movies
   useEffect(() => {
     // if (!page || currentPage === 1) {
     //   router.push(`/movies?page=${currentPage}`)
@@ -129,6 +131,7 @@ export default function Page(): ReactElement {
     fetchData(currentPage);
   }, [currentPage, router]);
 
+  // Infinite Scroll
   useEffect(() => {
     if (inView) {
       const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -143,6 +146,7 @@ export default function Page(): ReactElement {
     }
   }, [inView]);
 
+  // Fetch all reviews
   useEffect(() => {
     const fetchAllReviews = async () => {
       try {
@@ -222,6 +226,7 @@ export default function Page(): ReactElement {
     },
   ];
 
+  // Movies Animation
   useEffect(() => {
     const movieQueriesDOM = Array.from(document.querySelectorAll(".movie-obj"));
     gsap.set(movieQueriesDOM, {
@@ -236,6 +241,7 @@ export default function Page(): ReactElement {
     })
   }, [movies.length > 0]);
 
+  // Animation 3D Background
   useEffect(() => {
     const container = document.querySelector(".three_bg");
     console.log("This is container = ", container)
@@ -292,40 +298,82 @@ export default function Page(): ReactElement {
     return cleanup;
   })
 
-  // const filter = new Filter();
+  return <div className="relative top-0">
 
-  // console.log(filter.clean("Don't be an ash0le"));
-
-  return (
-    <div className="">
-      <div className="three_bg absolute opacity-30 bg-no-repeat z-11"></div>
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-white">Error: {error.message}</p>}
-      {/* {movies.length > 0 && (
-
-        <div className="relative flex flex-col">
-          <h1 className="text-white text-center z-10 relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+    <div className="background-custom-body" style={{ height: "fit-content" }}>
+      {/* <div className="absolute opacity-30 bg-no-repeat z-11"></div> */}
+      {loading
+        ? <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>
+        : <div className="relative flex flex-col top-0">
+          <h1 className="text-white text-center relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
           </h1>
+        </div>
+      }
+      {error && <p className="text-white">Error: {error.message}</p>}
+      <div className="flex flex-row">
+        <div className="blob relative"></div>
+        {/* <div className="blob-linear-green-blue relative"></div> */}
+      </div>
 
-          <div className="flex flex-row justify-center items-center absolute md:top-[17.8rem] md:left-[50rem]">
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
+      { /** Reviews List */}
+      {reviews.length > 0 && (
+        <div className="flex flex-col justify-center items-center relative md:mt-12">
+          <h1 className="text-white text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
+          <ul className="inline-grid grid-cols-2 relative justify-center items-center top-0 mx-auto">
+            {
+              reviews
+                .sort((a: FilmReviewProps, b: FilmReviewProps) =>
+                  new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .slice(0, 4).map((review: FilmReviewProps) => (
+                  <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:ml-4 md:mt-8" key={review.author}>
+                    <Image
+                      src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
+                      width={200}
+                      height={150}
+                      alt=""
+                      className="relative object-cover md:ml-2"
+                    >
+                    </Image>
+                    <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
+                      <h1 className="text-xl font-semibold text-white md:mt-6  md:w-[300px] text-gradient-cyan-blue">{movies.find(movie => movie.id === Number(review.movie))?.title}</h1>
+                      <span className="text-white text-left opacity-50 text-sm md:mt-2">{formatHistoryDate(review.createdAt)}</span>
+                      <h2 className="text-sm font-bold text-white md:mt-6">
+                        Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
+                        <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
+                      </h2>
+                      <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] text-justify">{review.content}</h2>
+                    </div>
+                  </li>
+                ))
+            }
+          </ul>
+        </div>
+      )}
+
+      { /** Movie List */}
+      {movies.length > 0 && (
+        <div className="flex flex-col justify-center relative md:mt-16">
+          <h1 className="text-white text-2xl font-semibold relative text-center">Popular Movies On This Week</h1>
+          <div className="flex flex-row justify-center items-center relative md:mt-12">
+            <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
               {yearOptions.map((option) => (
                 <option value={option.value} className="text-center">{option.label}</option>
               ))}
             </select>
 
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeRating}>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeRating}>
               <option value="" disabled selected className="text-center">Rating</option>
               {ratingOptions.map((option) => (
                 <option value={option.value} className="text-center">{option.label}</option>
               ))}
             </select>
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" value={popular} onChange={handleOnChangePopular}>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={popular} onChange={handleOnChangePopular}>
               {popularOptions.map((option) => (
                 <option value={option.value} className="text-center">{option.label}</option>
               ))}
             </select>
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeGenre}>
+            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeGenre}>
               <option value="" disabled selected className="text-center">Genre</option>
               {genres.map((genre) => (
                 <option value={genre.id} className="text-center">{genre.name}</option>
@@ -333,42 +381,28 @@ export default function Page(): ReactElement {
             </select>
           </div>
 
-          <div className="flex flex-row justify-center items-center absolute md:top-[18rem] md:left-[31rem]">
+          {/* <div className="flex flex-row justify-center items-center relative">
             <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>
+          </div> */}
+          <div className="flex flex-row">
+            {/* <div className="blob relative"></div> */}
+            <div className="blob-linear-yellow-blue relative"></div>
           </div>
-          <ul className="inline-grid grid-cols-3 absolute gap-4 justify-center md:left-[30rem] md:top-[22rem]">
+          <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
             {[...movies]
+              .slice(0, 6)
               .map((movie) => (
-                <li className="relative hover:scale-110 duration-500">
+                <li className="hover:scale-105 duration-500 rotate_3d m-0 rounded-2xl">
                   <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
                     <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
                   </Link>
                 </li>
               ))}
-            <p ref={ref}>Loading...</p>
           </ul>
         </div>
-      )} */}
-
-      <div className="flex flex-col justify-center items-center relative md:top-[18rem]">
-        <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Review On This Week</h1>
-        <ul className="inline-grid grid-cols-3 relative justify-center items-center top-0 mx-auto">
-          {/* {reviews.length > 0 &&
-            reviews
-              .slice(0, 4)
-              .map((review: FilmReviewProps) => (
-                <li className='flex flex-col h-max review-section'>
-                  <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
-                    <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
-
-                  <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
-                </li>
-              ))}
-          <p ref={ref}>Loading...</p> */}
-        </ul>
-      </div>
+      )}
     </div>
-  );
+  </div>
 
 }
 

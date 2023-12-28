@@ -31,9 +31,10 @@ const Related = ({ id }: { id: string }) => {
   return (
     <div className='grid grid-cols-3 gap-5 md:mx-auto md:mt-8'>
       {movies.map((movie) => (
-        movie.poster_path !== null && <Link href={`/movies/${movie.id}`} className='w-52 content-center hover:scale-110 duration-500 cursor-pointer'>
-          <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={300} alt="movie-poster" className="md:mx-auto"></Image>
-          <h2 className='text-[1rem] text-white font-semibold md:w-full md:py-4 text-center'>{movie.title}</h2>
+        movie.poster_path !== null &&
+        <Link href={`/movies/${movie.id}`} className='w-52 content-center hover:scale-110 duration-500 cursor-pointer relative'>
+          <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={300} alt="movie-poster" className="relative md:mx-auto"></Image>
+          <h2 className='text-[1rem] text-white font-semibold md:w-full md:py-4 text-center relative'>{movie.title}</h2>
         </Link>
       ))}
     </div>

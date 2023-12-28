@@ -30,7 +30,7 @@ export default function RootLayout({
 }) {
 
   return (
-    <html lang="en">
+    <html lang="en" className=''>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com"></link>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin='anonymous'></link>
@@ -48,7 +48,7 @@ export default function RootLayout({
               }
             }
             items={config.HEADER_ITEM_PATH}
-            // background='apple-linear-black'
+            background='glass'
             height='90px'
             fontItem={
               {

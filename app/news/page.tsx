@@ -53,6 +53,10 @@ export default function Page() {
 
   return <>
     <div className="container my-12 mx-auto px-4 md:px-12 relative md:top-[20rem]">
+      <div className="flex flex-row">
+        {/* <div className="blob relative"></div> */}
+        <div className="blob-linear-yellow-blue relative"></div>
+      </div>
       <h1 className="text-white text-xl font-semibold">Latest News</h1>
 
       {news.length > 0 && news[0] && <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">

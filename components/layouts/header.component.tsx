@@ -40,6 +40,15 @@ const Header = (header: HeaderProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [totalSearchResults, setTotalSearchResults] = useState<number>(0);
   const [suggestions, setSuggestions] = useState<Movie[]>([]);
+  const [isHoveringSearchResult, setIsHoveringSearchResult] = useState(false);
+
+  const handleMouseOver = () => {
+    setIsHoveringSearchResult(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHoveringSearchResult(false);
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -106,9 +115,31 @@ const Header = (header: HeaderProps) => {
     setTotalSearchResults(0);
   }, [path])
 
+  // Search HTML 
+  let searchResultHTML = (suggestion: Movie, index: number) =>
+    <li
+      className={"flex flex-col hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      onClick={() => router.push(`/movies/${suggestion.id}`)
+      }
+      key={suggestion.id}>
+      <div className='flex flex-row justify-start items-center md:mt-4 rounded-xl'>
+        <Image
+          src={`https://image.tmdb.org/t/p/w500/${suggestion.poster_path}`}
+          width={50}
+          height={50}
+          className='rounded-sm'
+          alt="Random Picture"
+        ></Image>
+        <p className='text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4'> {suggestion.title}</p>
+      </div>
+      {index < 4 && <div className='md:w-full bg-white md:h-[2px] md:mt-2 opacity-50'></div>}
+    </li>
+
   return (
-    <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] ${background}`}>
-      <nav className={`nav-container md:w-full md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
+    <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] bg-transparent rounded-sm`}>
+      <nav className={`nav-container md:w-full md:mx-auto relative flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
         <Link href='/' className='flex justify-center items-center'>
           <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
           <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
@@ -117,7 +148,7 @@ const Header = (header: HeaderProps) => {
 
         </Link>
 
-        <div className="w-[1000px] absolute left-[8rem] md:left-[80rem] mt-[3.5rem] md:mt-auto md:block md:w-full">
+        <div className="w-[1000px] relative md:ml-36 mt-[3.5rem] md:mt-auto md:block md:w-full">
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
             {items.map(item => (
               <li className='z-10' key={item.KEY}>
@@ -129,15 +160,15 @@ const Header = (header: HeaderProps) => {
             ))}
           </ul>
         </div>
-        <div className='flex flex-col relative md:left-[-20rem] z-10'>
+        <div className='flex flex-col relative z-10'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
-          <form className='' style={{
+          <form className='flex flex-row' style={{
             // backdropFilter: "blur(1rem)",
             // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
           }}>
             <TextField
               id="search-bar"
-              className="text-[0.75rem] glass"
+              className="text-[0.75rem] apple-linear-glass md:w-[350px] px-8 py-2 border-none font-poppins focus:outline-none"
               style={{
                 color: "#fff",
                 // backgroundColor: "rgba(225, 225, 225, 0.1)",
@@ -146,63 +177,57 @@ const Header = (header: HeaderProps) => {
               onInput={(e: any) => {
                 setSearchQuery(e.target.value);
               }}
-              sx={{ input: { color: '#fff' } }}
+              sx={{ input: { color: '#fff', border: "none" } }}
+              InputProps={{
+                disableUnderline: true,
+              }}
               // label="Enter a movie name"
-              variant="outlined"
+              variant="standard"
               placeholder="Enter the movie name..."
               size="small"
             />
-            <IconButton type="submit" aria-label="search">
+            <IconButton type="submit" aria-label="search" className=''>
               <SearchIcon style={{ fill: "white" }} />
             </IconButton>
           </form>
           {searchQuery &&
-            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl linear-reusable-ocean-green'>
+            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl glass-effect z-10'>
               <h1 className='text-white text-sm font-medium text-center md:w-full'>Founded <span className='font-bold' style={{ color: "#45FFCA" }}>{totalSearchResults}</span> results</h1>
               {suggestions
                 .slice(0, 5)
                 .sort((a: Movie, b: Movie) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime())
                 .map((suggestion, index) => suggestion.poster_path !== null && (
                   <li
-                    className={"flex flex-col justify-start items-center hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"}
+                    className={"flex flex-col hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"}
+                    onMouseOver={handleMouseOver}
+                    onMouseOut={handleMouseOut}
                     onClick={() => router.push(`/movies/${suggestion.id}`)
                     }
                     key={index}>
-                    <div className='flex flex-row justify-start items-center md:mt-4 rounded-xl'>
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w500/${suggestion.poster_path}`}
-                        width={50}
-                        height={50}
-                        className='rounded-sm'
-                        alt="Random Picture"
-                      ></Image>
-                      <p className='text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4'> {suggestion.title}</p>
-                    </div>
-                    {index < 4 && <div className='md:w-full bg-white md:h-[2px] md:mt-2 opacity-50'></div>}
+                    {searchResultHTML(suggestion, index)}
                   </li>
-
                 ))}
 
               <Box textAlign='center' marginTop={4}>
                 <Button
                   variant="contained"
-                  className='md:m-auto hover:opacity-60' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />}>
+                  className='md:m-auto hover:opacity-60 md:w-full font-poppins' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />}>
                   More
                 </Button>
               </Box>
             </ul>}
         </div>
 
-        <div className='flex flex-col absolute md:left-[100rem] left-[25rem] md:w-full w-full'>
+        <div className='flex flex-col relative'>
           {customer === null
             ?
             <button
-              className='text-white bg-red-500 py-2 px-6 text-sm z-10 absolute md:mt-[-16px] rounded-lg'
+              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg md:ml-36'
               onClick={() => router.push("/login")}
             >
               Login
             </button>
-            : <div className='flex flex-row justify-center items-center relative md:w-full w-full md:left-[-50rem] gap-4 cursor-pointer'>
+            : <div className='flex flex-row justify-center items-center relative md:ml-36 gap-4 cursor-pointer'>
 
               <Image className='rounded-full right-0 md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
@@ -210,17 +235,17 @@ const Header = (header: HeaderProps) => {
           }
 
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[4rem] bg-white md:px-2 md:w-[180px] w-full rounded-sm' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-sm' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
               <DropdownItem
                 onClick={() => { }}
                 url='/profile'
-                icon={<AccountBoxIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AccountBoxIcon>} text='Profile' />
+                icon={<AccountBoxIcon className='md:ml-[1rem]' style={{ color: "#fff" }}></AccountBoxIcon>} text='Profile' />
               <DropdownItem onClick={() => {
                 logout().then(() => {
                   router.refresh();
                 });
-              }} icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Log out' />
+              }} icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#fff" }}></AddToQueueIcon>} text='Log out' />
             </ul>
           )}
 
@@ -232,9 +257,9 @@ const Header = (header: HeaderProps) => {
 
 function DropdownItem(props: DropdownProps) {
   return (
-    <li className='dropdownItem md:w-full w-full relative md:mt-6'>
+    <li className='dropdownItem md:w-full w-full relative md:mt-6 hover:opacity-80 duration-500'>
       {props.icon}
-      <Link className='cursor-pointer text-black dropdown-text md:ml-6 text-center' href={`${props.url}`} onClick={props.onClick}> {props.text} </Link>
+      <Link className='cursor-pointer text-white dropdown-text md:ml-6 text-center' href={`${props.url}`} onClick={props.onClick}> {props.text} </Link>
       {/* <div className='dropdown-line w-full md:w-[270px] absolute  md:top-[1.8rem]'></div> */}
     </li>
   );

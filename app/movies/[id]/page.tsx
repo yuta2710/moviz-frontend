@@ -15,6 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import gsap from 'gsap';
 import { formatHistoryDate } from '@/utils/convert.utils';
 import axios from 'axios';
+import * as THREE from "../../../build/three.module"
 
 export default function Page({ params }: { params: { id: string } }) {
   const [choice, setChoice] = useState(1);
@@ -31,6 +32,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [warningMessage, setWarningMessage] = useState("");
 
   const id = params.id;
+
   const router = useRouter();
 
   const {
@@ -66,7 +68,28 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const hanndleOnChangeRatingSelector = (event: any) => {
     console.log("Hello = ", event.target.value);
-  }
+  };
+
+  const handleAddToWatchlist = async () => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8080/api/v1/users/${id}/watchlists`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const json = response.data;
+      console.log(json);
+    } catch (error) {
+      console.error('Error adding to watchlist:', error);
+    }
+  };
+
   const director = crews?.find(({ job }) => job === 'Director');
   const RATING_CONSTANTS = [
     1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
@@ -128,25 +151,25 @@ export default function Page({ params }: { params: { id: string } }) {
     })
   }
 
-  const handleAddToWatchlist = async () => {
-    try {
-      const response = await axios.patch(
-        `http://localhost:8080/api/v1/users/${id}/watchlists`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+  // const handleAddToWatchlist = async () => {
+  //   try {
+  //     const response = await axios.patch(
+  //       `http://localhost:8080/api/v1/users/${id}/watchlists`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     );
   
-      const json = response.data;
-      console.log(json);
-    } catch (error) {
-      console.error('Error adding to watchlist:', error);
-    }
-  };
+  //     const json = response.data;
+  //     console.log(json);
+  //   } catch (error) {
+  //     console.error('Error adding to watchlist:', error);
+  //   }
+  // };
   
 
   useEffect(() => {
@@ -259,8 +282,64 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }, [choice]);
 
+  useEffect(() => {
+    const container = document.querySelector(".three_bg");
+    console.log("This is container = ", container)
+
+    const loader = new THREE.TextureLoader();
+    const scene = new THREE.Scene();
+    const camera: any = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGL1Renderer();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container?.appendChild(renderer.domElement);
+
+    const geometry: any = new THREE.BoxGeometry(5, 4, 1);
+    const material = new THREE.MeshBasicMaterial({
+      map: loader.load("https://www.ecommercestrategies.co.uk/wp-content/uploads/brand-green-blue-grainy-gradient.png"),
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    const count = geometry.attributes.position.count;
+    const clock = new THREE.Clock();
+
+    const cleanup = () => {
+      // Dispose of resources when the component is unmounted
+      renderer.domElement.remove();
+      renderer.dispose();
+    };
+
+    const animate = () => {
+      const time = clock.getElapsedTime();
+
+      for (let i = 0; i < count; i++) {
+        const x = geometry.attributes.position.getX(i);
+        const y = geometry.attributes.position.getY(i);
+
+        const anim1 = 0.25 * Math.sin(x + time * 0.3);
+        const anim2 = 0.35 * Math.sin(x * 1 + time * 0.3);
+        const anim3 = 0.1 * Math.sin(y * 15 + time * 0.3);
+
+        geometry.attributes.position.setZ(
+          i,
+          anim1 + anim2 + anim3
+        );
+        geometry.computeVertexNormals();
+        geometry.attributes.position.needsUpdate = true;
+      }
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+
+    camera.position.z = 1;
+    animate()
+
+    return cleanup;
+  })
+
   if (!movie) {
-    return <div>Loading...</div>;
+    return <div className='text-white'>Loading...</div>;
   }
   const date = new Date(movie.release_date);
   const action = (
@@ -277,19 +356,21 @@ export default function Page({ params }: { params: { id: string } }) {
   );
 
   console.log(reviews);
+
   return (
-    <div className="relative flex flex-col flex-wrap md:top-[15rem] justify-center">
-      <div className='grid grid-cols-2 gap-3 w-4/5'>
-        <div className="md:pl-52 flex flex-col">
+    <div className="relative flex flex-col flex-wrap md:mt-8 justify-center">
+      {/* <div className='three_bg opacity-10 absolute top-0 transparent'></div> */}
+      <div className='relative grid grid-cols-2 gap-3 w-4/5'>
+        <div className="relative md:pl-52 flex flex-col">
           <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
           <button
             onClick={handleOpenPostReviewForm}
             type="button"
-            className="relative bg-dark-green rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
-            <button
+            className="relative linear-purple-pink rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
+          <button
             onClick={handleAddToWatchlist}
             type="button"
-            className="relative bg-dark-green rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Add to Watchlist</button>
+            className="relative linear-blue rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
         </div>
         <div className="text-white pr-52 content-center">
           <div className="flex my-5 md:w-[1200px]">
@@ -325,7 +406,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   <button
                     onClick={() => router.push(`/movies/${id}/casts`)}
                     type="button"
-                    className="bg-dark-green rounded-full md:top-[0rem] md:left-[2rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-5 py-4 me-2 mb-2 hover:scale-110 duration-500 hover:py-8 hover:px-8">+</button>
+                    className="linear-purple rounded-full md:top-[0rem] md:left-[2rem] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-8 py-4 me-2 mb-2 hover:scale-110 duration-500 hover:py-7 hover:px-8">+</button>
 
                 </div>)}
               {choice == 2 && (
@@ -376,7 +457,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
         </div>
       </div>
-      <div className='flex flex-col my-10 relative md:top-[8rem]'>
+      <div className='flex flex-col my-10 relative md:top-[2rem]'>
         <h1 className="text-2xl font-bold text-gray-400 text-center">Recommended similar films</h1>
         <Related id={id}></Related>
       </div>
@@ -454,7 +535,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className='z-10 relative md:mx-auto flex flex-row justify-around items-center'>
             <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} className='relative object-contain md:mt-12' width={300} height={500} alt={movie.title}></Image>
 
-            <form action={"#"} onSubmit={handleSubmit(onSubmit)}>
+            <form className='md:ml-16' action={"#"} onSubmit={handleSubmit(onSubmit)}>
               <FormControl className='relative'>
                 <p className='text-white font-regular text-sm opacity-70'>Create review, then create a new bonding</p>
                 <h1 className='text-white md:text-2xl font-bold italic md:mt-2'>"{movie.title}"</h1>
