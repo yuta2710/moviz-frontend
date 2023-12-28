@@ -298,6 +298,35 @@ export default function Page(): ReactElement {
     return cleanup;
   })
 
+  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto`}>
+    {
+      reviews
+        .sort((a: FilmReviewProps, b: FilmReviewProps) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 4).map((review: FilmReviewProps) => (
+          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:ml-4 md:mt-8" key={review.author}>
+            <Image
+              src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
+              width={200}
+              height={150}
+              alt=""
+              className="relative object-cover md:ml-2"
+            >
+            </Image>
+            <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
+              <h1 className="text-xl font-semibold text-white md:mt-6  md:w-[300px] text-gradient-cyan-blue">{movies.find(movie => movie.id === Number(review.movie))?.title}</h1>
+              <span className="text-white text-left opacity-50 text-sm md:mt-2">{formatHistoryDate(review.createdAt)}</span>
+              <h2 className="text-sm font-bold text-white md:mt-6">
+                Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
+                <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
+              </h2>
+              <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] text-justify">{review.content}</h2>
+            </div>
+          </li>
+        ))
+    }
+  </ul>
+
   return <div className="relative top-0">
 
     <div className="background-custom-body" style={{ height: "fit-content" }}>
@@ -319,34 +348,9 @@ export default function Page(): ReactElement {
       {reviews.length > 0 && (
         <div className="flex flex-col justify-center items-center relative md:mt-12">
           <h1 className="text-white text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
-          <ul className="inline-grid grid-cols-2 relative justify-center items-center top-0 mx-auto">
-            {
-              reviews
-                .sort((a: FilmReviewProps, b: FilmReviewProps) =>
-                  new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                .slice(0, 4).map((review: FilmReviewProps) => (
-                  <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:ml-4 md:mt-8" key={review.author}>
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
-                      width={200}
-                      height={150}
-                      alt=""
-                      className="relative object-cover md:ml-2"
-                    >
-                    </Image>
-                    <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
-                      <h1 className="text-xl font-semibold text-white md:mt-6  md:w-[300px] text-gradient-cyan-blue">{movies.find(movie => movie.id === Number(review.movie))?.title}</h1>
-                      <span className="text-white text-left opacity-50 text-sm md:mt-2">{formatHistoryDate(review.createdAt)}</span>
-                      <h2 className="text-sm font-bold text-white md:mt-6">
-                        Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
-                        <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
-                      </h2>
-                      <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] text-justify">{review.content}</h2>
-                    </div>
-                  </li>
-                ))
-            }
-          </ul>
+          {reviews.length > 0 && reviews.length < 2
+            ? movieListsHTML(1)
+            : movieListsHTML(2)}
         </div>
       )}
 

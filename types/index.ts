@@ -34,7 +34,7 @@ export interface User {
   role: string;
   gender: string;
   photo: string;
-  reviews: ReviewCustomization[];
+  reviews: FilmReviewProps[];
   watchLists: string[];
   createdAt: string;
 }
