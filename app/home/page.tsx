@@ -64,6 +64,7 @@ export default function Page(): ReactElement {
     router.push(`/movies/genre/${genre}`);
   };
 
+  // Handle authentication
   useEffect(() => {
     if (isAuthenticated() && user !== null) {
       const fetchData = async () => {
@@ -90,6 +91,7 @@ export default function Page(): ReactElement {
   }, [isAuthenticated]);
 
 
+  // Fetch all movies
   useEffect(() => {
     // if (!page || currentPage === 1) {
     //   router.push(`/movies?page=${currentPage}`)
@@ -129,6 +131,7 @@ export default function Page(): ReactElement {
     fetchData(currentPage);
   }, [currentPage, router]);
 
+  // Infinite Scroll
   useEffect(() => {
     if (inView) {
       const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -143,6 +146,7 @@ export default function Page(): ReactElement {
     }
   }, [inView]);
 
+  // Fetch all reviews
   useEffect(() => {
     const fetchAllReviews = async () => {
       try {
@@ -222,6 +226,7 @@ export default function Page(): ReactElement {
     },
   ];
 
+  // Movies Animation
   useEffect(() => {
     const movieQueriesDOM = Array.from(document.querySelectorAll(".movie-obj"));
     gsap.set(movieQueriesDOM, {
@@ -236,6 +241,7 @@ export default function Page(): ReactElement {
     })
   }, [movies.length > 0]);
 
+  // Animation 3D Background
   useEffect(() => {
     const container = document.querySelector(".three_bg");
     console.log("This is container = ", container)
@@ -298,15 +304,54 @@ export default function Page(): ReactElement {
 
   return (
     <div className="">
-      <div className="three_bg absolute opacity-30 bg-no-repeat z-11"></div>
+      {/* <div className="absolute opacity-30 bg-no-repeat z-11"></div> */}
       {loading && <p>Loading...</p>}
       {error && <p className="text-white">Error: {error.message}</p>}
-      {/* {movies.length > 0 && (
+      <div className="relative flex flex-col">
+        <h1 className="text-white text-center z-10 relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+        </h1>
+      </div>
 
+      { /** Reviews List */}
+      {reviews.length > 0 && (
+        <div className="flex flex-col justify-center items-center relative md:mt-24">
+          <h1 className="text-white text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
+          <ul className="inline-grid grid-cols-2 relative justify-center items-center top-0 mx-auto">
+            {
+              reviews
+                .sort((a: FilmReviewProps, b: FilmReviewProps) =>
+                  new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .slice(0, 4).map((review: FilmReviewProps) => (
+                  <li className="apple-linear-glass flex flex-row justify-between items-center review-section md:px-2 md:py-8 md:ml-4 md:mt-8" key={review.author}>
+                    <Image
+                      src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
+                      width={150}
+                      height={150}
+                      alt=""
+                      className="md:ml-2"
+                    >
+
+                    </Image>
+                    <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
+                      <h2 className="text-sm font-aold text-white md:mt-6">
+                        Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
+                        <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="md:ml-2">{review.author_details.rating} / 10</span>
+                        <span className="text-white opacity-50 text-[0.7rem] md:ml-4">{formatHistoryDate(review.createdAt)}</span>
+                      </h2>
+                      <h2 className="text-sm font-light text-gray-400 md:mt-2 relative md:w-[300px]">{review.content}</h2>
+                    </div>
+                  </li>
+                ))
+            }
+          </ul>
+        </div>
+      )}
+
+      { /** Movie List */}
+      {movies.length > 0 && (
         <div className="relative flex flex-col">
-          <h1 className="text-white text-center z-10 relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
-          </h1>
 
+          { /** Filter by year, rating, genre */}
           <div className="flex flex-row justify-center items-center absolute md:top-[17.8rem] md:left-[50rem]">
             <select className="md:ml-6 text-gray-900 text-sm relative rounded-lg block md:w-[120px] md:p-1.5 bg-dark-green dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
               {yearOptions.map((option) => (
@@ -348,26 +393,9 @@ export default function Page(): ReactElement {
             <p ref={ref}>Loading...</p>
           </ul>
         </div>
-      )} */}
-
-      <div className="flex flex-col justify-center items-center relative md:top-[18rem]">
-        <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Review On This Week</h1>
-        <ul className="inline-grid grid-cols-3 relative justify-center items-center top-0 mx-auto">
-          {reviews.length > 0 &&
-            reviews
-              .slice(0, 4)
-              .map((review: FilmReviewProps) => (
-                <li className='flex flex-col h-max review-section'>
-                  <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
-                    <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
-
-                  <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
-                </li>
-              ))}
-          <p ref={ref}>Loading...</p>
-        </ul>
-      </div>
+      )}
     </div>
+
   );
 
 }

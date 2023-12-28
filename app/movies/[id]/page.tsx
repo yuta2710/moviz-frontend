@@ -238,7 +238,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [choice]);
 
   if (!movie) {
-    return <div>Loading...</div>;
+    return <div className='text-white'>Loading...</div>;
   }
   const date = new Date(movie.release_date);
   const action = (
@@ -428,7 +428,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className='z-10 relative md:mx-auto flex flex-row justify-around items-center'>
             <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} className='relative object-contain md:mt-12' width={300} height={500} alt={movie.title}></Image>
 
-            <form action={"#"} onSubmit={handleSubmit(onSubmit)}>
+            <form className='md:ml-16' action={"#"} onSubmit={handleSubmit(onSubmit)}>
               <FormControl className='relative'>
                 <p className='text-white font-regular text-sm opacity-70'>Create review, then create a new bonding</p>
                 <h1 className='text-white md:text-2xl font-bold italic md:mt-2'>"{movie.title}"</h1>
