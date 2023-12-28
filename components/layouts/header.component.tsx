@@ -1,22 +1,47 @@
-"use client"
+"use client";
 
-import { HeaderProps, Movie, User } from '@/types'
-import Image from 'next/image'
-import Link from 'next/link'
-import React, { MouseEventHandler, ReactNode, useEffect, useRef, useState } from 'react'
+import { HeaderProps, Movie, User } from "@/types";
+import Image from "next/image";
+import Link from "next/link";
+import React, {
+  MouseEventHandler,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import _ from "lodash";
-import { useAuth } from '../context/AuthContext'
-import { APPLICATION_PATH, getMe, searchMovies } from '../../utils/clients.utils'
-import { Autocomplete, Box, Button, Grid, Icon, IconButton, InputBase, TextField, Typography, alpha, styled } from '@mui/material';
-import AddToQueueIcon from '@mui/icons-material/AddToQueue';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { usePathname, useRouter } from 'next/navigation'
+import { useAuth } from "../context/AuthContext";
+import {
+  APPLICATION_PATH,
+  getMe,
+  searchMovies,
+} from "../../utils/clients.utils";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Grid,
+  Icon,
+  IconButton,
+  InputBase,
+  TextField,
+  Typography,
+  alpha,
+  styled,
+} from "@mui/material";
+import AddToQueueIcon from "@mui/icons-material/AddToQueue";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import SearchIcon from '@mui/icons-material/Search';
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import SearchIcon from "@mui/icons-material/Search";
 import Fuse from "fuse.js";
-import { SearchBar } from '../common/search-bar.component'
-import AddIcon from '@mui/icons-material/Add';
+import { SearchBar } from "../common/search-bar.component";
+import AddIcon from "@mui/icons-material/Add";
+import BurgerMenu from "../common/burgerMenu";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 // import fetch from 'node-fetch'
 
 interface DropdownProps {
@@ -27,13 +52,18 @@ interface DropdownProps {
 }
 
 const Header = (header: HeaderProps) => {
-  const { logo, items, background, height, fontLogo, fontItem } = header
+  const { logo, items, background, height, fontLogo, fontItem } = header;
   const [customer, setCustomer] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
   const path = usePathname();
+  const [isBurgerMenuOpen, setBurgerMenuOpen] = useState(false);
+  const handleBurgerMenuToggle = () => {
+    setBurgerMenuOpen(!isBurgerMenuOpen);
+  };
+  
   // const [inputValue, setInputValue] = useState("");
   // const [searchQuery, setSearchQuery] = useState('')
   // const searchRef = useRef<typeof InputBase>();
@@ -50,14 +80,14 @@ const Header = (header: HeaderProps) => {
     const logoText = document.querySelector(".logo-text");
     gsap.set([logoPhoto, logoText], {
       opacity: 0,
-      y: -50
-    })
+      y: -50,
+    });
     gsap.to([logoPhoto, logoText], {
       y: 0,
       stagger: 0.2,
       duration: 1,
-      opacity: 1
-    })
+      opacity: 1,
+    });
   }, []);
 
   useEffect(() => {
@@ -76,12 +106,11 @@ const Header = (header: HeaderProps) => {
       fetchData();
     }
 
-    console.log(APPLICATION_PATH, path)
+    console.log(APPLICATION_PATH, path);
     if (APPLICATION_PATH.includes(path)) {
       setLoading(false);
       router.push(path);
-    }
-    else {
+    } else {
       setLoading(false);
       // router.push("/login");
     }
@@ -89,7 +118,7 @@ const Header = (header: HeaderProps) => {
 
   useEffect(() => {
     handleSearchMovie(searchQuery);
-  }, [searchQuery])
+  }, [searchQuery]);
 
   const handleSearchMovie = async (query: string) => {
     if (query) {
@@ -99,62 +128,66 @@ const Header = (header: HeaderProps) => {
       setSuggestions(moviesDatum);
       setTotalSearchResults(totalResults);
     }
-  }
+  };
 
   useEffect(() => {
     setSearchQuery("");
     setTotalSearchResults(0);
-  }, [path])
+  }, [path]);
 
   return (
     <header className={`py-5 ${background}`}>
-      
-      <nav className={` grid grid-cols-12 nav-container md:w-full md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
-        
-        <Link href='/home' className='lg:flex col-span-2 justify-center items-center hidden'>
-          <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
-          <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
+      <nav
+        className={` grid grid-cols-12 nav-container md:w-full md:mx-auto flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}
+      >
+        <Link
+          href="/home"
+          className="lg:flex col-span-2 justify-center items-center hidden"
+        >
+          <Image
+            className="logo-photo"
+            src={"/assets/icons/logo_icon.png"}
+            width={36}
+            height={42}
+            alt="Logo header"
+          ></Image>
+          <span
+            className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}
+          >
             {logo?.text}
           </span>
-
         </Link>
 
-        
-  
         <div className="lg:hidden">
-            <button id="burger-btn" className="text-white focus:outline-none">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                        d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
+          <button id="burger-btn" className="text-white focus:outline-none">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
         </div>
 
-        <div id="burger-menu" className="lg:hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-50 ">
-          <div className="flex justify-end p-4">
-              <button id="close-burger-btn" className="text-white">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-              </button>
-          </div>
 
-          <div className="flex flex-col items-center">
-            <ul>
-              {items.map(item => (
-                  <li className='col-span-1' key={item.KEY}>
-                    <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
-                      {_.startCase(item.KEY.split("-").join(" "))}
-                    </Link>
-                  </li>
 
-                ))}
-              </ul>
-          </div>
-        </div>
+        <div className="burger-menu-wrapper lg:hidden">
+        <button onClick={handleBurgerMenuToggle}>
+          <FontAwesomeIcon icon={faBars} />
+        </button>
+        <BurgerMenu isOpen={isBurgerMenuOpen} onClose={() => setBurgerMenuOpen(false)} />
+      </div>
+
+          
+        
 
         {/*<script>
           const burgerBtn = document.getElementById('burger-btn') as HTMLButtonElement | null;
@@ -171,25 +204,32 @@ const Header = (header: HeaderProps) => {
               });
             </script>*/}
 
-        <div className='col-span-2'></div>
-        <div className='col-span-4 flex flex-col relative '>
+        <div className="col-span-2"></div>
+        <div className="col-span-4 flex flex-col relative ">
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
-          <form className='flex justify-center' style={{
-            // backdropFilter: "blur(1rem)",
-            // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
-          }}>
+          <form
+            className="flex justify-center"
+            style={
+              {
+                // backdropFilter: "blur(1rem)",
+                // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
+              }
+            }
+          >
             <TextField
               id="search-bar"
               className="text-[0.75rem] glass"
               style={{
                 color: "#fff",
                 // backgroundColor: "rgba(225, 225, 225, 0.1)",
-                borderRadius: "8px", outline: "none", border: "none",
+                borderRadius: "8px",
+                outline: "none",
+                border: "none",
               }}
               onInput={(e: any) => {
                 setSearchQuery(e.target.value);
               }}
-              sx={{ input: { color: '#fff' } }}
+              sx={{ input: { color: "#fff" } }}
               // label="Enter a movie name"
               variant="outlined"
               placeholder="Enter the movie name..."
@@ -199,102 +239,164 @@ const Header = (header: HeaderProps) => {
               <SearchIcon style={{ fill: "white" }} />
             </IconButton>
           </form>
-          {searchQuery &&
-            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl linear-reusable-ocean-green'>
-              <h1 className='text-white text-sm font-medium text-center md:w-full'>Founded <span className='font-bold' style={{ color: "#45FFCA" }}>{totalSearchResults}</span> results</h1>
+          {searchQuery && (
+            <ul className="absolute md:mt-16 md:w-[500px] p-4 rounded-xl linear-reusable-ocean-green">
+              <h1 className="text-white text-sm font-medium text-center md:w-full">
+                Founded{" "}
+                <span className="font-bold" style={{ color: "#45FFCA" }}>
+                  {totalSearchResults}
+                </span>{" "}
+                results
+              </h1>
               {suggestions
                 .slice(0, 5)
-                .sort((a: Movie, b: Movie) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime())
-                .map((suggestion, index) => suggestion.poster_path !== null && (
-                  <li
-                    className={"flex flex-col justify-start items-center hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"}
-                    onClick={() => router.push(`/movies/${suggestion.id}`)
-                    }
-                    key={index}>
-                    <div className='flex flex-row justify-start items-center md:mt-4 rounded-xl'>
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w500/${suggestion.poster_path}`}
-                        width={50}
-                        height={50}
-                        className='rounded-sm'
-                        alt="Random Picture"
-                      ></Image>
-                      <p className='text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4'> {suggestion.title}</p>
-                    </div>
-                    {index < 4 && <div className='md:w-full bg-white md:h-[2px] md:mt-2 opacity-50'></div>}
-                  </li>
+                .sort(
+                  (a: Movie, b: Movie) =>
+                    new Date(b.release_date).getTime() -
+                    new Date(a.release_date).getTime()
+                )
+                .map(
+                  (suggestion, index) =>
+                    suggestion.poster_path !== null && (
+                      <li
+                        className={
+                          "flex flex-col justify-start items-center hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"
+                        }
+                        onClick={() => router.push(`/movies/${suggestion.id}`)}
+                        key={index}
+                      >
+                        <div className="flex flex-row justify-start items-center md:mt-4 rounded-xl">
+                          <Image
+                            src={`https://image.tmdb.org/t/p/w500/${suggestion.poster_path}`}
+                            width={50}
+                            height={50}
+                            className="rounded-sm"
+                            alt="Random Picture"
+                          ></Image>
+                          <p className="text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4">
+                            {" "}
+                            {suggestion.title}
+                          </p>
+                        </div>
+                        {index < 4 && (
+                          <div className="md:w-full bg-white md:h-[2px] md:mt-2 opacity-50"></div>
+                        )}
+                      </li>
+                    )
+                )}
 
-                ))}
-
-              <Box textAlign='center' marginTop={4}>
+              <Box textAlign="center" marginTop={4}>
                 <Button
                   variant="contained"
-                  className='md:m-auto hover:opacity-60' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />}>
+                  className="md:m-auto hover:opacity-60"
+                  style={{
+                    background: "#D61355",
+                    outline: "none",
+                    color: "#fff",
+                  }}
+                  startIcon={<AddIcon />}
+                >
                   More
                 </Button>
               </Box>
-            </ul>}
+            </ul>
+          )}
         </div>
-        
+
         <div className="col-span-2">
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0 hidden lg:flex">
-            {items.map(item => (
-              <li className='col-span-1' key={item.KEY}>
-                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
+            {items.map((item) => (
+              <li className="col-span-1" key={item.KEY}>
+                <Link
+                  href={item.APPLICATION_PATH}
+                  className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}
+                >
                   {_.startCase(item.KEY.split("-").join(" "))}
                 </Link>
               </li>
-
             ))}
           </ul>
         </div>
-        
-        <div className='col-span-1'></div>
-        <div className='flex flex-col col-span-1'>
-          {customer === null
-            ?
+
+        <div className="col-span-1"></div>
+        <div className="flex flex-col col-span-1">
+          {customer === null ? (
             <button
-              className='text-white bg-red-500 py-2 px-6 text-sm z-10 absolute md:mt-[-16px] rounded-lg'
+              className="text-white bg-red-500 py-2 px-6 text-sm z-10 absolute md:mt-[-16px] rounded-lg"
               onClick={() => router.push("/login")}
             >
               Login
             </button>
-            : <div className='flex flex-row justify-center items-center relative md:w-full w-full md:left-[-50rem] gap-4 cursor-pointer'>
-
-              <Image className='rounded-full right-0 md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
-              <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
+          ) : (
+            <div className="flex flex-row justify-center items-center relative md:w-full w-full md:left-[-50rem] gap-4 cursor-pointer">
+              <Image
+                className="rounded-full right-0 md:right-16"
+                src={customer?.photo}
+                width={50}
+                height={50}
+                alt=""
+              ></Image>
+              <ArrowDropDownIcon
+                onClick={toggleDropdown}
+                style={{ color: "#fff" }}
+              ></ArrowDropDownIcon>
             </div>
-          }
-
-          {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[4rem] bg-white md:px-2 md:w-[180px] w-full rounded-sm' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
-              { /* Render dropdown items here */}
-              <DropdownItem
-                onClick={() => { }}
-                url='/profile'
-                icon={<AccountBoxIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AccountBoxIcon>} text='Profile' />
-              <DropdownItem onClick={() => {
-                logout().then(() => {
-                  router.refresh();
-                });
-              }} icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#000" }}></AddToQueueIcon>} text='Log out' />
-            </ul>
           )}
 
+          {dropdownOpen && (
+            <ul
+              className="flex flex-col justify-center items-center dropdown-container absolute md:left-0 md:top-[4rem] bg-white md:px-2 md:w-[180px] w-full rounded-sm"
+              style={{ paddingTop: "0rem", paddingBottom: "2rem" }}
+            >
+              {/* Render dropdown items here */}
+              <DropdownItem
+                onClick={() => {}}
+                url="/profile"
+                icon={
+                  <AccountBoxIcon
+                    className="md:ml-[1rem]"
+                    style={{ color: "#000" }}
+                  ></AccountBoxIcon>
+                }
+                text="Profile"
+              />
+              <DropdownItem
+                onClick={() => {
+                  logout().then(() => {
+                    router.refresh();
+                  });
+                }}
+                icon={
+                  <AddToQueueIcon
+                    className="md:ml-[1rem]"
+                    style={{ color: "#000" }}
+                  ></AddToQueueIcon>
+                }
+                text="Log out"
+              />
+            </ul>
+          )}
         </div>
       </nav>
-    </header >
-  )
-}
+    </header>
+  );
+};
 
 function DropdownItem(props: DropdownProps) {
   return (
-    <li className='dropdownItem md:w-full w-full relative md:mt-6'>
+    <li className="dropdownItem md:w-full w-full relative md:mt-6">
       {props.icon}
-      <Link className='cursor-pointer text-black dropdown-text md:ml-6 text-center' href={`${props.url}`} onClick={props.onClick}> {props.text} </Link>
+      <Link
+        className="cursor-pointer text-black dropdown-text md:ml-6 text-center"
+        href={`${props.url}`}
+        onClick={props.onClick}
+      >
+        {" "}
+        {props.text}{" "}
+      </Link>
       {/* <div className='dropdown-line w-full md:w-[270px] absolute  md:top-[1.8rem]'></div> */}
     </li>
   );
 }
 
-export default Header
+export default Header;
