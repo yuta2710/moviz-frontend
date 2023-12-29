@@ -358,7 +358,7 @@ export default function Page(): ReactElement {
         {movies.length > 0 && (
           <div className="flex flex-col justify-center relative md:mt-16">
             <h1 className="text-white text-2xl font-semibold relative text-center">Popular Movies On This Week</h1>
-            <div className="flex flex-row justify-center items-center relative md:mt-12">
+            <div className="flex flex-row justify-center items-center relative md:mt-12 hidden md:flex">
               <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
               <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
                 {yearOptions.map((option) => (
@@ -392,7 +392,7 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
-            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+            <ul className="grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(0, 6)
                 .map((movie) => (
