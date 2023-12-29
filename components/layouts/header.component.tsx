@@ -17,6 +17,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import Fuse from "fuse.js";
 import { SearchBar } from '../common/search-bar.component'
 import AddIcon from '@mui/icons-material/Add';
+import BurgerMenu from "../common/burger-menu";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 // import fetch from 'node-fetch'
 
 interface DropdownProps {
@@ -34,6 +37,10 @@ const Header = (header: HeaderProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
   const path = usePathname();
+  const [isBurgerMenuOpen, setBurgerMenuOpen] = useState(false);
+  const handleBurgerMenuToggle = () => {
+    setBurgerMenuOpen(!isBurgerMenuOpen);
+  };
   // const [inputValue, setInputValue] = useState("");
   // const [searchQuery, setSearchQuery] = useState('')
   // const searchRef = useRef<typeof InputBase>();
@@ -138,9 +145,9 @@ const Header = (header: HeaderProps) => {
     </li>
 
   return (
-    <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] bg-transparent rounded-sm`}>
-      <nav className={`nav-container md:w-full md:mx-auto relative flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
-        <Link href='/' className='flex justify-center items-center'>
+    <header className={`lg:container mx-auto px-3 py-3 relative bg-transparent rounded-sm`}>
+      <nav className={`grid grid-cols-12 nav-container md:w-full md:mx-auto relative flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
+        <Link href='/' className='col-span-1 flex justify-center items-center hidden lg:flex'>
           <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
           <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
@@ -148,10 +155,37 @@ const Header = (header: HeaderProps) => {
 
         </Link>
 
-        <div className="w-[1000px] relative md:ml-36 mt-[3.5rem] md:mt-auto md:block md:w-full">
+        <div className="lg:hidden">
+          <button id="burger-btn" className="text-white focus:outline-none">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div className="burger-menu-wrapper lg:hidden">
+          <button onClick={handleBurgerMenuToggle}>
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+          <BurgerMenu isOpen={isBurgerMenuOpen} onClose={() => setBurgerMenuOpen(false)} />
+        </div>
+
+        <div className='col-span-1 hidden md:flex'></div>
+        <div className="col-span-3  hidden lg:flex">
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
             {items.map(item => (
-              <li className='z-10' key={item.KEY}>
+              <li className='col-span-1 flex justufy-center z-10' key={item.KEY}>
                 <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
                   {_.startCase(item.KEY.split("-").join(" "))}
                 </Link>
@@ -160,7 +194,8 @@ const Header = (header: HeaderProps) => {
             ))}
           </ul>
         </div>
-        <div className='flex flex-col relative z-10'>
+        <div className='lg:col-span-1 hidden'></div>
+        <div className='col-span-6 md:col-span-4 flex flex-col relative z-10'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
           <form className='flex flex-row' style={{
             // backdropFilter: "blur(1rem)",
@@ -217,19 +252,20 @@ const Header = (header: HeaderProps) => {
               </Box>
             </ul>}
         </div>
-
-        <div className='flex flex-col relative'>
+        
+        <div className='col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-1'></div>
+        <div className='col-span-3 md:col-span-2 lg:col-span-1 flex flex-col relative'>
           {customer === null
             ?
             <button
-              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg md:ml-36'
+              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg '
               onClick={() => router.push("/login")}
             >
               Login
             </button>
-            : <div className='flex flex-row justify-center items-center relative md:ml-36 gap-4 cursor-pointer'>
+            : <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
 
-              <Image className='rounded-full right-0 md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
+              <Image className='rounded-full  md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
             </div>
           }

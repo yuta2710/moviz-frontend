@@ -43,6 +43,15 @@ button:focus {
   border: none;
 }
 
+.bm-menu{
+  background-color: rgb(10, 17, 39);
+}
+.menu-item:hover {
+  background-color: transparent;
+  outline-color: white;
+  outline: auto;
+}
+
 .custom-list-item {
   display: flex;
   justify-content: flex-start; /* Căn chỉnh về bên trái */
