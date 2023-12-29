@@ -124,15 +124,18 @@ export default function Page() {
   if (customer !== null) {
     html = (
 
-      <div className="flex flex-col justify-center  relative md:top-[10rem] w-3/5 mx-auto text-white">
+      <div className="flex flex-col justify-center relative md:top-[10rem] w-full md:w-3/5 mx-auto text-white p-4">
         <div className="flex flex-row">
           {/* <div className="blob relative"></div> */}
           <div className="blob-linear-green-blue relative"></div>
         </div>
-        <div className="grid grid-cols-3 items-center">
-          <div className="">
+
+        {/*Profile Grid*/}
+        <div className="grid grid-cols-1 md:grid-cols-3 items-center">
+
+          <div className="col-span-1 md:col-span-1 flex items-center justify-center"> {/*Added tailwind to image class*/}
             <Image
-              className="text-white text-center rounded-full md:mr-36 hover:cursor-pointer"
+              className="rounded-full hover:cursor-pointer"
               width={250}
               height={250}
               alt="Customer Photo"
@@ -141,22 +144,26 @@ export default function Page() {
             />
             <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
           </div>
-          <div className="grid col-span-2 grid-rows-4 gap-5 w2/3">
+          
+          <div className="grid col-span-2 grid-rows-4 gap-5 w-full md:w-2/3">
             <div className="col-span-4 justify-center items-center text-3xl font-medium my-auto">
               <h1 className="text-white text-center md:text-left ">
                 {customer.username}
               </h1>
             </div>
             <div className="col-span-2 justify-center items-center">
-              <div className="flex flex-col mr-5">
+              <div className="flex flex-col mb-5"> {/*Changed from mr-5 to mb-5 */}
                 <h3 className="mb-3">First Name</h3>
                 {!isEditingFirstname &&
-                  (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
+                  (<div className="flex flex-col apple-linear-glass px-4 rounded-xl py-2 text-sm">
                     {customer.firstName}
                     <p className={`${isEditingEmail || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingFirstname(true))}>Edit</p>
                   </div>)}
+
                 {isEditingFirstname &&
-                  (<form className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between" onSubmit={handleSubmit}>
+                  (<form className="flex flex-col apple-linear-glass px-4 rounded-xl py-2" onSubmit={handleSubmit}> 
+                    {/*t.ly/JltVY */}
+                    {/* Updated input width to full width for better responsiveness */}
                     <input type="text" className="text-sm border-none bg-transparent w-auto" id="fname" placeholder={`${customer.firstName}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit" >Save</button>
@@ -165,16 +172,17 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
+
             <div className="col-span-2 justify-center items-center">
-              <div className="flex flex-col">
+              <div className="flex flex-col mb-5"> {/*Changed from mr-5 to mb-5 */}
                 <h3 className="mb-3">Last Name</h3>
                 {!isEditingLastname &&
-                  (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
+                  (<div className="flex flex-col apple-linear-glass px-4 rounded-xl py-2 text-sm">
                     {customer.lastName}
                     <p className={`${isEditingEmail || isEditingFirstname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingLastname(true))}>Edit</p>
                   </div>)}
                 {isEditingLastname &&
-                  (<form className="flex flex-row py-2 justify-between" onSubmit={handleSubmit}>
+                  (<form className="flex flex-col py-2" onSubmit={handleSubmit}>
                     <input type="text" className="border-none bg-transparent w-auto text-sm" id="lname" placeholder={`${customer.lastName}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit">Save</button>
@@ -183,16 +191,17 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
+            
             <div className="col-span-2 justify-center items-center">
-              <div className="flex flex-col mr-5">
+              <div className="flex flex-col mb-5"> {/*Changed from mr-5 to mb-5 */}
                 <h3 className="mb-3">Email</h3>
                 {!isEditingEmail &&
-                  (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
+                  (<div className="flex flex-col apple-linear-glass px-4 rounded-xl py-2 text-sm">
                     {customer.email}
                     <p className={`${isEditingFirstname || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingEmail(true))}>Edit</p>
                   </div>)}
                 {isEditingEmail &&
-                  (<form className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between" onSubmit={handleSubmit}>
+                  (<form className="flex flex-col apple-linear-glass px-4 rounded-xl py-2" onSubmit={handleSubmit}>
                     <input type="text" className="border-none bg-transparent w-auto text-sm" id="email" placeholder={`${customer.email}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit">Save</button>
@@ -201,6 +210,9 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
+          
+          {/*Added {customer.reviews && ( FOR when customer.reviews is truthy to prevent TypeError */}
+          {customer.reviews && (
             <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col">
                 <h3 className="mb-3 text-gray-500 underline">Review Tags</h3>
@@ -210,6 +222,11 @@ export default function Page() {
                       {review.tag}
                     </button>
                   ))}
+                </div>
+              </div>
+            </div>
+            )}
+            
                   {/* <button className=" bg-cyan-700 rounded-lg">
                     Netflix
                   </button>
@@ -228,12 +245,12 @@ export default function Page() {
                   <button className=" bg-cyan-700 rounded-lg">
                     Netflix
                   </button> */}
-                </div>
-              </div>
-            </div>
+                
           </div>
         </div>
-        <div className="flex flex-row gap-10 items-start">
+
+        {/*Reviews Watchlist Like Pane */}
+        <div className="flex flex-row gap-4 items-start md:gap-10">
           <h1 className={`${selected == 1 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(1)}>Reviews</h1>
           <h1 className={`${selected == 2 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(2)}>Watchlist</h1>
           <h1 className={`${selected == 3 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(3)}>Like</h1>
