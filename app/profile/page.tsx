@@ -208,7 +208,12 @@ export default function Page() {
               <div className="flex flex-col">
                 <h3 className="mb-3 text-gray-500 underline">Review Tags</h3>
                 <div className="grid grid-cols-5 gap-2">
-                  <button className=" bg-cyan-700 rounded-lg">
+                  {customer.reviews.map((review, index) => review.tag && (
+                    <button className=" bg-cyan-700 rounded-lg">
+                      {review.tag}
+                    </button>
+                  ))}
+                  {/* <button className=" bg-cyan-700 rounded-lg">
                     Netflix
                   </button>
                   <button className=" bg-cyan-700 rounded-lg">
@@ -225,10 +230,7 @@ export default function Page() {
                   </button>
                   <button className=" bg-cyan-700 rounded-lg">
                     Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

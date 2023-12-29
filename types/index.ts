@@ -34,9 +34,10 @@ export interface User {
   role: string;
   gender: string;
   photo: string;
-  reviews: ReviewCustomization[];
-  createdAt: string;
+  reviews: FilmReviewProps[];
   watchLists: string[];
+  createdAt: string;
+  //watchLists: string[];
 }
 
 export interface HeaderProps {

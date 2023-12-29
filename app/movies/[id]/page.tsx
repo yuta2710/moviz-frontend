@@ -507,7 +507,13 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold my-10 relative md:top-[2rem]">Recent Reviews</h1>
+            <div className='flex flex-row justify-start items-start md:mt-16'>
+              <h1 className="text-2xl font-bold relative">Recent Reviews</h1>
+              <button
+                onClick={() => router.push(`/movies/${id}/reviews`)}
+                type="button"
+                className="relative glass-effect rounded-lg md:w-[220px] focus:outline-none md:ml-8 text-white text-[1.8rem] font-medium text-sm px-1 py-2 me-2 mb-2 hover:scale-110 duration-500">More</button>
+            </div>
             {reviews.length > 0 &&
               reviews
                 .slice(0, 4)

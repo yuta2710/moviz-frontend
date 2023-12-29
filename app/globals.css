@@ -14,13 +14,12 @@
 html {
   position: relative;
   font-family: "Noto Sans";
-  font-family: "Poppins";
+  /* font-family: "Poppins"; */
   /* background: #000; */
 }
 
 body {
   margin: 0;
-  padding: 0;
   position: relative;
   background: radial-gradient(
     73.19% 111.55% at 93.07% 74.31%,
@@ -29,8 +28,8 @@ body {
   );
   box-shadow: 0px 1px 0px 0px transparent inset,
     0px 20px 100px 0px rgba(74, 57, 127, 0.7);
-  background-repeat: no-repeat;
-  background-origin: border-box;
+  background-repeat: repeat-y;
+  background-origin: content-box;
   width: 100vw;
   min-height: 100vh;
 }
@@ -42,6 +41,15 @@ header {
 button:focus {
   outline: none !important;
   border: none;
+}
+
+.bm-menu{
+  background-color: rgb(10, 17, 39);
+}
+.menu-item:hover {
+  background-color: transparent;
+  outline-color: white;
+  outline: auto;
 }
 
 .custom-list-item {
@@ -422,6 +430,16 @@ button:focus {
     rgba(48, 207, 208, 1) 11.2%,
     rgb(29, 90, 203) 92.5%
   );
+}
+
+.text-gradient-purple {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: brightness(1.85);
+  background-image: linear-gradient(12deg, #3ccc4d 50%, #e58b24 50%);
 }
 
 .linear-purple {
