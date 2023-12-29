@@ -343,38 +343,49 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className='relative grid grid-cols-2 gap-3 w-4/5'>
         <div className="relative md:pl-52 flex flex-col">
           <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
-          <button
+          <div className='grid grid-cols-1'>
+            <div className='flex justify-center'>
+            <button
             onClick={handleOpenPostReviewForm}
             type="button"
-            className="relative linear-purple-pink rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
-          <button
-            onClick={handleAddToWatchlist}
-            type="button"
-            className="relative linear-blue rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
-        </div>
-        <div className="text-white pr-52 content-center">
-          <div className="flex my-5 md:w-[1200px]">
-            <h1 className="text-2xl font-bold pr-10 md:w-[400px]">{movie.title}</h1>
-            <p className="font-light text-gray-400 px-10 md:mt-2">{date.getFullYear()}</p>
-            <p className="font-light text-gray-400 px-10 md:mt-2">Directed by <span className='text-white font-bold cursor-pointer hover:scale-120 duration-500' onClick={handleOpenDirectorInfo}>{director?.name}</span></p>
-          </div>
-          <p className="text-[0.75rem] text-gray-400 md:max-w-6xl text-justify leading-6">{movie.overview}</p>
-          <div className="">
-            <div className="flex flex-row space-x-5 font-bold text-gray-400 my-5">
-              <h2 className='text-[0.75rem] hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(1)}>Cast</h2>
-              <h2 className='text-[0.75rem] hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(2)}>Genres</h2>
-              <h2 className='text-[0.75rem] hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(3)}>Details</h2>
-              <h2 className='text-[0.75rem] hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(4)}>Release</h2>
+            className=" linear-purple-pink rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
             </div>
-            <div className="flex flex-col space-x-3">
+            <div className='flex justify-center'>
+            <button
+              onClick={handleAddToWatchlist}
+              type="button"
+              className=" linear-blue rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
+            </div>
+          </div>
+        </div>
+        <div className="text-white pr-52 content-center grid grid-cols-1">
+          <div className="grid md:grid-cols-4 flex my-5 md:w-[1200px]">
+            <h1 className="col-span-1 text-2xl font-bold pr-10 md:w-[400px]">{movie.title}</h1>
+            <div className='flex justify-center col-span-1'><p className=" font-light text-gray-400 px-10 md:mt-2">{date.getFullYear()}</p></div>
+            
+            <p className=" col-span-1 font-light text-gray-400 px-10 md:mt-2">Directed by <span className='text-white font-bold cursor-pointer hover:scale-120 duration-500' onClick={handleOpenDirectorInfo}>{director?.name}</span></p>
+            <div className='col-span-1'></div>
+            <p className="col-span-3 text-base text-gray-400 md:max-w-6xl text-justify leading-6">{movie.overview}</p>
+            <div className='col-span-1'></div>
+          </div>
+          
+          <div className="md:w-[1200px]">
+            <div className="flex flex-row space-x-5 font-bold text-gray-400 my-5">
+              <h2 className='text-base hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(1)}>Cast</h2>
+              <h2 className='text-base hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(2)}>Genres</h2>
+              <h2 className='text-base hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(3)}>Details</h2>
+              <h2 className='text-base hover:opacity-50 duration-500 cursor-pointer' onClick={() => setChoice(4)}>Release</h2>
+            </div>
+            <div className="flex flex-col space-x-3 ">
+              {/*Need fixing for mobile UI */}
               {choice == 1 && (
 
-                <div className='flex flex-row justify-center items-center relative md:left-[10rem] md:top-[1rem]'>
+                <div className='flex flex-row justify-center items-center md:left-[10rem] md:top-[1rem] grid grid-cols-3 md:grid-cols-6'>
                   <div className='flex gap-3'>
                     {/* <Casts id={id} /> */}
                     {casts?.slice(0, 6).map((cast, index) => {
                       if (cast.profile_path !== null) {
-                        return <div className='flex flex-col md:w-28 h-max cast-key'>
+                        return <div className='block md:w-28 h-max cast-key col-span-1 justify-center'>
                           <Image className='object-contains' src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt='cast-img' width={80} height={80}></Image>
                           <div className='relative md:mt-4 md:w-[400px]'>
                             <h2 className='text-[0.7rem] font-medium text-white md:w-full'>{cast.name}</h2>
@@ -382,17 +393,21 @@ export default function Page({ params }: { params: { id: string } }) {
                         </div>
                       }
                     })}
+                    <div className='col-span-1 grid place-items-center'>
+                      <button
+                      onClick={() => router.push(`/movies/${id}/casts`)}
+                      type="button"
+                      className="linear-purple rounded-full focus:outline-none text-white text-[1.8rem] font-medium text-sm px-8 py-4 me-2 mb-2 hover:scale-110 duration-500 hover:py-7 hover:px-8">+</button>
+                    </div>
+                    
                   </div>
-                  <button
-                    onClick={() => router.push(`/movies/${id}/casts`)}
-                    type="button"
-                    className="linear-purple rounded-full md:top-[0rem] md:left-[2rem] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-8 py-4 me-2 mb-2 hover:scale-110 duration-500 hover:py-7 hover:px-8">+</button>
+                  
 
                 </div>)}
               {choice == 2 && (
                 <>
                   <div>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-6 gap-2">
                       {movie.genres.map((genre) => (
                         <button className="genre-label ocean-linear-bg rounded-lg py-[0.25rem] text-[0.75rem]" style={{}}>
                           {genre.name}
@@ -453,7 +468,7 @@ export default function Page({ params }: { params: { id: string } }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-
+    
         <Box sx={style} style={{
           // backgroundImage:
           //   "radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );"
