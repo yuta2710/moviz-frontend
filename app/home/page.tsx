@@ -345,14 +345,14 @@ export default function Page(): ReactElement {
         </div>
 
         { /** Reviews List */}
-        {reviews.length > 0 && (
-          <div className="flex flex-col justify-center items-center relative md:mt-12">
-            <h1 className="text-white text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
-            {reviews.length > 0 && reviews.length < 2
-              ? movieListsHTML(1)
-              : movieListsHTML(2)}
-          </div>
-        )}
+      {reviews.length > 0 && (
+        <div className="flex flex-col justify-center items-center relative md:mt-12">
+          <h1 className="text-white text-lg md:text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
+          {reviews.length > 0 && reviews.length < 2
+            ? movieListsHTML(1)
+            : movieListsHTML(2)}
+        </div>
+      )}
 
         { /** Movie List */}
         {movies.length > 0 && (
@@ -392,7 +392,7 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
-            <ul className="grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(0, 6)
                 .map((movie) => (
