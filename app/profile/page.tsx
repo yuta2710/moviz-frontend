@@ -132,8 +132,7 @@ export default function Page() {
 
         {/*Profile Grid*/}
         <div className="grid grid-cols-1 md:grid-cols-3 items-center">
-
-          <div className="col-span-1 md:col-span-1 flex items-center justify-center"> {/*Added tailwind to image class*/}
+          <div className="col-span-1 md:col-span-1 flex items-center justify-center"> {/*Added tailwind to image class to center image in mobile view*/}
             <Image
               className="rounded-full hover:cursor-pointer"
               width={250}

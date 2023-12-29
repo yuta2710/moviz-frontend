@@ -55,8 +55,9 @@ export const RegisterForm = () => {
   }, [isAuthenticated])
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-black">
-      <div className="bg-no-repeat bg-cover max-w-max overflow-hidden md:ml-48">
+    <div className="flex flex-col md:flex-row items-center min-h-screen bg-black">
+      
+      <div className="hidden md:block bg-no-repeat bg-cover max-w-max overflow-hidden md:ml-48">
         <Image src={"https://sepm-bucket.s3.eu-west-1.amazonaws.com/movie-lab.png"} width={500} height={900} alt="movie-lab"></Image>
         <Image src={"https://sepm-bucket.s3.eu-west-1.amazonaws.com/marker.png"} width={500} height={500} alt=""></Image>
       </div>
@@ -132,11 +133,11 @@ export const RegisterForm = () => {
             </select>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-8">
             <input type="submit" value="Sign up with email" className="py-3 bg-green-500 text-white w-full rounded hover:bg-green-600" />
           </div>
         </form>
-        <a className="" href="#" data-test="Link"><span className="block  p-5 text-center text-white  text-sm ">Already have an account?</span></a>
+        <a className="mt-4" href="#" data-test="Link"><span className="block  p-5 text-center text-white  text-sm ">Already have an account?</span></a>
       </div>
 
 
