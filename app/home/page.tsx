@@ -334,7 +334,7 @@ export default function Page(): ReactElement {
         {loading
           ? <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>
           : <div className="relative flex flex-col top-0">
-            <h1 className="text-white text-center relative md:mt-52 text-lg md:text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+            <h1 className="text-white text-center relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
             </h1>
           </div>
         }
