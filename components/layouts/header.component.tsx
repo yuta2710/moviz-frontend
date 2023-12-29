@@ -17,6 +17,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import Fuse from "fuse.js";
 import { SearchBar } from '../common/search-bar.component'
 import AddIcon from '@mui/icons-material/Add';
+
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 // import fetch from 'node-fetch'
 
 interface DropdownProps {
@@ -52,6 +55,12 @@ const Header = (header: HeaderProps) => {
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   useEffect(() => {
@@ -139,20 +148,31 @@ const Header = (header: HeaderProps) => {
 
   return (
     <header className={`md:w-full md:h-[${height}] relative md:z-10 md:px-[16rem] md:py-[2rem] bg-transparent rounded-sm`}>
-      <nav className={`nav-container md:w-full md:mx-auto relative flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
+      <nav className={`nav-container md:w-full md:mx-auto relative flex flex-col sm:flex-row justify-between items-center sm:px-4 md:px-6 md:py-4 bg-transparent`}>
+        {/* Hamburger menu for mobile*/}
+        <div className="md:hidden absolute top-4 left-4 z-50">
+          <button onClick={toggleMobileMenu}>
+            {mobileMenuOpen ? (
+              <CloseIcon style={{ color: '#fff', fontSize: '2rem' }} />
+            ) : (
+              <MenuIcon style={{ color: '#fff', fontSize: '2rem' }} />
+            )}
+          </button>
+        </div>
+
         <Link href='/' className='flex justify-center items-center'>
-          <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
-          <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
+          <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header '></Image>
+          <span className={`logo-text self-center text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
           </span>
 
         </Link>
 
-        <div className="w-[1000px] relative md:ml-36 mt-[3.5rem] md:mt-auto md:block md:w-full">
-          <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
+        <div className="hidden md:block w-full md:w-auto relative md:ml-4 mt-4 md:mt-0">
+          <ul className="items-container font-medium flex flex-col md:flex-row md:space-x-4">
             {items.map(item => (
               <li className='z-10' key={item.KEY}>
-                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
+                <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-4 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
                   {_.startCase(item.KEY.split("-").join(" "))}
                 </Link>
               </li>
@@ -160,7 +180,27 @@ const Header = (header: HeaderProps) => {
             ))}
           </ul>
         </div>
-        <div className='flex flex-col relative z-10'>
+
+        {/* Mobile menu CONCEPT */}
+        {mobileMenuOpen && (
+          <div className="md:hidden w-full mt-4">
+            {/* Render your mobile menu items here */}
+            <ul className="items-container font-medium flex flex-col md:space-x-4">
+              {items.map((item) => (
+                <li className="z-10" key={item.KEY}>
+                  <Link
+                    href={item.APPLICATION_PATH}
+                    className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-4 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}
+                  >
+                    {_.startCase(item.KEY.split('-').join(' '))}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className='hidden md:flex flex-col relative md:w-full md:ml-4 mt-4 md:mt-0'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
           <form className='flex flex-row' style={{
             // backdropFilter: "blur(1rem)",
@@ -218,16 +258,16 @@ const Header = (header: HeaderProps) => {
             </ul>}
         </div>
 
-        <div className='flex flex-col relative'>
+        <div className='hidden md:flex flex-col relative mt-4 md:mt-0'>
           {customer === null
             ?
             <button
-              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg md:ml-36'
+              className='text-white bg-red-500 py-2 px-4 text-sm z-10 relative rounded-lg md:ml-4'
               onClick={() => router.push("/login")}
             >
               Login
             </button>
-            : <div className='flex flex-row justify-center items-center relative md:ml-36 gap-4 cursor-pointer'>
+            : <div className='flex flex-row justify-center items-center relative gap-2 cursor-pointer'>
 
               <Image className='rounded-full right-0 md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
@@ -235,7 +275,7 @@ const Header = (header: HeaderProps) => {
           }
 
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className={`flex flex-col justify-center items-center dropdown-container absolute w-full md:w-[180px] rounded-2xl bg-gray-800 p-2 md:left-0 md:top-[4rem]`}>
               { /* Render dropdown items here */}
               <DropdownItem
                 onClick={() => { }}
