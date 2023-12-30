@@ -78,7 +78,7 @@ export default function Page(): ReactElement {
       duration: 1,
       opacity: 1
     })
-  }, [movies.length > 0, movies]);
+  }, [movies.length > 0]);
 
   const handleOnChangeRating = (event: any) => {
     const rating = event.target.value;
@@ -158,8 +158,8 @@ export default function Page(): ReactElement {
     // if (!page || currentPage === 1) {
     //   router.push(/movies?page=${currentPage})
     // }
-    const fetchData = async (pageNumber: number, rating: string, genre:string) => {
-      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
+    const fetchData = async (rating: string, genre:string) => {
+      const response = await fetch(`http://localhost:8080/api/v1/movies?page=1&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
       const data = response.json();
       data.then(json => {
         const data = json.data;
@@ -206,9 +206,48 @@ export default function Page(): ReactElement {
 
       setTitle(newTitle);
     }
-    fetchData(currentPage, rating, genre);
+    fetchData(rating, genre);
     
-  }, [currentPage, router, year, rating, genre, popular]);
+  }, [router, year, rating, genre, popular]);
+
+
+  useEffect(() => {
+    // if (!page || currentPage === 1) {
+    //   router.push(/movies?page=${currentPage})
+    // }
+    const fetchData = async (pageNumber: number) => {
+      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
+      const data = response.json();
+      // data.then(json => {
+      //   const data = json.data;
+      //   console.log("data result:" , data.results);
+      //   setMovies(data.results as Movie[]);
+
+      // });
+      data.then(json => {
+        const data = json.data;
+        console.log("data result:" , data.results);
+        setMovies((prevMovies: Movie[]) => {
+          const uniqueMovies = data.results.filter((newMovie: Movie) =>
+            !prevMovies.some(prevMovie => prevMovie.id === newMovie.id)
+          );
+          return [...prevMovies, ...uniqueMovies];
+        });
+      })
+      // const options = {
+      //   method: "GET",
+      //   headers: {
+      //     accept: "application/json",
+      //     Authorization:
+      //       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY",
+      //   },
+      // };
+    
+     
+    }
+    fetchData(currentPage);
+    
+  }, [currentPage]);
 
 
   // Infinite Scroll
@@ -345,8 +384,8 @@ export default function Page(): ReactElement {
                     </li>
                   ))}
               </ul>
+              <div className="text-white text-2xl font-semibold relative text-center" ref={ref}>Load More ....</div>
             </div>
-            
             
           )}
         </div>
