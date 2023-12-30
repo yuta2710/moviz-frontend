@@ -88,15 +88,15 @@ export default function Page() {
               <i className="fa fa-heart"></i>
             </a>
           </footer>
-
         </article>
 
       </div>}
+
       <h1 className="text-white text-xl font-semibold">Recent News</h1>
-      <div className="flex flex-wrap -mx-1 lg:-mx-4">
+      <div className="flex flex-wrap -mx-1 sm:-mx-2 md:-mx-4 lg:-mx-4">
         {/* <!-- Column --> */}
         {news.slice(1).map((article, index) => (
-          <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+          <div key={index} className="my-1 px-1 w-full sm:w-1/2 md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
 
             {/* <!-- Article --> */}
             <article className="overflow-hidden rounded-lg shadow-lg ">
@@ -107,7 +107,7 @@ export default function Page() {
 
               <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
                 <h1 className="text-lg">
-                  <Link className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold" href={article.web_url} target="_blanket">
+                  <Link className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold" href={article.web_url} target="_blank"> {/*Fixed target blanket -> blank */}
                     <span className="text-white">{article.abstract}</span>
                   </Link>
                 </h1>
@@ -134,6 +134,20 @@ export default function Page() {
         {/* <!-- END Column --> */}
       </div>
     </div>
+    
+    {/* Concept Responsive Pagination Implementation
+    <div className="flex justify-center items-center mt-4">
+      <Pagination
+        count={Math.ceil(news.length / numberOfArticlesPerPage)}
+        page={currentPage}
+        onChange={(event, page) => paginate(page)}
+        size="large"
+        color="primary"
+        style={{ color: "#000", background: "#fff", margin: "10px" }}
+      />
+    </div>
+     */}
+
     <Pagination
       count={Math.ceil(news.length / numberOfArticlesPerPage)}
       page={currentPage}
