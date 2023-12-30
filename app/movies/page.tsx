@@ -22,12 +22,12 @@ export default function Page(): ReactElement {
   const [currentPage, setCurrentPage] = useState(page || 1);
   const [numberOfMoviesPerPage] = useState(2);
 
-  const [year, setYear] = useState(2023);
+  const [year, setYear] = useState();
   const [reviews, setReviews] = useState<FilmReviewProps[]>([]);
   const [genre, setGenre] = useState("");
   const [rating, setRating] = useState("popularity.desc");
   const [popular, setPopular] = useState("popularity.desc");
-  const [period, setPeriod] = useState("This Week");
+  const [period, setPeriod] = useState("");
   const [startDate, setStartDate] = useState("2023-01-01");
   const [endDate, setEndDate] = useState("2023-12-31");
   const [genres, setGenres] = useState<Genre[]>([])
@@ -36,6 +36,8 @@ export default function Page(): ReactElement {
   const [customer, setCustomer] = useState<User | null>(null);
   const { user, logout, isAuthenticated } = useAuth();
   const path = usePathname();
+
+  const [title, setTitle] = useState("Popular Movies This Week");
 
   const currentDate = new Date();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -49,6 +51,8 @@ export default function Page(): ReactElement {
   lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6); 
   const firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1);
   const lastDayOfYear = new Date(currentDate.getFullYear() + 1, 0, 0);
+
+
   
   console.log("You chose this genre: " + genre);
 
@@ -57,6 +61,7 @@ export default function Page(): ReactElement {
     setYear(year);
     setStartDate(year + "-01-01");
     setEndDate(year + "-12-31");
+    setPopular("popularity.desc");
     // router.push(/movies/decades/year/${year});
     // router.push(`/movies/decades/year/${year}/${page}`);
   };
@@ -92,6 +97,7 @@ export default function Page(): ReactElement {
     const popular = event.target.value;
     setPopular(popular);
     setRating("popularity.desc");
+    setYear(undefined);
     if(popular === "this-year") {
       setStartDate(formatDate(firstDayOfYear));
       setEndDate(formatDate(lastDayOfYear));
@@ -181,6 +187,24 @@ export default function Page(): ReactElement {
       const genres = await getGenres();
       setGenres(genres);
       console.log("Movies list: ", movies);
+      let newTitle = "Popular Movies";
+      if(year){
+        newTitle += ` of ${year}`
+      }
+      if (genre) {
+        const selectedGenre = genres.find((g) => g.id === parseInt(genre, 10));
+        if (selectedGenre) {
+          newTitle += ` in ${selectedGenre.name}`;
+        }
+      }
+      if (rating !== "popularity.desc") {
+        newTitle += ` by ${rating === "vote_average.desc" ? "Highest" : "Lowest"} Rating`; // Add rating to the title
+      }
+      if (popular !== "popularity.desc") {
+        newTitle += ` This ${popular === "this-year" ? "Year" : popular === "this-month" ? "Month" : "Week"}`; // Add popularity period to the title
+      }
+
+      setTitle(newTitle);
     }
     fetchData(currentPage, rating, genre);
     
@@ -263,7 +287,7 @@ export default function Page(): ReactElement {
       <div className="">
           {movies.length > 0 && (
             <div className="flex flex-col justify-center relative md:mt-16">
-              <h1 className="text-white text-2xl font-semibold relative text-center">Popular Movies On This Week</h1>
+              <h1 className="text-white text-2xl font-semibold relative text-center">{title}</h1>
               <div className="flex flex-row justify-center items-center relative md:mt-12">
                 <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
                 <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
@@ -300,7 +324,19 @@ export default function Page(): ReactElement {
               </div>
               <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
                 {[...movies]
-                  //.slice(0, 6)
+                  .slice(0, 6)
+                  .map((movie) => (
+                    <li className="">
+                      <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+              <h1 className="text-white text-2xl font-semibold relative text-center md:mt-10">Other</h1>
+              <ul className="grid grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+                {[...movies]
+                  .slice(6, )
                   .map((movie) => (
                     <li className="">
                       <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
@@ -310,6 +346,8 @@ export default function Page(): ReactElement {
                   ))}
               </ul>
             </div>
+            
+            
           )}
         </div>
     </div>
