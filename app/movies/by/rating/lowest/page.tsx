@@ -45,17 +45,25 @@ export default function Page() {
 
 
   return <div className="text-white">
-    <ul className="inline-grid grid-cols-3 absolute gap-4 justify-center md:left-[30rem] md:top-[22rem]">
-      {[...moviesFilterByLowestRate]
-        .map((movie) => (
-          movie.poster_path !== null && <li className="relative hover:scale-110 duration-500">
-            <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-filter-by-rating-lowest-obj">
-              <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-              {/* <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{movie.popularity}</h5> */}
-            </Link>
-          </li>
-        ))}
-    </ul>
+    <div className="flex flex-wrap justify-center -mx-2">
+    {[...moviesFilterByLowestRate].map((movie) => (
+      movie.poster_path !== null && (
+        <div key={movie.id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-2">
+          <Link href={`/movies/${movie.id}`} className="block p-2 rounded-lg shadow movie-filter-by-rating-lowest-obj">
+            <Image
+              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+              width={200}
+              height={300} // Set an appropriate height
+              alt=""
+              className="mx-auto object-cover rounded-sm"
+            />
+            {/* Additional information if needed */}
+            {/* <h5 className="mt-2 text-xl font-bold text-gray-900 dark:text-white">{movie.title}</h5> */}
+          </Link>
+        </div>
+      )
+    ))}
+  </div>
 
   </div>
 }
