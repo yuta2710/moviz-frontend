@@ -3,7 +3,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovies, getReviews } from "@/utils/clients.utils";
+import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovie, getMovies, getReviews } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
 import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
@@ -37,7 +37,7 @@ export default function Page(): ReactElement {
   const handleOnChangeYear = (event: any) => {
     const year = event.target.value;
     setYear(year);
-    // router.push(`/movies/decades/year/${year}`);
+    // router.push(/movies/decades/year/${year});
     router.push(`/movies/decades/year/${year}/${page}`);
   };
 
@@ -51,7 +51,7 @@ export default function Page(): ReactElement {
     if (rating === "Lowest") {
       router.push(`/movies/by/rating/lowest/`);
     }
-    // router.push(`/movies/decade/${rating}`);
+    // router.push(/movies/decade/${rating});
   };
 
   const handleOnChangePopular = (event: any) => {
@@ -94,7 +94,7 @@ export default function Page(): ReactElement {
   // Fetch all movies
   useEffect(() => {
     // if (!page || currentPage === 1) {
-    //   router.push(`/movies?page=${currentPage}`)
+    //   router.push(/movies?page=${currentPage})
     // }
     const fetchData = async (pageNumber: number) => {
       const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`);
@@ -161,6 +161,29 @@ export default function Page(): ReactElement {
 
     fetchAllReviews();
   }, [])
+
+  // Loop through all reviews and set movie poster path 
+  useEffect(() => {
+    const fetchPosters = async () => {
+      const posterPaths = await Promise.all(
+        reviews.map(async (review: FilmReviewProps) => {
+          try {
+            const movieDetails = await getMovie(review.movie);
+            const posterPath = movieDetails.poster_path || ''; 
+            return { ...review, poster_path: posterPath };
+          } catch (error) {
+            console.error(`Error fetching poster for movie ${review.movie}:`, error);
+            return { ...review, poster_path: '' };
+          }
+        })
+      );
+      setReviews(posterPaths);
+    };
+
+    fetchPosters();
+  }, [reviews]);
+
+  
 
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
@@ -298,15 +321,15 @@ export default function Page(): ReactElement {
     return cleanup;
   })
 
-  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto`}>
+  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto gap-4`}>
     {
       reviews
         .sort((a: FilmReviewProps, b: FilmReviewProps) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .slice(0, 4).map((review: FilmReviewProps) => (
-          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:ml-4 md:mt-8" key={review.author}>
+          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
             <Image
-              src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
+              src={`https://image.tmdb.org/t/p/w500/${review.poster_path}`}
               width={200}
               height={150}
               alt=""
@@ -320,13 +343,13 @@ export default function Page(): ReactElement {
                 Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
                 <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
               </h2>
-              <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] text-justify">{review.content}</h2>
+              <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] ellipsis text-justify">{review.content}</h2>
             </div>
           </li>
         ))
     }
   </ul>
-  
+
   return (
     <div className="relative top-0">
       <div className="background-custom-body" style={{ height: "fit-content" }}>
@@ -334,7 +357,7 @@ export default function Page(): ReactElement {
         {loading
           ? <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>
           : <div className="relative flex flex-col top-0">
-            <h1 className="text-white text-center relative md:mt-52 text-lg md:text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+            <h1 className="text-white text-center relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
             </h1>
           </div>
         }
@@ -342,49 +365,15 @@ export default function Page(): ReactElement {
         <div className="flex flex-row">
           <div className="blob relative"></div>
           {/* <div className="blob-linear-green-blue relative"></div> */}
-          
         </div>
 
-
-      { /** Reviews List */}
-      {reviews.length > 0 && (
-        <div className="flex flex-col justify-center items-center relative md:mt-12">
-          <h1 className="text-white text-lg md:text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
-          {reviews.length > 0 && reviews.length < 2
-            ? movieListsHTML(1)
-            : movieListsHTML(2)}
-        </div>
-      )}
-
-      { /** Movie List */}
-      {movies.length > 0 && (
-        <div className="flex flex-col justify-center relative md:mt-16">
-          <h1 className="text-white text-2xl font-semibold relative text-center">Popular Movies On This Week</h1>
-          <div className="flex flex-row justify-center items-center relative md:mt-12 hidden md:flex">
-            <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
-              {yearOptions.map((option) => (
-                <option value={option.value} className="text-center">{option.label}</option>
-              ))}
-            </select>
-
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeRating}>
-              <option value="" disabled selected className="text-center">Rating</option>
-              {ratingOptions.map((option) => (
-                <option value={option.value} className="text-center">{option.label}</option>
-              ))}
-            </select>
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={popular} onChange={handleOnChangePopular}>
-              {popularOptions.map((option) => (
-                <option value={option.value} className="text-center">{option.label}</option>
-              ))}
-            </select>
-            <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeGenre}>
-              <option value="" disabled selected className="text-center">Genre</option>
-              {genres.map((genre) => (
-                <option value={genre.id} className="text-center">{genre.name}</option>
-              ))}
-            </select>
+        { /** Reviews List */}
+        {reviews.length > 0 && (
+          <div className="flex flex-col justify-center items-center relative md:mt-12">
+            <h1 className="text-white text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
+            {reviews.length > 0 && reviews.length < 2
+              ? movieListsHTML(1)
+              : movieListsHTML(2)}
           </div>
         )}
 
@@ -438,19 +427,8 @@ export default function Page(): ReactElement {
                 ))}
             </ul>
           </div>
-          <ul className="grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
-            {[...movies]
-              .slice(0, 6)
-              .map((movie) => (
-                <li className="col-span-1 hover:scale-105 duration-500 rotate_3d m-0 rounded-2xl">
-                  <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                    <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 
