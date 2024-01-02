@@ -210,7 +210,7 @@ export interface FilmReviewProps {
   updatedAt: string;
   // rating: number;
   // url: string;
-  poster_path: string;
+  poster_path?: string;
 }
 
 export interface Genre {
