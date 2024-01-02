@@ -86,7 +86,6 @@ export default function Page(): ReactElement {
     }
     else {
       setLoading(false);
-      // router.push("/login");
     }
   }, [isAuthenticated]);
 
@@ -161,6 +160,13 @@ export default function Page(): ReactElement {
 
     fetchAllReviews();
   }, [])
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      setLoading(true);
+      router.push("/login");
+    }
+  }, [!loading])
 
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
@@ -298,13 +304,15 @@ export default function Page(): ReactElement {
     return cleanup;
   })
 
-  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto`}>
+  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto gap-4`}>
     {
       reviews
         .sort((a: FilmReviewProps, b: FilmReviewProps) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        .slice(0, 4).map((review: FilmReviewProps) => (
-          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:ml-4 md:mt-8" key={review.author}>
+        .slice(0, 4).map((review: FilmReviewProps) => {
+          // const movieAvatar = String(movies.find(movie => movie.id === Number(review.movie))?.poster_path);
+          // console.log(review.movie)
+          return <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
             <Image
               src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
               width={200}
@@ -320,10 +328,12 @@ export default function Page(): ReactElement {
                 Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
                 <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
               </h2>
-              <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] text-justify">{review.content}</h2>
+              <div className="md:w-[20rem]  ">
+                <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative text-justify line-clamp-6">{review.content}</h2>
+              </div>
             </div>
           </li>
-        ))
+        })
     }
   </ul>
 
@@ -345,17 +355,17 @@ export default function Page(): ReactElement {
         </div>
 
         { /** Reviews List */}
-      {reviews.length > 0 && (
-        <div className="flex flex-col justify-center items-center relative md:mt-12">
-          <h1 className="text-white text-lg md:text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
-          {reviews.length > 0 && reviews.length < 2
-            ? movieListsHTML(1)
-            : movieListsHTML(2)}
-        </div>
-      )}
+        {/* {!loading && reviews.length > 0 && (
+          <div className="flex flex-col justify-center items-center relative md:mt-12">
+            <h1 className="text-white text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
+            {reviews.length > 0 && reviews.length < 2
+              ? movieListsHTML(1)
+              : movieListsHTML(2)}
+          </div>
+        )} */}
 
         { /** Movie List */}
-        {movies.length > 0 && (
+        {!loading && movies.length > 0 && (
           <div className="flex flex-col justify-center relative md:mt-16">
             <h1 className="text-white text-2xl font-semibold relative text-center">Popular Movies On This Week</h1>
             <div className="flex flex-row justify-center items-center relative md:mt-12 hidden md:flex">
@@ -392,17 +402,17 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
-              <ul className="grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
-                {[...movies]
-                  .slice(0, 6)
-                  .map((movie) => (
-                    <li className="col-span-1 hover:scale-105 duration-500 rotate_3d m-0 rounded-2xl">
-                      <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
+            <ul className="grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+              {[...movies]
+                .slice(0, 6)
+                .map((movie) => (
+                  <li className="col-span-1 hover:scale-105 duration-500 rotate_3d m-0 rounded-2xl">
+                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                    </Link>
+                  </li>
+                ))}
+            </ul>
           </div>
         )}
       </div>

@@ -68,10 +68,10 @@ export const LoginForm = () => {
   const formErrors = errors as any;
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-black">
+    <div className="flex justify-center items-center min-h-screen relative">
       <div className="md:w-1/2 max-w-lg mx-auto my-24 px-4 py-5 shadow-none">
         <div className="text-left p-0 font-sans">
-          <h1 className=" text-white text-3xl font-semibold text-center font-poppins">Login to become members</h1>
+          <h1 className=" text-white text-3xl font-semibold text-center font-noto">Login to become members</h1>
         </div>
         <form action="#" onSubmit={handleSubmit(onSubmit)} className="p-0">
           <div className="mt-5">

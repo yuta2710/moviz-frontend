@@ -18,8 +18,8 @@ import Fuse from "fuse.js";
 import { SearchBar } from '../common/search-bar.component'
 import AddIcon from '@mui/icons-material/Add';
 import BurgerMenu from "../common/burger-menu";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faBars } from '@fortawesome/free-solid-svg-icons';
 // import fetch from 'node-fetch'
 
 interface DropdownProps {
@@ -147,7 +147,7 @@ const Header = (header: HeaderProps) => {
   return (
     <header className={`lg:container mx-auto px-3 py-3 relative bg-transparent rounded-sm`}>
       <nav className={`grid grid-cols-12 nav-container md:w-full md:mx-auto relative flex flex-row justify-between items-center sm:px-16 md:px-6 md:py-4 bg-transparent`}>
-        <Link href='/' className='col-span-1 flex justify-center items-center hidden lg:flex'>
+        <Link href='/home' className='col-span-1 flex justify-center items-center hidden lg:flex'>
           <Image className='logo-photo' src={"/assets/icons/logo_icon.png"} width={36} height={42} alt='Logo header'></Image>
           <span className={`logo-text self-center relative left-[2rem] md:left-[0rem] top-[4rem] md:top-[0rem] text-[2.5rem] md:text-2xl font-semibold whitespace-nowrap logo block ${fontLogo?.size} ${fontLogo?.color}`}>
             {logo?.text}
@@ -176,7 +176,7 @@ const Header = (header: HeaderProps) => {
 
         <div className="burger-menu-wrapper lg:hidden">
           <button onClick={handleBurgerMenuToggle}>
-            <FontAwesomeIcon icon={faBars} />
+            {/* <FontAwesomeIcon icon={faBars} /> */}
           </button>
           <BurgerMenu isOpen={isBurgerMenuOpen} onClose={() => setBurgerMenuOpen(false)} />
         </div>
@@ -252,7 +252,6 @@ const Header = (header: HeaderProps) => {
               </Box>
             </ul>}
         </div>
-        
         <div className='col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-1'></div>
         <div className='col-span-3 md:col-span-2 lg:col-span-1 flex flex-col relative'>
           {customer === null

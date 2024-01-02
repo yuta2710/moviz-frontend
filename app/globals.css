@@ -126,9 +126,9 @@ button:focus {
 }
 
 .ellipsis {
-  text-overflow: ellipsis; /* enables ellipsis */
-  white-space: wrap; /* keeps the text in a single line */
-  overflow: hidden; /* keeps the element from overflowing its parent */
+  /* text-overflow: ellipsis;  */
+  /* white-space: wrap; */
+  /* overflow: hidden;  */
 }
 
 .cast-container {
