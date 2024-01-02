@@ -37,6 +37,7 @@ export interface User {
   reviews: FilmReviewProps[];
   watchLists: string[];
   createdAt: string;
+  //watchLists: string[];
 }
 
 export interface HeaderProps {
@@ -209,6 +210,7 @@ export interface FilmReviewProps {
   updatedAt: string;
   // rating: number;
   // url: string;
+  poster_path: string;
 }
 
 export interface Genre {
