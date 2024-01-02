@@ -22,7 +22,6 @@ export default function Page() {
   const router = useRouter();
   const path = usePathname();
 
-
   useEffect(() => {
     if (!page || currentPage === 1) {
       router.push(`/news?page=${currentPage}`)

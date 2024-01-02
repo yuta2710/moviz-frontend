@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { APPLICATION_PATH, getGenres, getMe, getMovies } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
-import { Pagination } from "@mui/material";
+import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
 import gsap from "gsap";
 import * as THREE from "../../build/three.module";
@@ -43,17 +43,16 @@ export default function Page(): ReactElement {
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
   const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
   const currentDayOfWeek = currentDate.getDay();
-  const firstDayOfWeekIndex: number = 1; 
+  const firstDayOfWeekIndex: number = 1;
   const difference: number = currentDayOfWeek - firstDayOfWeekIndex;
   const firstDayOfWeek: Date = new Date(currentDate);
   firstDayOfWeek.setDate(currentDate.getDate() - difference - (currentDayOfWeek === 0 ? 7 : 0));
   const lastDayOfWeek = new Date(firstDayOfWeek);
-  lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6); 
+  lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
   const firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1);
   const lastDayOfYear = new Date(currentDate.getFullYear() + 1, 0, 0);
 
 
-  
   console.log("You chose this genre: " + genre);
 
   const handleOnChangeYear = (event: any) => {
@@ -98,31 +97,30 @@ export default function Page(): ReactElement {
     setPopular(popular);
     setRating("popularity.desc");
     setYear(undefined);
-    if(popular === "this-year") {
+    if (popular === "this-year") {
       setStartDate(formatDate(firstDayOfYear));
       setEndDate(formatDate(lastDayOfYear));
-      }
-      else if(popular === "this-month") {
-        setStartDate(formatDate(firstDayOfMonth));
-        setEndDate(formatDate(lastDayOfMonth));
-      }
-      else if(popular === "this-week") {
-        setStartDate(formatDate(firstDayOfWeek));
-        setEndDate(formatDate(lastDayOfWeek));
-      }
+    }
+    else if (popular === "this-month") {
+      setStartDate(formatDate(firstDayOfMonth));
+      setEndDate(formatDate(lastDayOfMonth));
+    }
+    else if (popular === "this-week") {
+      setStartDate(formatDate(firstDayOfWeek));
+      setEndDate(formatDate(lastDayOfWeek));
+    }
   };
 
-  function formatDate(date:Date): string {
+  function formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-}
+  }
 
   const handleOnChangeGenre = (event: any) => {
     const genre = event.target.value;
     setGenre(genre);
-    
     // router.push(`/movies/genre/${genre}`);
   };
 
@@ -158,7 +156,7 @@ export default function Page(): ReactElement {
     // if (!page || currentPage === 1) {
     //   router.push(/movies?page=${currentPage})
     // }
-    const fetchData = async (rating: string, genre:string) => {
+    const fetchData = async (rating: string, genre: string) => {
       const response = await fetch(`http://localhost:8080/api/v1/movies?page=1&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
       const data = response.json();
       data.then(json => {
@@ -188,7 +186,7 @@ export default function Page(): ReactElement {
       setGenres(genres);
       console.log("Movies list: ", movies);
       let newTitle = "Popular Movies";
-      if(year){
+      if (year) {
         newTitle += ` of ${year}`
       }
       if (genre) {
@@ -207,7 +205,6 @@ export default function Page(): ReactElement {
       setTitle(newTitle);
     }
     fetchData(rating, genre);
-    
   }, [router, year, rating, genre, popular]);
 
 
@@ -226,7 +223,7 @@ export default function Page(): ReactElement {
       // });
       data.then(json => {
         const data = json.data;
-        console.log("data result:" , data.results);
+        console.log("data result:", data.results);
         setMovies((prevMovies: Movie[]) => {
           const uniqueMovies = data.results.filter((newMovie: Movie) =>
             !prevMovies.some(prevMovie => prevMovie.id === newMovie.id)
@@ -242,11 +239,11 @@ export default function Page(): ReactElement {
       //       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY",
       //   },
       // };
-    
-     
+
+
     }
     fetchData(currentPage);
-    
+
   }, [currentPage]);
 
 
@@ -324,71 +321,71 @@ export default function Page(): ReactElement {
   return (
     <div className="relative top-0">
       <div className="">
-          {movies.length > 0 && (
-            <div className="flex flex-col justify-center relative md:mt-16">
-              <h1 className="text-white text-2xl font-semibold relative text-center">{title}</h1>
-              <div className="flex flex-row justify-center items-center relative md:mt-12">
-                <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
-                <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
-                  {yearOptions.map((option) => (
-                    <option value={option.value} className="text-center">{option.label}</option>
-                  ))}
-                </select>
+        {movies.length > 0 && (
+          <div className="flex flex-col justify-center relative md:mt-16">
+            <h1 className="text-white text-2xl font-semibold relative text-center">{title}</h1>
+            <div className="flex flex-row justify-center items-center relative md:mt-12">
+              <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
+              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
+                {yearOptions.map((option) => (
+                  <option value={option.value} className="text-center">{option.label}</option>
+                ))}
+              </select>
 
-                <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={rating} onChange={handleOnChangeRating}>
-                  <option value={rating} disabled selected className="text-center">Rating</option>
-                  {ratingOptions.map((option) => (
-                    <option value={option.value} className="text-center">{option.label}</option>
-                  ))}
-                </select>
-                <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={popular} onChange={handleOnChangePopular}>
-                  {popularOptions.map((option) => (
-                    <option value={option.value} className="text-center">{option.label}</option>
-                  ))}
-                </select>
-                <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={genre} onChange={handleOnChangeGenre}>
-                  <option value="" disabled selected className="text-center">Genre</option>
-                  {genres.map((genre) => (
-                    <option value={genre.id} className="text-center">{genre.name}</option>
-                  ))}
-                </select>
-              </div>
+              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={rating} onChange={handleOnChangeRating}>
+                <option value={rating} disabled selected className="text-center">Rating</option>
+                {ratingOptions.map((option) => (
+                  <option value={option.value} className="text-center">{option.label}</option>
+                ))}
+              </select>
+              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={popular} onChange={handleOnChangePopular}>
+                {popularOptions.map((option) => (
+                  <option value={option.value} className="text-center">{option.label}</option>
+                ))}
+              </select>
+              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={genre} onChange={handleOnChangeGenre}>
+                <option value="" disabled selected className="text-center">Genre</option>
+                {genres.map((genre) => (
+                  <option value={genre.id} className="text-center">{genre.name}</option>
+                ))}
+              </select>
+            </div>
 
-              {/* <div className="flex flex-row justify-center items-center relative">
+            {/* <div className="flex flex-row justify-center items-center relative">
               <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>
             </div> */}
-              <div className="flex flex-row">
-                {/* <div className="blob relative"></div> */}
-                <div className="blob-linear-yellow-blue relative"></div>
-              </div>
-              <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
-                {[...movies]
-                  .slice(0, 6)
-                  .map((movie) => (
-                    <li className="">
-                      <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-              <h1 className="text-white text-2xl font-semibold relative text-center md:mt-10">Other</h1>
-              <ul className="grid grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
-                {[...movies]
-                  .slice(6, )
-                  .map((movie) => (
-                    <li className="">
-                      <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-              <div className="text-white text-2xl font-semibold relative text-center" ref={ref}>Load More ....</div>
+            <div className="flex flex-row">
+              {/* <div className="blob relative"></div> */}
+              <div className="blob-linear-yellow-blue relative"></div>
             </div>
-            
-          )}
-        </div>
+            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+              {[...movies]
+                .slice(0, 6)
+                .map((movie) => (
+                  <li className="">
+                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+            <h1 className="text-white text-2xl font-semibold relative text-center md:mt-10">Other</h1>
+            <ul className="grid grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+              {[...movies]
+                .slice(6,)
+                .map((movie) => (
+                  <li className="">
+                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+            <div className="text-white text-2xl font-semibold relative text-center md:py-16" ref={ref}><CircularProgress color="secondary" /></div>
+          </div>
+
+        )}
+      </div>
     </div>
   );
 

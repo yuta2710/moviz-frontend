@@ -169,7 +169,7 @@ export default function Page(): ReactElement {
         reviews.map(async (review: FilmReviewProps) => {
           try {
             const movieDetails = await getMovie(review.movie);
-            const posterPath = movieDetails.poster_path || ''; 
+            const posterPath = movieDetails.poster_path || '';
             return { ...review, poster_path: posterPath };
           } catch (error) {
             console.error(`Error fetching poster for movie ${review.movie}:`, error);
@@ -183,7 +183,6 @@ export default function Page(): ReactElement {
     fetchPosters();
   }, [reviews]);
 
-  
 
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
