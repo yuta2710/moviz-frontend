@@ -51,8 +51,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const handleOpenPostReviewForm = () => setPostReviewForm(true);
   const handleClosePostReviewForm = () => setPostReviewForm(false);
 
-  const [openToastWarning, setOpenToastWarning] = useState(false);
-  const [openToastSuccesss, setOpenToastSuccess] = useState(false);
+  const [openToastWarning, setOpenToastWarning] = useState<boolean>();
+  const [openToastSuccesss, setOpenToastSuccess] = useState<boolean>();
 
   const handleOpenToastWarning = () => {
     setOpenToastWarning(true);
@@ -198,11 +198,19 @@ export default function Page({ params }: { params: { id: string } }) {
       updatedAt: ISO_DATE
     };
     console.log("reviewData = ", reviewData);
-
-    saveReviewsByMovieId(id, reviewData).then(() => {
-      handleClosePostReviewForm();
-      window.location.reload();
-    })
+    setOpenToastSuccess(true);
+    setSuccessMessage("Review posted successfully!");
+  
+    saveReviewsByMovieId(id, reviewData)
+      .then(() => {
+        handleClosePostReviewForm();
+        // Reload the page
+        window.location.reload();
+      })
+      .catch((error) => {
+        // Handle error if needed
+        console.error("Error saving review:", error);
+      });
   }
 
   // const handleAddToWatchlist = async () => {
