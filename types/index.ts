@@ -206,11 +206,12 @@ export interface FilmReviewProps {
   createdAt: string;
   tag?: string;
   movie: string;
+  movieObject?: Movie;
   // id: string;
   updatedAt: string;
   // rating: number;
   // url: string;
-  poster_path?: string;
+  //poster_path?: string;
 }
 
 export interface Genre {

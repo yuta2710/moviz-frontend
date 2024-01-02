@@ -151,37 +151,33 @@ export default function Page(): ReactElement {
     const fetchAllReviews = async () => {
       try {
         const reviewsJson = await getAllReviews() as FilmReviewProps[];
-        setReviews(reviewsJson);
+  
+        // Set poster path for each review
+        const reviewsWithPosters = await Promise.all(
+          reviewsJson.map(async (review: FilmReviewProps) => {
+            try {
+              const movieDetails = await getMovie(review.movie) as Movie;
+              //const posterPath = movieDetails.poster_path || '';
+              return { ...review, movieObject: movieDetails };
+            } catch (error) {
+              console.error(`Error fetching poster for movie ${review.movie}:`, error);
+              return { ...review, poster_path: '' };
+            }
+          })
+        );
+  
+        // Update the reviews state with reviews including poster paths
+        setReviews(reviewsWithPosters);
       } catch (error) {
         console.log(error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchAllReviews();
-  }, [])
+  }, []);
 
-  // Loop through all reviews and set movie poster path 
-  useEffect(() => {
-    const fetchPosters = async () => {
-      const posterPaths = await Promise.all(
-        reviews.map(async (review: FilmReviewProps) => {
-          try {
-            const movieDetails = await getMovie(review.movie);
-            const posterPath = movieDetails.poster_path || '';
-            return { ...review, poster_path: posterPath };
-          } catch (error) {
-            console.error(`Error fetching poster for movie ${review.movie}:`, error);
-            return { ...review, poster_path: '' };
-          }
-        })
-      );
-      setReviews(posterPaths);
-    };
-
-    fetchPosters();
-  }, [reviews]);
 
 
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
@@ -328,7 +324,7 @@ export default function Page(): ReactElement {
         .slice(0, 4).map((review: FilmReviewProps) => (
           <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
             <Image
-              src={`https://image.tmdb.org/t/p/w500/${review.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w500/${review.movieObject?.poster_path}`}
               width={200}
               height={150}
               alt=""
@@ -336,7 +332,7 @@ export default function Page(): ReactElement {
             >
             </Image>
             <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
-              <h1 className="text-xl font-semibold text-white md:mt-6  md:w-[300px] text-gradient-cyan-blue">{movies.find(movie => movie.id === Number(review.movie))?.title}</h1>
+              <h1 className="text-xl font-semibold text-white md:mt-6  md:w-[300px] text-gradient-cyan-blue">{review.movieObject?.title}</h1>
               <span className="text-white text-left opacity-50 text-sm md:mt-2">{formatHistoryDate(review.createdAt)}</span>
               <h2 className="text-sm font-bold text-white md:mt-6">
                 Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
