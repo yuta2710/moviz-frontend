@@ -152,8 +152,8 @@ export default function Page(): ReactElement {
       try {
         const reviewsJson = await getAllReviews() as FilmReviewProps[];
   
-        // Set poster path for each review
-        const reviewsWithPosters = await Promise.all(
+        // Set movie object for each review
+        const reviewsWithMovies = await Promise.all(
           reviewsJson.map(async (review: FilmReviewProps) => {
             try {
               const movieDetails = await getMovie(review.movie) as Movie;
@@ -161,13 +161,13 @@ export default function Page(): ReactElement {
               return { ...review, movieObject: movieDetails };
             } catch (error) {
               console.error(`Error fetching poster for movie ${review.movie}:`, error);
-              return { ...review, poster_path: '' };
+              return { ...review };
             }
           })
         );
   
-        // Update the reviews state with reviews including poster paths
-        setReviews(reviewsWithPosters);
+        // Update the reviews state with reviews including movie objects
+        setReviews(reviewsWithMovies);
       } catch (error) {
         console.log(error);
       } finally {

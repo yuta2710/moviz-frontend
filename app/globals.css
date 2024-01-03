@@ -485,3 +485,9 @@ button:focus {
   transform-style: initial;
   transition: 1s;
 }
+
+.MuiPagination-root {
+  button {
+    color: #FFFFFF;
+ }
+}

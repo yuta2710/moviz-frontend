@@ -4,12 +4,13 @@ import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getCurrentReviewsFromLetterboxdServer, getMe } from "@/utils/clients.utils";
-import { User } from "@/types";
+import { getCurrentReviewsFromLetterboxdServer, getMe, getMovie } from "@/utils/clients.utils";
+import { FilmReviewProps, User } from "@/types";
 import letterboxd from "letterboxd-api";
 import axios from "axios";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Pagination } from "@mui/material";
 import MovieList from "@/components/movies-list.component";
+import ReviewList from "@/components/review-list.component";
 
 export default function Page() {
   const [customer, setCustomer] = useState<User | null>(null);
@@ -20,6 +21,12 @@ export default function Page() {
   const [isEditingLastname, setIsEditingLastname] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const reviewsPerPage = 3; 
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
   useEffect(() => {
     if (isAuthenticated() && user !== null) {
@@ -38,12 +45,14 @@ export default function Page() {
       console.log("Watchlist: " , customer?.watchLists);
       console.log("customer id: ",  customer?._id)
       console.log("customer name: ", customer?.lastName);
+      console.log("customer reviews: ", customer?.reviews);
     } else {
       setLoading(false);
       router.push("/login")
     }
   }, [isAuthenticated]);
 
+   
   const handleAvatarClick = () => {
     // Trigger click on the hidden file input
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
@@ -243,7 +252,22 @@ export default function Page() {
         </div>
         {selected == 1 && (
           <div>
+          
+            <ReviewList reviews={customer.reviews} currentPage={currentPage} itemsPerPage={reviewsPerPage} />
+            <div className="items-center justify-center">
+              <Pagination
+                count={Math.ceil(customer.reviews.length / reviewsPerPage)}
+                // variant="outlined"
+                color="secondary"
+                size="large"
+                page={currentPage}
+                onChange={(event, page) => handlePageChange(page)}
 
+              />
+            </div>
+
+      
+            
           </div>
         )}
         {selected == 2 && (
