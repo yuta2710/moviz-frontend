@@ -3,7 +3,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovie, getMovies, getReviews } from "@/utils/clients.utils";
+import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovie, getMovies, getRecommendations, getReviews } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
 import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
@@ -18,6 +18,7 @@ export default function Page(): ReactElement {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page"));
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(page || 1);
@@ -177,6 +178,47 @@ export default function Page(): ReactElement {
   
     fetchAllReviews();
   }, []);
+
+
+  useEffect(() => {
+    const fetchUserWatchlist = async () => {
+      if (customer?.watchLists) {
+        // Create an array to store all recommendations
+        const allRecommendations: Movie[] = [];
+  
+        // Loop through each movie in the watchlist
+        for (const movieId of customer.watchLists) {
+          try {
+            // Make API request to get recommendations for each movie
+            const data = await getRecommendations(movieId);
+  
+            // Update state with unique recommendations
+            setRecommendedMovies((prevMovies: Movie[]) => {
+              const uniqueMovies = data.results.filter((newMovie: Movie) =>
+                !prevMovies.some(prevMovie => prevMovie.id === newMovie.id)
+              );
+              return [...prevMovies, ...uniqueMovies];
+            });
+  
+            // Add recommendations to the allRecommendations array
+            allRecommendations.push(...data.results);
+          } catch (error) {
+            console.error(`Error fetching recommendations for movie ${movieId}:`, error);
+          }
+        }
+  
+        // Log all recommendations after the loop
+        console.log("All Recommendations:", allRecommendations);
+      }
+    };
+  
+    // Call the function to fetch user watchlist and recommendations
+    if (isAuthenticated() && user !== null) {
+      fetchUserWatchlist();
+    }
+  }, [isAuthenticated, user, customer?.watchLists, getRecommendations, setRecommendedMovies]);
+  
+
 
 
 
@@ -420,6 +462,24 @@ export default function Page(): ReactElement {
                     </Link>
                   </li>
                 ))}
+            </ul>
+          </div>
+        )}
+
+        {recommendedMovies.length > 0 && (
+          <div className="flex flex-col justify-center relative md:mt-16">
+            <h1 className="text-white text-2xl font-semibold relative text-center">Recommended For You</h1>
+            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+              {[...recommendedMovies]
+                  .sort((a, b) => b.popularity - a.popularity) 
+                  .slice(0, 6)
+                  .map((movie) => (
+                    <li className=" m-0 rounded-2xl">
+                      <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                      </Link>
+                    </li>
+                  ))}
             </ul>
           </div>
         )}
