@@ -30,6 +30,18 @@ export const saveUser = async (userData: UserRegisterRequestProps) => {
   }
 };
 
+export const getUserById = async (userId: string) => {
+  const res = await axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("accessToken")} `,
+    },
+  });
+
+  const json = res.data;
+
+  return json;
+};
+
 export const getAuthConfig = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
