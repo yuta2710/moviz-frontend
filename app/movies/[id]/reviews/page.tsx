@@ -68,8 +68,8 @@ export default function Page({ params }: { params: { id: string } }) {
               ))}
         </div>
       </div>
-      <div className="relative">
-        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={306} height={391} alt="" className="md:ml-24"></Image>
+      <div className="relative md:mr-64 md:mt-24">
+        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={506} height={591} alt="" className="md:ml-24"></Image>
       </div>
     </div>
   )

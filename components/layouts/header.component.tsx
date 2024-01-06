@@ -18,8 +18,8 @@ import Fuse from "fuse.js";
 import { SearchBar } from '../common/search-bar.component'
 import AddIcon from '@mui/icons-material/Add';
 import BurgerMenu from "../common/burger-menu";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faBars } from '@fortawesome/free-solid-svg-icons';
 // import fetch from 'node-fetch'
 
 interface DropdownProps {
@@ -176,7 +176,7 @@ const Header = (header: HeaderProps) => {
 
         <div className="burger-menu-wrapper lg:hidden">
           <button onClick={handleBurgerMenuToggle}>
-            <FontAwesomeIcon icon={faBars} />
+            {/* <FontAwesomeIcon icon={faBars} /> */}
           </button>
           <BurgerMenu isOpen={isBurgerMenuOpen} onClose={() => setBurgerMenuOpen(false)} />
         </div>
@@ -252,7 +252,6 @@ const Header = (header: HeaderProps) => {
               </Box>
             </ul>}
         </div>
-        
         <div className='col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-1'></div>
         <div className='col-span-3 md:col-span-2 lg:col-span-1 flex flex-col relative'>
           {customer === null
@@ -271,7 +270,7 @@ const Header = (header: HeaderProps) => {
           }
 
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
               <DropdownItem
                 onClick={() => { }}

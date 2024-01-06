@@ -3,7 +3,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovies, getReviews } from "@/utils/clients.utils";
+import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovie, getMovies, getRecommendations, getReviews } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
 import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
@@ -18,6 +18,7 @@ export default function Page(): ReactElement {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page"));
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(page || 1);
@@ -37,7 +38,7 @@ export default function Page(): ReactElement {
   const handleOnChangeYear = (event: any) => {
     const year = event.target.value;
     setYear(year);
-    // router.push(`/movies/decades/year/${year}`);
+    // router.push(/movies/decades/year/${year});
     router.push(`/movies/decades/year/${year}/${page}`);
   };
 
@@ -51,7 +52,7 @@ export default function Page(): ReactElement {
     if (rating === "Lowest") {
       router.push(`/movies/by/rating/lowest/`);
     }
-    // router.push(`/movies/decade/${rating}`);
+    // router.push(/movies/decade/${rating});
   };
 
   const handleOnChangePopular = (event: any) => {
@@ -94,7 +95,7 @@ export default function Page(): ReactElement {
   // Fetch all movies
   useEffect(() => {
     // if (!page || currentPage === 1) {
-    //   router.push(`/movies?page=${currentPage}`)
+    //   router.push(/movies?page=${currentPage})
     // }
     const fetchData = async (pageNumber: number) => {
       const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`);
@@ -151,7 +152,23 @@ export default function Page(): ReactElement {
     const fetchAllReviews = async () => {
       try {
         const reviewsJson = await getAllReviews() as FilmReviewProps[];
-        setReviews(reviewsJson);
+
+        // Set movie object for each review
+        const reviewsWithMovies = await Promise.all(
+          reviewsJson.map(async (review: FilmReviewProps) => {
+            try {
+              const movieDetails = await getMovie(review.movie) as Movie;
+              //const posterPath = movieDetails.poster_path || '';
+              return { ...review, movieObject: movieDetails };
+            } catch (error) {
+              console.error(`Error fetching poster for movie ${review.movie}:`, error);
+              return { ...review };
+            }
+          })
+        );
+
+        // Update the reviews state with reviews including movie objects
+        setReviews(reviewsWithMovies);
       } catch (error) {
         console.log(error);
       } finally {
@@ -160,7 +177,50 @@ export default function Page(): ReactElement {
     };
 
     fetchAllReviews();
-  }, [])
+  }, []);
+
+
+  useEffect(() => {
+    const fetchUserWatchlist = async () => {
+      if (customer?.watchLists) {
+        // Create an array to store all recommendations
+        const allRecommendations: Movie[] = [];
+
+        // Loop through each movie in the watchlist
+        for (const movieId of customer.watchLists) {
+          try {
+            // Make API request to get recommendations for each movie
+            const data = await getRecommendations(movieId);
+
+            // Update state with unique recommendations
+            setRecommendedMovies((prevMovies: Movie[]) => {
+              const uniqueMovies = data.results.filter((newMovie: Movie) =>
+                !prevMovies.some(prevMovie => prevMovie.id === newMovie.id)
+              );
+              return [...prevMovies, ...uniqueMovies];
+            });
+
+            // Add recommendations to the allRecommendations array
+            allRecommendations.push(...data.results);
+          } catch (error) {
+            console.error(`Error fetching recommendations for movie ${movieId}:`, error);
+          }
+        }
+
+        // Log all recommendations after the loop
+        console.log("All Recommendations:", allRecommendations);
+      }
+    };
+
+    // Call the function to fetch user watchlist and recommendations
+    if (isAuthenticated() && user !== null) {
+      fetchUserWatchlist();
+    }
+  }, [isAuthenticated, user, customer?.watchLists, getRecommendations, setRecommendedMovies]);
+
+
+
+
 
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
@@ -298,15 +358,18 @@ export default function Page(): ReactElement {
     return cleanup;
   })
 
-  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto`}>
+  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto gap-4`}>
     {
       reviews
+        // .sort((a: FilmReviewProps, b: FilmReviewProps) =>
+        //   new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .sort((a: FilmReviewProps, b: FilmReviewProps) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          b.author_details.rating - a.author_details.rating
+        )
         .slice(0, 4).map((review: FilmReviewProps) => (
-          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:ml-4 md:mt-8" key={review.author}>
+          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
             <Image
-              src={`https://image.tmdb.org/t/p/w500/${String(movies.find(movie => movie.id === Number(review.movie))?.poster_path)}`}
+              src={`https://image.tmdb.org/t/p/w500/${review.movieObject?.poster_path}`}
               width={200}
               height={150}
               alt=""
@@ -314,13 +377,15 @@ export default function Page(): ReactElement {
             >
             </Image>
             <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
-              <h1 className="text-xl font-semibold text-white md:mt-6  md:w-[300px] text-gradient-cyan-blue">{movies.find(movie => movie.id === Number(review.movie))?.title}</h1>
+              <h1 className="text-xl font-semibold text-white md:mt-6  md:w-[300px] text-gradient-cyan-blue">{review.movieObject?.title}</h1>
               <span className="text-white text-left opacity-50 text-sm md:mt-2">{formatHistoryDate(review.createdAt)}</span>
               <h2 className="text-sm font-bold text-white md:mt-6">
                 Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
-                <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
+                <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">
+                  {review.author_details.rating.toFixed(1)} / 10
+                </span>
               </h2>
-              <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] text-justify">{review.content}</h2>
+              <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] line-clamp-4 text-justify">{review.content}</h2>
             </div>
           </li>
         ))
@@ -345,45 +410,19 @@ export default function Page(): ReactElement {
         </div>
 
         { /** Reviews List */}
-      {reviews.length > 0 && (
-        <div className="flex flex-col justify-center items-center relative md:mt-12">
-          <h1 className="text-white text-lg md:text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
-          {reviews.length > 0 && reviews.length < 2
-            ? movieListsHTML(1)
-            : movieListsHTML(2)}
-        </div>
-      )}
+        {reviews.length > 0 && (
+          <div className="flex flex-col justify-center items-center relative md:mt-12">
+            <h1 className="text-white text-2xl font-semibold relative text-left">Popular Reviews On This Week</h1>
+            {reviews.length > 0 && reviews.length < 2
+              ? movieListsHTML(1)
+              : movieListsHTML(2)}
+          </div>
+        )}
 
         { /** Movie List */}
         {movies.length > 0 && (
           <div className="flex flex-col justify-center relative md:mt-16">
             <h1 className="text-white text-2xl font-semibold relative text-center">Popular Movies On This Week</h1>
-            <div className="flex flex-row justify-center items-center relative md:mt-12 hidden md:flex">
-              <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
-                {yearOptions.map((option) => (
-                  <option value={option.value} className="text-center">{option.label}</option>
-                ))}
-              </select>
-
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeRating}>
-                <option value="" disabled selected className="text-center">Rating</option>
-                {ratingOptions.map((option) => (
-                  <option value={option.value} className="text-center">{option.label}</option>
-                ))}
-              </select>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={popular} onChange={handleOnChangePopular}>
-                {popularOptions.map((option) => (
-                  <option value={option.value} className="text-center">{option.label}</option>
-                ))}
-              </select>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeGenre}>
-                <option value="" disabled selected className="text-center">Genre</option>
-                {genres.map((genre) => (
-                  <option value={genre.id} className="text-center">{genre.name}</option>
-                ))}
-              </select>
-            </div>
 
             {/* <div className="flex flex-row justify-center items-center relative">
             <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>
@@ -392,6 +431,7 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
+
             <ul className="grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(0, 6)
@@ -403,6 +443,26 @@ export default function Page(): ReactElement {
                   </li>
                 ))}
             </ul>
+
+          </div>
+        )}
+
+        {recommendedMovies.length > 0 && (
+          <div className="flex flex-col justify-center relative md:mt-16">
+            <h1 className="text-white text-2xl font-semibold relative text-center">Recommended For You</h1>
+            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+              {[...recommendedMovies]
+                .sort((a, b) => b.popularity - a.popularity)
+                .slice(0, 6)
+                .map((movie) => (
+                  <li className=" m-0 rounded-2xl">
+                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+
           </div>
         )}
       </div>

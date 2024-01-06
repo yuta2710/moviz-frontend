@@ -2,7 +2,7 @@
 
 import { ArticleProps } from "@/types";
 import { formatDate } from "@/utils/convert.utils";
-import { Pagination } from "@mui/material";
+import { Pagination, styled } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -21,6 +21,13 @@ export default function Page() {
   const [numberOfArticlesPerPage] = useState(1);
   const router = useRouter();
   const path = usePathname();
+
+  const StyledPagination = styled(Pagination)(({ theme }) => ({
+    button: {
+      color: '#fff', // Change the color of inactive page numbers here
+    },
+  }));
+
 
   useEffect(() => {
     if (!page || currentPage === 1) {
@@ -117,96 +124,21 @@ export default function Page() {
               </footer>
             </article>
           </div>
-        )}
-        <h1 className="text-white text-xl font-semibold">Recent News</h1>
-        <div className="flex flex-wrap -mx-1 lg:-mx-4">
-          {/* <!-- Column --> */}
-          {news.slice(1).map((article, index) => (
-            <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
-              {/* <!-- Article --> */}
-              <article className="overflow-hidden rounded-lg shadow-lg ">
-                <Link href={article.web_url}>
-                  <Image
-                    alt="Placeholder"
-                    className="block h-auto w-full"
-                    src={`https://www.nytimes.com/${article.multimedia[5].url}`}
-                    width={article.multimedia[5].width}
-                    height={article.multimedia[5].height}
-                  ></Image>
-                </Link>
 
-                <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
-                  <h1 className="text-lg">
-                    <Link
-                      className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold"
-                      href={article.web_url}
-                      target="_blanket"
-                    >
-                      <span className="text-white">{article.abstract}</span>
-                    </Link>
-                  </h1>
-                </header>
-                <p className="text-white text-left ellipsis md:ml-4 text-sm">
-                  {article.lead_paragraph}
-                </p>
-
-                <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                  <Link
-                    className="flex items-center no-underline hover:underline text-white"
-                    href={article.web_url}
-                  >
-                    <Image
-                      alt="Placeholder"
-                      className="block rounded-full"
-                      src="https://picsum.photos/32/32/?random"
-                      width={32}
-                      height={32}
-                    ></Image>
-                    <p className="ml-2 text-sm">
-                      {article.byline.original.split(" ")[0]}{" "}
-                      <span className="text-white font-semibold">
-                        {article.byline.original.split(" ")[1]}{" "}
-                        {article.byline.original.split(" ")[2]}
-                      </span>
-                    </p>
-                  </Link>
-                  <Link
-                    className="no-underline text-grey-darker hover:text-red-dark"
-                    href="#"
-                  >
-                    <span className="hidden">Like</span>
-                    <i className="fa fa-heart"></i>
-                  </Link>
-                </footer>
-              </article>
-            </div>
-          ))}
-          {/* <!-- END Column --> */}
-        </div>
+        ))}
+        {/* <!-- END Column --> */}
+        <StyledPagination
+          count={Math.ceil(news.length / numberOfArticlesPerPage)}
+          page={currentPage}
+          onChange={(event, page) => paginate(page)}
+          size="large"
+          color="secondary"
+          className="relative md:rounded-sm md:mx-auto md:mt-12 md:py-16"
+          variant="outlined"
+        // classes={ }
+        />
       </div>
-
-      <Pagination
-        count={Math.ceil(news.length / numberOfArticlesPerPage)}
-        page={currentPage}
-        onChange={(event, page) => paginate(page)}
-        size="large"
-        color="primary"
-        className="fixed bottom-0 left-1/2 transform -translate-x-1/2"
-        sx={{
-          "& .MuiPaginationItem-root": {
-            color: "#fff", // Text color for non-active components
-            "&.Mui-selected": {
-              backgroundColor: "rgb(14 165 233)", // Background color for active component
-              color: "#fff", // Text color for active component
-            },
-            "&:hover": {
-              backgroundColor: "transparent", // Background color on hover
-              color: "#fff", // Text color on hover
-            },
-          },
-        }}
-      />
-      
-    </>
-  );
+    </div>
+  </>
 }
+
