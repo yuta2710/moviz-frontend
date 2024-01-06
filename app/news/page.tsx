@@ -162,7 +162,6 @@ export default function Page() {
         />
         {/* <!-- END Column --> */}
       </div>
-    </div>
-  </>
+    </>
+  )
 }
-

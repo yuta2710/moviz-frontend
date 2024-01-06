@@ -326,7 +326,7 @@ export default function Page(): ReactElement {
       <div className="">
         {movies.length > 0 && (
           <div className="flex flex-col justify-center relative md:mt-16">
-            <h1 className="text-white text-2xl font-semibold relative text-center">Most Popular Films <span className="text-red-500 font-semibold">{title}</span></h1>
+            <h1 className="text-white text-2xl font-semibold relative text-center py-4">Most Popular Films <span className="text-red-500 font-semibold">{title}</span></h1>
             <div className="flex flex-row justify-center items-center relative md:mt-12">
               <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
               <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
@@ -361,11 +361,11 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
-            <ul className={`grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8`}>
+            <ul className={`grid grid-cols-2 md:grid-cols-4 md:mx-auto relative gap-4 justify-center items-center md:mt-8`}>
               {[...movies]
                 .slice(0, 6)
                 .map((movie) => movie.poster_path !== null && (
-                  <li className="">
+                  <li className="col-span-1">
                     <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
                       <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-contain rounded-sm"></Image>
                     </Link>
@@ -373,8 +373,8 @@ export default function Page(): ReactElement {
                   </li>
                 ))}
             </ul>
-            <h1 className="text-white text-2xl font-semibold relative text-center md:mt-24">Other Similar Films</h1>
-            <ul className="grid grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+            <h1 className="text-white text-2xl font-semibold relative text-center md:mt-24 py-4">Other Similar Films</h1>
+            <ul className="grid grid-cols-2 md:grid-cols-5 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(6,)
                 .map((movie) => movie.poster_path !== null && (
