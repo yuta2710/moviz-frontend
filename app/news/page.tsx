@@ -1,7 +1,7 @@
 "use client";
 
 import { ArticleProps } from "@/types";
-import { formatDate } from "@/utils/convert.utils";
+import { formatDate, formatHistoryDate } from "@/utils/convert.utils";
 import { Pagination, styled } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,76 +57,99 @@ export default function Page() {
     router.push(`/news?page=${pageNumber}`);
   };
 
-  return (
-    <>
-      <div className="container my-12 mx-auto px-4 md:px-12 relative md:top-[20rem]">
-        <div className="flex flex-row">
-          {/* <div className="blob relative"></div> */}
-          <div className="blob-linear-yellow-blue relative"></div>
-        </div>
-        <h1 className="text-white text-xl font-semibold">Latest News</h1>
+  return <>
+    <div className="container my-12 mx-auto px-4 md:px-12 relative">
+      <div className="flex flex-row">
+        {/* <div className="blob relative"></div> */}
+        <div className="blob-linear-yellow-blue relative"></div>
+      </div>
+      <h1 className="text-white text-xl font-semibold">Latest News</h1>
 
-        {news.length > 0 && news[0] && (
-          <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
-            {/* <!-- Article --> */}
-            <article className="overflow-hidden rounded-lg shadow-lg ">
-              <a href="#">
-                <Image
-                  alt="Placeholder"
-                  className="block h-auto w-full"
-                  src={`https://www.nytimes.com/${news[0].multimedia[5].url}`}
-                  width={news[0].multimedia[5].width}
-                  height={news[0].multimedia[5].height}
-                ></Image>
-              </a>
+      <ul className="grid grid-cols-3 gap-2 relative">
+        {news.length > 0 &&
+          news
+            .slice(0, 3)
+            .sort((a: ArticleProps, b: ArticleProps) => new Date(b.pub_date).getTime() - new Date(a.pub_date).getTime())
+            .map((newsItem) =>
+              <li className="">
+                <div className="my-1 px-1 w-full lg:my-4 lg:px-0 lg:w-full">
+                  {/* <!-- Article --> */}
+                  <article className="overflow-hidden rounded-lg shadow-lg">
+                    <a href="#">
+                      <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${newsItem.multimedia[5].url}`} width={newsItem.multimedia[5].width} height={newsItem.multimedia[5].height}></Image>
+                    </a>
 
-              <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
-                <h1 className="text-lg">
-                  <a
-                    className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold"
-                    href="#"
-                  >
-                    <span className="text-white">{news[0].abstract}</span>
-                  </a>
-                </h1>
-              </header>
-              <p className="text-white text-left ellipsis md:ml-4 text-sm">
-                {news[0].lead_paragraph}
-              </p>
+                    <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
+                      <h1 className="text-lg">
+                        <a className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold" href="#">
+                          <span className="text-white">{newsItem.abstract}</span>
+                        </a>
+                      </h1>
+                    </header>
+                    <p className="text-white text-left ellipsis md:ml-4 text-sm">{newsItem.lead_paragraph}</p>
 
-              <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                <a
-                  className="flex items-center no-underline hover:underline text-white"
-                  href="#"
-                >
-                  <Image
-                    alt="Placeholder"
-                    className="block rounded-full"
-                    src="https://picsum.photos/32/32/?random"
-                    width={32}
-                    height={32}
-                  ></Image>
-                  <p className="ml-2 text-sm">
-                    {news[0].byline.original.split(" ")[0]}{" "}
-                    <span className="text-white font-semibold">
-                      {news[0].byline.original.split(" ")[1]}{" "}
-                      {news[0].byline.original.split(" ")[2]}
-                    </span>
-                  </p>
-                </a>
-                <a
-                  className="no-underline text-grey-darker hover:text-red-dark"
-                  href="#"
-                >
-                  <span className="hidden">Like</span>
-                  <i className="fa fa-heart"></i>
-                </a>
-              </footer>
-            </article>
-          </div>
+                    <footer className="flex items-center justify-between leading-none p-2 md:p-4">
+                      <a className="flex items-center no-underline hover:underline text-white" href="#">
+                        <Image alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" width={32} height={32}></Image>
+                        <p className="ml-2 text-sm">
+                          {newsItem.byline.original.split(" ")[0]} <span className="text-white font-semibold">{newsItem.byline.original.split(" ")[1]} {newsItem.byline.original.split(" ")[2]}</span>
+                        </p>
+                      </a>
+                      {/* <a className="no-underline text-grey-darker hover:text-red-dark" href="#">
+                        <span className="hidden">Like</span>
+                        <i className="fa fa-heart"></i>
+                      </a> */}
+                      <p className="text-white text-sm font-semibold">{formatHistoryDate(newsItem.pub_date)}</p>
+                    </footer>
 
-        )}
-        {/* <!-- END Column --> */}
+                  </article>
+
+                </div>
+              </li>
+            )}
+      </ul>
+      <h1 className="text-white text-xl font-semibold md:mt-8">Another News</h1>
+      <div className="flex flex-wrap -mx-1 lg:-mx-4">
+        {/* <!-- Column --> */}
+        {news
+          .sort((a: ArticleProps, b: ArticleProps) => new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime())
+          .map((article, index) => (
+            <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+
+              {/* <!-- Article --> */}
+              <article className="overflow-hidden rounded-lg shadow-lg ">
+
+                <Link href={article.web_url}>
+                  <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${article.multimedia[5].url}`} width={article.multimedia[5].width} height={article.multimedia[5].height}></Image>
+                </Link>
+
+                <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
+                  <h1 className="text-lg">
+                    <Link className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold" href={article.web_url} target="_blanket">
+                      <span className="text-white">{article.abstract}</span>
+                    </Link>
+                  </h1>
+                </header>
+                <p className="text-white text-left ellipsis md:ml-4 text-sm">{article.lead_paragraph}</p>
+
+                <footer className="flex items-center justify-between leading-none p-2 md:p-4">
+                  <Link className="flex items-center no-underline hover:underline text-white" href={article.web_url}>
+                    <Image alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" width={32} height={32}></Image>
+                    <p className="ml-2 text-sm">
+                      {article.byline.original.split(" ")[0]} <span className="text-white font-semibold">{article.byline.original.split(" ")[1]} {article.byline.original.split(" ")[2]}</span>
+                    </p>
+                    <p className="text-white text-sm font-medium relative md:ml-4 opacity-60">{formatHistoryDate(article.pub_date)}</p>
+                  </Link>
+                  <Link className="no-underline text-grey-darker hover:text-red-dark" href="#">
+                    <span className="hidden">Like</span>
+                    <i className="fa fa-heart"></i>
+                  </Link>
+                </footer>
+
+              </article>
+
+            </div>
+          ))}
         <StyledPagination
           count={Math.ceil(news.length / numberOfArticlesPerPage)}
           page={currentPage}
@@ -137,6 +160,7 @@ export default function Page() {
           variant="outlined"
         // classes={ }
         />
+        {/* <!-- END Column --> */}
       </div>
     </>
   )

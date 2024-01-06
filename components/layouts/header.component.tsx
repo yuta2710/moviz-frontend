@@ -195,7 +195,7 @@ const Header = (header: HeaderProps) => {
           </ul>
         </div>
         <div className='lg:col-span-1 hidden'></div>
-        <div className='col-span-6 md:col-span-4 flex flex-col relative z-10'>
+        <div className='col-span-6 md:col-span-4 flex flex-col relative z-10 md:ml-24'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
           <form className='flex flex-row' style={{
             // backdropFilter: "blur(1rem)",
