@@ -193,6 +193,7 @@ export interface CrewProps {
 }
 
 interface AuthorDetails {
+  reviewerId: User | null;
   name: string;
   username: string;
   avatar_path: string;

@@ -205,6 +205,7 @@ export default function Page({ params }: { params: { id: string } }) {
       content: data.content,
       author: customer !== null ? customer.username : "",
       author_details: {
+        reviewerId: customer,
         name:
           customer !== null ? customer.firstName + " " + customer.lastName : "",
         username: customer !== null ? customer.username : "",
@@ -450,31 +451,33 @@ export default function Page({ params }: { params: { id: string } }) {
   console.log(reviews);
 
   return (
-    <div className="relative flex flex-col flex-wrap md:mt-8 justify-center">
+    <div className=" flex flex-col flex-wrap md:mt-8 justify-center container md:mx-auto">
       {/* <div className='three_bg opacity-10 absolute top-0 transparent'></div> */}
-      <div className='relative grid grid-cols-2 gap-3 w-4/5'>
-        <div className="relative md:pl-52 flex flex-col">
-          <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
+      <div className=' grid grid-cols-1 md:grid-cols-4 gap-3'>
+        <div className=" flex flex-col col-span-1">
+          <div className="flex justify-center col-span-3 py-2"><Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image></div>
           <button
             onClick={handleOpenPostReviewForm}
             type="button"
-            className="relative linear-purple-pink rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
-
+            className="relative linear-purple-pink rounded-lg  focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
+          <div className="col-span-1"></div>
+          <div className="col-span-1"></div>
+          <div className="col-span-1"></div>
           {isInWatchlist && (
             <button
               onClick={handleRemoveFromWatchlist}
               type="button"
-              className="relative bg-gradient-to-r from-red-400 to-pink-500 rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Remove from watchlist</button>
+              className="relative bg-gradient-to-r from-red-400 to-pink-500 rounded-lg  focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Remove from watchlist</button>
           )}
           {!isInWatchlist && (
             <button
               onClick={handleAddToWatchlist}
               type="button"
-              className="relative linear-blue rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
+              className="relative linear-blue rounded-lg  focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
           )}
         </div>
-        <div className="col-span-3 text-white content-center grid grid-cols-4 ">
-          <div className="grid grid-cols-1 md:grid-cols-4 flex my-5 col-span-4">
+        <div className="col-span-3 text-white content-center grid grid-cols-4 md:ml-24">
+          <div className="grid grid-cols-1 md:grid-cols-4 my-5 col-span-4">
             <h1 className="col-span-1 text-2xl font-bold pr-10 md:w-[400px]">
               {movie.title}
             </h1>
@@ -487,14 +490,14 @@ export default function Page({ params }: { params: { id: string } }) {
             <p className=" col-span-1 font-light text-gray-400 md:px-10 md:mt-2">
               Directed by{" "}
               <span
-                className="text-white font-bold cursor-pointer hover:scale-120 duration-500"
+                className="text-white text-sm font-bold cursor-pointer hover:scale-120 duration-500"
                 onClick={handleOpenDirectorInfo}
               >
                 {director?.name}
               </span>
             </p>
-            <div className="col-span-1"></div>
-            <p className="col-span-1 md:col-span-3 text-base text-gray-400 md:max-w-6xl text-justify leading-6">
+
+            <p className="col-span-1 md:col-span-3 text-sm text-gray-400 md:max-w-6xl text-justify leading-6 md:mt-2">
               {movie.overview}
             </p>
             <div className="col-span-1"></div>
@@ -530,7 +533,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <div className="flex flex-col space-x-3 ">
               {/*Need fixing for mobile UI */}
               {choice == 1 && (
-                <div className="flex flex-row justify-center items-center md:left-[10rem] md:top-[1rem] grid grid-cols-3 md:grid-cols-6 gap-2">
+                <div className="flex flex-row justify-center items-center md:left-[10rem] md:top-[1rem] grid grid-cols-3 md:grid-cols-8 gap-2">
                   {/* <Casts id={id} /> */}
                   {casts?.slice(0, 6).map((cast, index) => {
                     if (cast.profile_path !== null) {
@@ -637,10 +640,20 @@ export default function Page({ params }: { params: { id: string } }) {
                 .slice(0, 4)
                 .map((review: FilmReviewProps) => (
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
-                    <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
-                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)}/10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
-
-                    <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
+                    <div className="flex flex-row justify-center items-center">
+                      <div className="">
+                        {review.author_details.reviewerId !== undefined && review.author_details.reviewerId !== null &&
+                          <Image src={review.author_details.reviewerId.photo} width={50} height={50} className="rounded-full object-cover" alt=""></Image>
+                        }
+                      </div>
+                      {/* {review.author_details.reviewerId !== undefined && <p className="text-white">{review.author_details.reviewerId.email}</p>} */}
+                      <div className="md:w-full">
+                        <h2 className='text-sm font-aold text-white md:mt-6 md:ml-4'>
+                          Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
+                          <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)}/10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
+                      </div>
+                    </div>
+                    <h2 className='text-sm font-regular text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
                   </div>
                 ))}
           </div>

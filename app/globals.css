@@ -13,7 +13,8 @@
 
 html {
   position: relative;
-  font-family: "Noto Sans";
+  /* font-family: "Noto Sans"; */
+  font-family: "SF Pro";
   /* font-family: "Poppins"; */
   /* background: #000; */
 }
@@ -489,7 +490,10 @@ button:focus {
 @media screen and (max-width: 768px) {
   .grid-container {
     display: grid;
-    grid-template-columns: repeat(1, 1fr); /* Adjust the number of columns as needed */
+    grid-template-columns: repeat(
+      1,
+      1fr
+    ); /* Adjust the number of columns as needed */
     gap: 2px; /* Adjust the gap between items as needed */
   }
 }

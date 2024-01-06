@@ -385,7 +385,7 @@ export default function Page(): ReactElement {
                   {review.author_details.rating.toFixed(1)} / 10
                 </span>
               </h2>
-              <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] line-clamp-4 text-justify">{review.content}</h2>
+              <h2 className="text-[0.8rem] font-regular text-gray-400 md:mt-2 relative md:w-[300px] line-clamp-4 text-justify">{review.content}</h2>
             </div>
           </li>
         ))
