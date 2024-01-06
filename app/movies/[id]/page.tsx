@@ -450,27 +450,29 @@ export default function Page({ params }: { params: { id: string } }) {
   console.log(reviews);
 
   return (
-    <div className="relative flex flex-col flex-wrap md:mt-8 justify-center">
+    <div className=" flex flex-col flex-wrap md:mt-8 justify-center container md:mx-auto">
       {/* <div className='three_bg opacity-10 absolute top-0 transparent'></div> */}
-      <div className='relative grid grid-cols-2 gap-3 w-4/5'>
-        <div className="relative md:pl-52 flex flex-col">
-          <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image>
+      <div className=' grid grid-cols-1 md:grid-cols-4 gap-3'>
+        <div className=" flex flex-col col-span-1">
+          <div className="flex justify-center col-span-3 py-2"><Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image></div>
           <button
             onClick={handleOpenPostReviewForm}
             type="button"
-            className="relative linear-purple-pink rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
-
+            className="relative linear-purple-pink rounded-lg  focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
+          <div className="col-span-1"></div>
+          <div className="col-span-1"></div>
+          <div className="col-span-1"></div>
           {isInWatchlist && (
             <button
               onClick={handleRemoveFromWatchlist}
               type="button"
-              className="relative bg-gradient-to-r from-red-400 to-pink-500 rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Remove from watchlist</button>
+              className="relative bg-gradient-to-r from-red-400 to-pink-500 rounded-lg  focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Remove from watchlist</button>
           )}
           {!isInWatchlist && (
             <button
               onClick={handleAddToWatchlist}
               type="button"
-              className="relative linear-blue rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
+              className="relative linear-blue rounded-lg  focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
           )}
         </div>
         <div className="col-span-3 text-white content-center grid grid-cols-4 ">
@@ -530,7 +532,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <div className="flex flex-col space-x-3 ">
               {/*Need fixing for mobile UI */}
               {choice == 1 && (
-                <div className="flex flex-row justify-center items-center md:left-[10rem] md:top-[1rem] grid grid-cols-3 md:grid-cols-6 gap-2">
+                <div className="flex flex-row justify-center items-center md:left-[10rem] md:top-[1rem] grid grid-cols-3 md:grid-cols-8 gap-2">
                   {/* <Casts id={id} /> */}
                   {casts?.slice(0, 6).map((cast, index) => {
                     if (cast.profile_path !== null) {
