@@ -485,3 +485,11 @@ button:focus {
   transform-style: initial;
   transition: 1s;
 }
+
+@media screen and (max-width: 768px) {
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* Adjust the number of columns as needed */
+    gap: 2px; /* Adjust the gap between items as needed */
+  }
+}

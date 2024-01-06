@@ -431,7 +431,8 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
-            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+
+            <ul className="grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(0, 6)
                 .map((movie) => (
@@ -442,6 +443,7 @@ export default function Page(): ReactElement {
                   </li>
                 ))}
             </ul>
+
           </div>
         )}
 
@@ -460,6 +462,7 @@ export default function Page(): ReactElement {
                   </li>
                 ))}
             </ul>
+
           </div>
         )}
       </div>

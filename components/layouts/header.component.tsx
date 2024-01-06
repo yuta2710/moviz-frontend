@@ -181,7 +181,7 @@ const Header = (header: HeaderProps) => {
           <BurgerMenu isOpen={isBurgerMenuOpen} onClose={() => setBurgerMenuOpen(false)} />
         </div>
 
-        <div className='col-span-1 hidden md:flex'></div>
+        <div className='col-span-1 hidden md:flex '></div>
         <div className="col-span-3  hidden lg:flex">
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
             {items.map(item => (
