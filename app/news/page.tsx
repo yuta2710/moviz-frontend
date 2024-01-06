@@ -125,7 +125,7 @@ export default function Page() {
             </article>
           </div>
 
-        ))}
+        )}
         {/* <!-- END Column --> */}
         <StyledPagination
           count={Math.ceil(news.length / numberOfArticlesPerPage)}
@@ -138,7 +138,6 @@ export default function Page() {
         // classes={ }
         />
       </div>
-    </div>
-  </>
+    </>
+  )
 }
-
