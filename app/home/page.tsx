@@ -418,32 +418,6 @@ export default function Page(): ReactElement {
         {movies.length > 0 && (
           <div className="flex flex-col justify-center relative md:mt-16">
             <h1 className="text-white text-2xl font-semibold relative text-center">Popular Movies On This Week</h1>
-            <div className="flex flex-row justify-center items-center relative md:mt-12">
-              <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
-                {yearOptions.map((option) => (
-                  <option value={option.value} className="text-center">{option.label}</option>
-                ))}
-              </select>
-
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeRating}>
-                <option value="" disabled selected className="text-center">Rating</option>
-                {ratingOptions.map((option) => (
-                  <option value={option.value} className="text-center">{option.label}</option>
-                ))}
-              </select>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={popular} onChange={handleOnChangePopular}>
-                {popularOptions.map((option) => (
-                  <option value={option.value} className="text-center">{option.label}</option>
-                ))}
-              </select>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" onChange={handleOnChangeGenre}>
-                <option value="" disabled selected className="text-center">Genre</option>
-                {genres.map((genre) => (
-                  <option value={genre.id} className="text-center">{genre.name}</option>
-                ))}
-              </select>
-            </div>
 
             {/* <div className="flex flex-row justify-center items-center relative">
             <h1 className="text-white text-[1.2rem] font-semibold relative text-left">Popular Film On This Week</h1>

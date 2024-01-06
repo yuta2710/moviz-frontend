@@ -528,7 +528,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 .map((review: FilmReviewProps) => (
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
                     <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
-                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
+                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)}/10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
 
                     <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
                   </div>
