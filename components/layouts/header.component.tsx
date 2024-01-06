@@ -270,7 +270,7 @@ const Header = (header: HeaderProps) => {
           }
 
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
               <DropdownItem
                 onClick={() => { }}

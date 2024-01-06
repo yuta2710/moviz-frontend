@@ -2,7 +2,7 @@
 
 import { ArticleProps } from "@/types";
 import { formatDate } from "@/utils/convert.utils";
-import { Pagination } from "@mui/material";
+import { Pagination, styled } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -21,6 +21,12 @@ export default function Page() {
   const [numberOfArticlesPerPage] = useState(1);
   const router = useRouter();
   const path = usePathname();
+
+  const StyledPagination = styled(Pagination)(({ theme }) => ({
+    button: {
+      color: '#fff', // Change the color of inactive page numbers here
+    },
+  }));
 
   useEffect(() => {
     if (!page || currentPage === 1) {
@@ -131,15 +137,17 @@ export default function Page() {
           </div>
         ))}
         {/* <!-- END Column --> */}
+        <StyledPagination
+          count={Math.ceil(news.length / numberOfArticlesPerPage)}
+          page={currentPage}
+          onChange={(event, page) => paginate(page)}
+          size="large"
+          color="secondary"
+          className="relative md:rounded-sm md:mx-auto md:mt-12 md:py-16"
+          variant="outlined"
+        // classes={ }
+        />
       </div>
     </div>
-    <Pagination
-      count={Math.ceil(news.length / numberOfArticlesPerPage)}
-      page={currentPage}
-      onChange={(event, page) => paginate(page)}
-      size="large"
-      color="primary"
-      className="absolute md:left-[45rem] md:top-[170rem] md:rounded-sm"
-      style={{ color: "#000", background: "#fff" }} />
   </>
 }

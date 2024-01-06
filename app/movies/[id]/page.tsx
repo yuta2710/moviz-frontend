@@ -30,6 +30,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
   const [warningMessage, setWarningMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
 
   const id = params.id;
 
@@ -49,10 +51,15 @@ export default function Page({ params }: { params: { id: string } }) {
   const handleOpenPostReviewForm = () => setPostReviewForm(true);
   const handleClosePostReviewForm = () => setPostReviewForm(false);
 
-  const [openToastWarning, setOpenToastWarning] = useState(false);
+  const [openToastWarning, setOpenToastWarning] = useState<boolean>();
+  const [openToastSuccesss, setOpenToastSuccess] = useState<boolean>();
 
   const handleOpenToastWarning = () => {
     setOpenToastWarning(true);
+  };
+
+  const handleOpenToastSuccess = () => {
+    setOpenToastSuccess(true);
   };
 
   const handleClose = (
@@ -64,6 +71,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
 
     setOpenToastWarning(false);
+    setOpenToastSuccess(false);
   };
 
   const hanndleOnChangeRatingSelector = (event: any) => {
@@ -71,7 +79,7 @@ export default function Page({ params }: { params: { id: string } }) {
   };
 
   const handleAddToWatchlist = async () => {
-
+    setIsInWatchlist(true);
     try {
       const response = await axios.patch(
         `http://localhost:8080/api/v1/users/${id}/watchlists`,
@@ -84,10 +92,55 @@ export default function Page({ params }: { params: { id: string } }) {
         }
       );
 
-      const json = response.data;
-      console.log(json);
+      setOpenToastSuccess(true);
+      setSuccessMessage(response.data.message);
     } catch (error) {
-      console.error('Error adding to watchlist:', error);
+      if (axios.isAxiosError(error) && error.response) {
+        const { status, data } = error.response;
+
+        if (status === 404) {
+          setOpenToastWarning(true);
+          setWarningMessage(data.message);
+        } else {
+          setOpenToastWarning(true);
+          setWarningMessage(error.response.data);
+        }
+      } else {
+        setOpenToastWarning(true);
+        setWarningMessage("Unknown error!");
+      }
+    }
+  };
+
+  const handleRemoveFromWatchlist = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/v1/users/${id}/un-watchlists`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      setOpenToastSuccess(true);
+      setSuccessMessage(response.data.message);
+      setIsInWatchlist(false);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const { status, data } = error.response;
+
+        if (status === 404) {
+          setOpenToastWarning(true);
+          setWarningMessage(data.message);
+        } else {
+          setOpenToastWarning(true);
+          setWarningMessage(error.response.data);
+        }
+      } else {
+        setOpenToastWarning(true);
+        setWarningMessage("Unknown error!");
+      }
     }
   };
 
@@ -145,12 +198,41 @@ export default function Page({ params }: { params: { id: string } }) {
       updatedAt: ISO_DATE
     };
     console.log("reviewData = ", reviewData);
+    setOpenToastSuccess(true);
+    setSuccessMessage("Review posted successfully!");
 
-    saveReviewsByMovieId(id, reviewData).then(() => {
-      handleClosePostReviewForm();
-      window.location.reload();
-    })
+    saveReviewsByMovieId(id, reviewData)
+      .then(() => {
+        handleClosePostReviewForm();
+        // Reload the page
+        window.location.reload();
+      })
+      .catch((error) => {
+        // Handle error if needed
+        console.error("Error saving review:", error);
+      });
   }
+
+  // const handleAddToWatchlist = async () => {
+  //   try {
+  //     const response = await axios.patch(
+  //       `http://localhost:8080/api/v1/users/${id}/watchlists`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     );
+
+  //     const json = response.data;
+  //     console.log(json);
+  //   } catch (error) {
+  //     console.error('Error adding to watchlist:', error);
+  //   }
+  // };
+
 
   useEffect(() => {
     if (isAuthenticated() && user !== null) {
@@ -158,6 +240,9 @@ export default function Page({ params }: { params: { id: string } }) {
         try {
           const json = await getMe();
           setCustomer(json.data);
+          if (customer?.watchLists.includes(id)) {
+            setIsInWatchlist(true);
+          }
         } catch (error) {
           console.log(error);
         } finally {
@@ -347,10 +432,19 @@ export default function Page({ params }: { params: { id: string } }) {
             onClick={handleOpenPostReviewForm}
             type="button"
             className="relative linear-purple-pink rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
-          <button
-            onClick={handleAddToWatchlist}
-            type="button"
-            className="relative linear-blue rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
+
+          {isInWatchlist && (
+            <button
+              onClick={handleRemoveFromWatchlist}
+              type="button"
+              className="relative bg-gradient-to-r from-red-400 to-pink-500 rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Remove from watchlist</button>
+          )}
+          {!isInWatchlist && (
+            <button
+              onClick={handleAddToWatchlist}
+              type="button"
+              className="relative linear-blue rounded-lg md:top-[0rem] md:left-[8rem] md:w-[220px] focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500">Add to Watchlist</button>
+          )}
         </div>
         <div className="text-white pr-52 content-center">
           <div className="flex my-5 md:w-[1200px]">
@@ -434,7 +528,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 .map((review: FilmReviewProps) => (
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
                     <h2 className='text-sm font-aold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
-                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
+                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)}/10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
 
                     <h2 className='text-sm font-light text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
                   </div>
@@ -593,6 +687,33 @@ export default function Page({ params }: { params: { id: string } }) {
           }
         }}
       />
+
+      <Snackbar
+        style={{
+
+        }}
+        open={openToastSuccesss}
+        anchorOrigin={{ vertical: "top", "horizontal": "center" }}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={successMessage}
+        action={action}
+        ContentProps={{
+          sx: {
+            paddingX: "4rem",
+            paddingY: "2rem",
+            borderRadiusL: "8px",
+            background: "linear-gradient(270deg, #072434 3.17%, #000 50.35%, #072434 97.53%)",
+            color: "#09b311",
+            fontFamily: "Poppins",
+            fontWeight: "bold",
+            fontSize: "1.2rem",
+          }
+        }}
+      />
+
+
+
     </div>
   )
 }
