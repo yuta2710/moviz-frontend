@@ -367,22 +367,24 @@ export default function Page(): ReactElement {
                 .map((movie) => movie.poster_path !== null && (
                   <li className="">
                     <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-contain rounded-sm"></Image>
+                      <div className="">
+                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-contain rounded-sm"></Image>
+                      </div>
                     </Link>
                     <h3 className="text-white text-[1rem] text-center font-semibold">{movie.title}</h3>
                   </li>
                 ))}
             </ul>
             <h1 className="text-white text-2xl font-semibold relative text-center md:mt-24">Other Similar Films</h1>
-            <ul className="grid grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+            <ul className="grid grid-cols-4 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(6,)
                 .map((movie) => movie.poster_path !== null && (
                   <li className="">
                     <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                      <div className="md:w-[200px]"><Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={500} objectFit="cover" alt="" className="md:mx-auto rounded-sm"></Image></div>
+                      <div className=""><Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={500} objectFit="cover" alt="" className="md:mx-auto rounded-sm"></Image></div>
                     </Link>
-                    <h3 className="text-white text-sm text-center font-semibold relative md:mt-1">{movie.title}</h3>
+                    <h3 className="text-white text-sm text-center font-semibold md:mt-1">{movie.title}</h3>
                   </li>
                 ))}
             </ul>

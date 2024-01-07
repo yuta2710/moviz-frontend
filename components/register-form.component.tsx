@@ -40,7 +40,7 @@ export const RegisterForm = () => {
       lastName: data.lastName,
       email: data.email,
       password: data.password,
-      role: data.role ? data.role : "user",
+      role: "user",
       gender: _.lowerCase(data.gender),
     };
 

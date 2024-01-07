@@ -35,6 +35,7 @@ import gsap from "gsap";
 import { formatHistoryDate } from "@/utils/convert.utils";
 import axios from "axios";
 import * as THREE from "../../../build/three.module";
+import Link from "next/link";
 
 export default function Page({ params }: { params: { id: string } }) {
   const [choice, setChoice] = useState(1);
@@ -638,19 +639,30 @@ export default function Page({ params }: { params: { id: string } }) {
             {reviews.length > 0 &&
               reviews
                 .slice(0, 4)
-                .map((review: FilmReviewProps) => (
+                .sort((a: FilmReviewProps, b: FilmReviewProps) =>
+                  b.author_details.rating - a.author_details.rating
+                )
+                .map((review: FilmReviewProps) => review.author_details.reviewerId !== null && (
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
                     <div className="flex flex-row justify-center items-center">
-                      <div className="">
+                      <div className="md:mt-4">
                         {review.author_details.reviewerId !== undefined && review.author_details.reviewerId !== null &&
-                          <Image src={review.author_details.reviewerId.photo} width={50} height={50} className="rounded-full object-cover" alt=""></Image>
+                          <Link href={`/visitor/${review.author_details.reviewerId._id}`}>
+                            <Image src={review.author_details.avatar_path} width={55} height={0} style={{ height: "50px" }} className="rounded-full object-cover" alt="" objectFit="cover"
+                              objectPosition="center center"></Image>
+                          </Link>
                         }
                       </div>
                       {/* {review.author_details.reviewerId !== undefined && <p className="text-white">{review.author_details.reviewerId.email}</p>} */}
                       <div className="md:w-full">
                         <h2 className='text-sm font-aold text-white md:mt-6 md:ml-4'>
-                          Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
-                          <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)}/10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
+                          Review by <Link href={`/visitor/${review.author_details.reviewerId._id}`}>
+                            <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
+                          </Link>
+                          <span className='text-white md:ml-8 font-bold'>Rating:</span>
+                          <span className='md:ml-2'>{review.author_details.rating.toFixed(1)}/10</span>
+                          <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span>
+                        </h2>
                       </div>
                     </div>
                     <h2 className='text-sm font-regular text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
