@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/components/context/AuthContext";
 import { User } from "@/types";
-import { APPLICATION_PATH, getMe, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
+import { APPLICATION_PATH, checkIsCurrentUserFollowOtherUser, getMe, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,15 +10,15 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { startTransition, useEffect, useState, useTransition } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const path = usePathname();
   // step 1: getUser from back end 
   const [visitor, setVisitor] = useState<User | null>(null);
-  const [isFollowed, setIsFollowed] = useState<boolean>(false);
   const [shouldFetchVisitor, setShouldFetchVisitor] = useState(true);
   const [loading, setLoading] = useState(true);
   const [customer, setCustomer] = useState<User | null>(null);
   const { user, logout, isAuthenticated } = useAuth();
-  const router = useRouter();
-  const path = usePathname();
+  const [isFollowed, setIsFollowed] = useState<boolean>(localStorage.getItem("isFollowed") === "true");
 
   // Handle authentication
   useEffect(() => {
@@ -62,6 +62,10 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }, [shouldFetchVisitor, params.id]);
 
+  useEffect(() => {
+    localStorage.setItem("isFollowed", String(isFollowed));
+  }, [isFollowed]);
+
 
   const handleOnFollow = async () => {
     if (visitor !== null) {
@@ -79,7 +83,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }
 
-  console.log(customer);
+  customer !== null && visitor !== null && console.log(checkIsCurrentUserFollowOtherUser(customer, visitor));
 
   return visitor !== null &&
     <div className="flex flex-row justify-center items-start md:w-full md:mt-16">
@@ -90,19 +94,20 @@ export default function Page({ params }: { params: { id: string } }) {
         {/** Username and follow button */}
         <div className="flex flex-row justify-center items-center">
           <div className="text-white">{visitor.username}</div>
-          {!isFollowed ? <button
-            onClick={handleOnFollow}
-            type="button"
-            className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
-          >
-            Follow
-          </button> : <button
+          {customer !== null && isFollowed ? <button
             onClick={handleUnFollow}
             type="button"
             className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
           >
             Unfollow
-          </button>}
+          </button> : <button
+            onClick={handleOnFollow}
+            type="button"
+            className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
+          >
+            Follow
+          </button>
+          }
         </div>
 
         {/** Followers/Followings and Posts display */}
@@ -147,3 +152,9 @@ export default function Page({ params }: { params: { id: string } }) {
 
 // karma2710 follow dungle, dungle follow account A ==> karma2710 can see dungle follow that account
 
+// Algorithm to check is followed of 2 accounts.
+// step 1: checkIsCurrentUserFollowOtherUser(currentUser: User, otherUser: User)
+        // checkIsOtherUserFollowCurrentUser(currentUser: User, otherUser: User)
+        // checkIsCurrentUserFollowingFollowOtherUser(currentUser: User, otherUser: User)
+        
+// step 2: Check if current

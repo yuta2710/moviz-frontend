@@ -1,6 +1,6 @@
 "use client";
 
-import { FilmReviewProps, ReviewCustomization, Genre } from "@/types";
+import { FilmReviewProps, ReviewCustomization, Genre, User } from "@/types";
 import {
   Movie,
   Review,
@@ -451,4 +451,11 @@ export const unFollow = async (visitorId: string) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const checkIsCurrentUserFollowOtherUser = (
+  currentUser: User,
+  otherUser: User
+) => {
+  return currentUser.followings.includes(otherUser);
 };
