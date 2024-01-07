@@ -36,6 +36,8 @@ export interface User {
   photo: string;
   reviews: FilmReviewProps[];
   watchLists: string[];
+  followers: User[];
+  followings: User[];
   createdAt: string;
   //watchLists: string[];
 }

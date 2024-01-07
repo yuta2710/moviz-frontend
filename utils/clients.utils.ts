@@ -9,7 +9,6 @@ import {
 } from "@/types";
 import axios from "axios";
 import letterboxd from "letterboxd-api";
-import { useRouter } from "next/navigation";
 
 // data
 export const saveUser = async (userData: UserRegisterRequestProps) => {
@@ -421,3 +420,35 @@ export async function getRecommendations(id: string) {
     throw error; // Re-throw the error for the caller to handle
   }
 }
+
+export const onFollow = async (visitorId: string) => {
+  try {
+    await axios.post(
+      `http://localhost:8080/api/v1/follow/${visitorId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const unFollow = async (visitorId: string) => {
+  try {
+    await axios.post(
+      `http://localhost:8080/api/v1/unfollow/${visitorId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};

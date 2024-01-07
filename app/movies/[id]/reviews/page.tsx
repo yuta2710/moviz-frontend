@@ -67,12 +67,11 @@ export default function Page({ params }: { params: { id: string } }) {
                     <div className="flex flex-row">
                       <div className="">
                         {review.author_details.reviewerId !== undefined && review.author_details.reviewerId !== null
-                          ? <Image src={review.author_details.reviewerId.photo} width={50} height={50} className="rounded-full object-cover relative" alt=""></Image>
+                          ? <Image src={review.author_details.avatar_path} width={50} height={50} className="rounded-full object-cover relative" style={{ height: "50px" }} alt=""></Image>
                           : review.author_details.avatar_path !== null &&
                           <Image src={`https://image.tmdb.org/t/p/w500/${review.author_details.avatar_path}`} width={100} height={100} className="object-cover relative" alt=""></Image>
                         }
                       </div>
-
                     </div>
                     <h2 className='text-sm font-bold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
                       <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
