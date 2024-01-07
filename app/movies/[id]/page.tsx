@@ -646,12 +646,11 @@ export default function Page({ params }: { params: { id: string } }) {
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
                     <div className="flex flex-row justify-center items-center">
                       <div className="md:mt-4">
-                        {review.author_details.reviewerId !== undefined && review.author_details.reviewerId !== null &&
-                          <Link href={`/visitor/${review.author_details.reviewerId._id}`}>
-                            <Image src={review.author_details.avatar_path} width={55} height={0} style={{ height: "50px" }} className="rounded-full object-cover" alt="" objectFit="cover"
-                              objectPosition="center center"></Image>
-                          </Link>
-                        }
+                        <Link href={`/visitor/${review.author_details.reviewerId._id !== null ? review.author_details.reviewerId._id : "not-exist"}`}>
+                          <Image src={review.author_details.avatar_path} width={55} height={0} style={{ height: "50px" }} className="rounded-full object-cover" alt="" objectFit="cover"
+                            objectPosition="center center"></Image>
+                        </Link>
+
                       </div>
                       {/* {review.author_details.reviewerId !== undefined && <p className="text-white">{review.author_details.reviewerId.email}</p>} */}
                       <div className="md:w-full">

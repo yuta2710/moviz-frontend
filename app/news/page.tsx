@@ -58,57 +58,55 @@ export default function Page() {
   };
 
   return <>
-    <div className="container my-12 mx-auto px-4 md:px-12 relative">
+    <div className="container my-12 mx-auto px-4 md:px-12 relative md:mt-16">
       <div className="flex flex-row">
         {/* <div className="blob relative"></div> */}
         <div className="blob-linear-yellow-blue relative"></div>
       </div>
-      <h1 className="text-white text-xl font-semibold">Latest News</h1>
+      <h1 className="text-white text-xl font-extrabold tracking-wide">Latest News</h1>
 
-      <ul className="grid grid-cols-3 gap-2 relative">
+      <ul className="grid grid-cols-3 relative">
         {news.length > 0 &&
           news
             .slice(0, 3)
             .sort((a: ArticleProps, b: ArticleProps) => new Date(b.pub_date).getTime() - new Date(a.pub_date).getTime())
             .map((newsItem) =>
-              <li className="">
-                <div className="my-1 px-1 w-full lg:my-4 lg:px-0 lg:w-full">
-                  {/* <!-- Article --> */}
-                  <article className="overflow-hidden rounded-lg shadow-lg">
-                    <a href="#">
-                      <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${newsItem.multimedia[5].url}`} width={newsItem.multimedia[5].width} height={newsItem.multimedia[5].height}></Image>
-                    </a>
+              <div className="my-1 px-1 lg:my-4 lg:px-0 ">
+                {/* <!-- Article --> */}
+                <article className="overflow-hidden rounded-lg shadow-lg">
+                  <a href="#" className="">
+                    <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${newsItem.multimedia[5].url}`} width={120} height={0} style={{}}></Image>
+                  </a>
 
-                    <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
-                      <h1 className="text-lg">
-                        <a className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold" href="#">
-                          <span className="text-white">{newsItem.abstract}</span>
-                        </a>
-                      </h1>
-                    </header>
-                    <p className="text-white text-left ellipsis md:ml-4 text-sm">{newsItem.lead_paragraph}</p>
-
-                    <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                      <a className="flex items-center no-underline hover:underline text-white" href="#">
-                        <Image alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" width={32} height={32}></Image>
-                        <p className="ml-2 text-sm">
-                          {newsItem.byline.original.split(" ")[0]} <span className="text-white font-semibold">{newsItem.byline.original.split(" ")[1]} {newsItem.byline.original.split(" ")[2]}</span>
-                        </p>
+                  <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
+                    <h1 className="md:text-sm font-regular md:w-full">
+                      <a className="no-underline hover:underline text-white" href="#">
+                        <span className="text-white">{newsItem.abstract}</span>
                       </a>
-                      {/* <a className="no-underline text-grey-darker hover:text-red-dark" href="#">
-                        <span className="hidden">Like</span>
-                        <i className="fa fa-heart"></i>
-                      </a> */}
-                      <p className="text-white text-sm font-semibold">{formatHistoryDate(newsItem.pub_date)}</p>
-                    </footer>
+                    </h1>
+                  </header>
+                  <p className="text-white text-left ellipsis md:ml-4 text-sm">{newsItem.lead_paragraph}</p>
 
-                  </article>
+                  <footer className="flex items-center justify-between leading-none p-2 md:p-4">
+                    <a className="flex items-center no-underline hover:underline text-white" href="#">
+                      <Image alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" width={32} height={32}></Image>
+                      <p className="ml-2 text-sm">
+                        {newsItem.byline.original.split(" ")[0]} <span className="text-white font-semibold">{newsItem.byline.original.split(" ")[1]} {newsItem.byline.original.split(" ")[2]}</span>
+                      </p>
+                    </a>
+                    {/* <a className="no-underline text-grey-darker hover:text-red-dark" href="#">
+                  <span className="hidden">Like</span>
+                  <i className="fa fa-heart"></i>
+                </a> */}
+                    <p className="text-white text-sm font-semibold">{formatHistoryDate(newsItem.pub_date)}</p>
+                  </footer>
 
-                </div>
-              </li>
+                </article>
+
+              </div>
             )}
       </ul>
-      <h1 className="text-white text-xl font-semibold md:mt-8">Another News</h1>
+      <h1 className="text-white text-xl font-extrabold tracking-wide md:mt-16">Another News</h1>
       <div className="flex flex-wrap -mx-1 lg:-mx-4">
         {/* <!-- Column --> */}
         {news
@@ -150,19 +148,20 @@ export default function Page() {
 
             </div>
           ))}
-        <StyledPagination
-          count={Math.ceil(news.length / numberOfArticlesPerPage)}
-          page={currentPage}
-          onChange={(event, page) => paginate(page)}
-          size="large"
-          color="secondary"
-          className="relative md:rounded-sm md:mx-auto md:mt-12 md:py-16"
-          variant="outlined"
-        // classes={ }
-        />
         {/* 
         <!-- END Column --> */}
+
       </div>
+      <StyledPagination
+        count={Math.ceil(news.length / numberOfArticlesPerPage)}
+        page={currentPage}
+        onChange={(event, page) => paginate(page)}
+        size="large"
+        color="secondary"
+        className="relative md:rounded-sm md:m-auto"
+        variant="outlined"
+      // classes={ }
+      />
     </div>
   </>
 

@@ -322,11 +322,11 @@ export default function Page(): ReactElement {
     },
   ];
   return (
-    <div className="relative top-0">
+    <div className="relative">
       <div className="">
         {movies.length > 0 && (
-          <div className="flex flex-col justify-center relative md:mt-16">
-            <h1 className="text-white text-2xl font-semibold relative text-center">Most Popular Films <span className="text-red-500 font-semibold">{title}</span></h1>
+          <div className="flex flex-col justify-center relative md:mt-8">
+            <h1 className="text-white text-2xl font-extrabold tracking-wide relative text-center">Most Popular Films <span className="text-red-500 font-semibold">{title}</span></h1>
             <div className="flex flex-row justify-center items-center relative md:mt-12">
               <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
               <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
