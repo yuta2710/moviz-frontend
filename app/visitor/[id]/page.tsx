@@ -88,9 +88,33 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }, [shouldFetchVisitor, params.id, currentUser]);
 
+  // useEffect(() => {
+  //   localStorage.setItem("isFollowed", String(isFollowed));
+  // }, [isFollowed]);
+
   useEffect(() => {
-    localStorage.setItem("isFollowed", String(isFollowed));
-  }, [isFollowed]);
+    const checkFollowed = async () =>{
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/v1/check/${visitor?._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        setIsFollowed(response.data.isFollowed);
+        console.log("Follow chua ne: ", isFollowed)
+      } catch (error) {
+        console.error("Error checking following:", error);
+      }
+    }
+    if (visitor !== null){
+    checkFollowed();
+    }
+    
+    console.log("visitor's id: ", visitor?._id);
+  }, [visitor]);
 
 
   const handleOnFollow = async () => {
@@ -130,7 +154,7 @@ export default function Page({ params }: { params: { id: string } }) {
         {/** Username and follow button */}
         <div className="flex flex-row justify-center items-center">
           <div className="text-white">{visitor.username}</div>
-          {currentUser !== null && visitor !== null && checkIsCurrentUserFollowOtherUser(currentUser, visitor)  ? <button
+          {isFollowed  ? <button
             onClick={handleUnFollow}
             type="button"
             className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
