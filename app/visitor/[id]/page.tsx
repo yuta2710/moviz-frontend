@@ -338,6 +338,105 @@ export default function Page({ params }: { params: { id: string } }) {
         <MovieList ids={visitor.watchLists} />
       }
     </div>
+
+      <Modal
+        open={openFollowersInfo}
+        onClose={handleCloseFollowersInfo}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={style}
+          style={
+            {
+              // backgroundImage:
+              //   "radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );"
+            }
+          }
+          className="util-box-shadow-purple-mode black-linear"
+        >
+         <ul className="z-10 relative md:mx-auto md:w-full">
+         <div className="text-white text-center text-sm font-medium">You followed this user</div>
+            {visitor.followers.map((followings: User) => followings._id !== currentUser?._id && (
+              <div className="">
+                <li className="flex flex-row justify-start apple-linear-glass md:p-4 md:mt-4 rounded-lg">
+                <div className="">
+                  <Image src={followings.photo} width={50} height={50} style={{height: "50px"}} alt="" className="rounded-full"></Image>
+                </div>
+                <div className="flex flex-col justify-center md:ml-8 flex-grow">
+                  <p className="text-white text-[0.8rem] relative">{followings.username}</p>
+                  <p className="text-gray-500 relative text-[0.8rem]">{followings.lastName + " " + followings.firstName}</p>
+                </div>
+                {currentUser !== null && checkIsCurrentUserFollowOtherUser(currentUser, followings) ? 
+                <button
+                  onClick={() => handleUnFollow(followings)}
+                  type="button"
+                  className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 py-1 hover:scale-105 duration-500"
+                >
+                  Unfollow
+                </button> : <button
+                  onClick={() => handleOnFollow(followings)}
+                  type="button"
+                  className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 py-1 hover:scale-105 duration-500"
+                >
+                  Follow
+                </button>
+                }
+              </li>
+              </div>
+            ))}
+          </ul>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openFollowingsInfo}
+        onClose={handleCloseFollowingsInfo}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={style}
+          style={
+            {
+              // backgroundImage:
+              //   "radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );"
+            }
+          }
+          className="util-box-shadow-purple-mode black-linear"
+        >
+          <ul className="z-10 relative md:mx-auto md:w-full">
+
+            {visitor.followings.map((follower: User) => (
+              <li className="flex flex-row justify-start apple-linear-glass md:p-4 md:mt-4 rounded-lg">
+                <div className="">
+                  <Image src={follower.photo} width={50} height={50} style={{height: "50px"}} alt="" className="rounded-full"></Image>
+                </div>
+                <div className="flex flex-col justify-center md:ml-8 flex-grow">
+                  <p className="text-white text-[0.8rem] relative">{follower.username}</p>
+                  <p className="text-gray-500 relative text-[0.8rem]">{follower.lastName + " " + follower.firstName}</p>
+                </div>
+                {currentUser !== null && checkIsCurrentUserFollowOtherUser(currentUser, follower) ? 
+                <button
+                onClick={() => handleUnFollow(follower)}
+                  type="button"
+                  className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 py-1 hover:scale-105 duration-500"
+                >
+                  Unfollow
+                </button> : <button
+                  onClick={() => handleOnFollow(follower)}
+                  type="button"
+                  className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 py-1 hover:scale-105 duration-500"
+                >
+                  Follow
+                </button>
+                }
+              </li>
+            ))}
+           
+          </ul>
+        </Box>
+      </Modal>
     </div>
 }
 
