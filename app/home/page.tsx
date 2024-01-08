@@ -152,7 +152,6 @@ export default function Page(): ReactElement {
     const fetchAllReviews = async () => {
       try {
         const reviewsJson = await getAllReviews() as FilmReviewProps[];
-  
         // Set movie object for each review
         const reviewsWithMovies = await Promise.all(
           reviewsJson.map(async (review: FilmReviewProps) => {
@@ -166,7 +165,6 @@ export default function Page(): ReactElement {
             }
           })
         );
-  
         // Update the reviews state with reviews including movie objects
         setReviews(reviewsWithMovies);
       } catch (error) {
@@ -185,13 +183,11 @@ export default function Page(): ReactElement {
       if (customer?.watchLists) {
         // Create an array to store all recommendations
         const allRecommendations: Movie[] = [];
-  
         // Loop through each movie in the watchlist
         for (const movieId of customer.watchLists) {
           try {
             // Make API request to get recommendations for each movie
             const data = await getRecommendations(movieId);
-  
             // Update state with unique recommendations
             setRecommendedMovies((prevMovies: Movie[]) => {
               const uniqueMovies = data.results.filter((newMovie: Movie) =>
@@ -199,14 +195,12 @@ export default function Page(): ReactElement {
               );
               return [...prevMovies, ...uniqueMovies];
             });
-  
             // Add recommendations to the allRecommendations array
             allRecommendations.push(...data.results);
           } catch (error) {
             console.error(`Error fetching recommendations for movie ${movieId}:`, error);
           }
         }
-  
         // Log all recommendations after the loop
         console.log("All Recommendations:", allRecommendations);
       }
@@ -218,6 +212,9 @@ export default function Page(): ReactElement {
     }
   }, [isAuthenticated, user, customer?.watchLists, getRecommendations, setRecommendedMovies]);
   
+
+    
+
 
 
 
@@ -361,8 +358,11 @@ export default function Page(): ReactElement {
   const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto gap-4`}>
     {
       reviews
+        // .sort((a: FilmReviewProps, b: FilmReviewProps) =>
+        //   new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .sort((a: FilmReviewProps, b: FilmReviewProps) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          b.author_details.rating - a.author_details.rating
+        )
         .slice(0, 4).map((review: FilmReviewProps) => (
           <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
             <Image
@@ -378,9 +378,11 @@ export default function Page(): ReactElement {
               <span className="text-white text-left opacity-50 text-sm md:mt-2">{formatHistoryDate(review.createdAt)}</span>
               <h2 className="text-sm font-bold text-white md:mt-6">
                 Review by <span className="text-ai4biz-green-quite-light font-semibold">{review.author}</span>
-                <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">{review.author_details.rating} / 10</span>
+                <span className="text-white md:ml-8 font-bold">Rating:</span> <span className="font-medium md:ml-2">
+                  {review.author_details.rating.toFixed(1)} / 10
+                </span>
               </h2>
-              <h2 className="text-[0.8rem] font-light text-gray-400 md:mt-2 relative md:w-[300px] ellipsis text-justify">{review.content}</h2>
+              <h2 className="text-[0.8rem] font-regular text-gray-400 md:mt-2 relative md:w-[300px] line-clamp-4 text-justify">{review.content}</h2>
             </div>
           </li>
         ))
@@ -388,13 +390,13 @@ export default function Page(): ReactElement {
   </ul>
 
   return (
-    <div className="relative top-0">
+    <div className="relative">
       <div className="background-custom-body" style={{ height: "fit-content" }}>
         {/* <div className="absolute opacity-30 bg-no-repeat z-11"></div> */}
         {loading
           ? <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>
           : <div className="relative flex flex-col top-0">
-            <h1 className="text-white text-center relative md:mt-52 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+            <h1 className="text-white text-center relative md:mt-16 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
             </h1>
           </div>
         }
@@ -426,7 +428,8 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
-            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+
+            <ul className="grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(0, 6)
                 .map((movie) => (
@@ -437,6 +440,26 @@ export default function Page(): ReactElement {
                   </li>
                 ))}
             </ul>
+
+          </div>
+        )}
+
+        {recommendedMovies.length > 0 && (
+          <div className="flex flex-col justify-center relative md:mt-16">
+            <h1 className="text-white text-2xl font-semibold relative text-center">Recommended For You</h1>
+            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+              {[...recommendedMovies]
+                .sort((a, b) => b.popularity - a.popularity)
+                .slice(0, 6)
+                .map((movie) => (
+                  <li className=" m-0 rounded-2xl">
+                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+
           </div>
         )}
 

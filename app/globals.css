@@ -13,8 +13,9 @@
 
 html {
   position: relative;
-  font-family: "Noto Sans";
-  /* font-family: "Poppins"; */
+  /* font-family: "Noto Sans"; */
+  /* font-family: "SF Pro"; */
+  font-family: "Poppins";
   /* background: #000; */
 }
 
@@ -28,7 +29,7 @@ body {
   );
   box-shadow: 0px 1px 0px 0px transparent inset,
     0px 20px 100px 0px rgba(74, 57, 127, 0.7);
-  background-repeat: repeat-y;
+  background-repeat: no-repeat;
   background-origin: content-box;
   width: 100vw;
   min-height: 100vh;
@@ -43,7 +44,7 @@ button:focus {
   border: none;
 }
 
-.bm-menu{
+.bm-menu {
   background-color: rgb(10, 17, 39);
 }
 .menu-item:hover {
@@ -59,7 +60,7 @@ button:focus {
 }
 
 .util-box-shadow-light-mode {
-  box-shadow: 0px 0px 70px 15px rgba(205, 205, 205, 0.35);
+  box-shadow: 0px 0px 70px 15px rgba(165, 165, 165, 0.35);
 }
 
 .util-box-shadow-purple-mode {
@@ -115,6 +116,10 @@ button:focus {
   );
 }
 
+.black-linear {
+  background-image: linear-gradient(-20deg, #01011c 15.5%, #022737 100%);
+}
+
 .dropdown-line {
   content: "";
   position: absolute;
@@ -134,7 +139,7 @@ button:focus {
 .cast-container {
   display: flex;
   flex-direction: column;
-  width: 28rem; /* Đặt chiều rộng cố định cho container */
+  width: 28rem;
 }
 
 .cast-image {
@@ -490,4 +495,14 @@ button:focus {
   button {
     color: #FFFFFF;
  }
+}
+@media screen and (max-width: 768px) {
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(
+      1,
+      1fr
+    ); /* Adjust the number of columns as needed */
+    gap: 2px; /* Adjust the gap between items as needed */
+  }
 }

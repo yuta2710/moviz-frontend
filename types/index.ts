@@ -36,6 +36,8 @@ export interface User {
   photo: string;
   reviews: FilmReviewProps[];
   watchLists: string[];
+  followers: User[];
+  followings: User[];
   createdAt: string;
   //watchLists: string[];
 }
@@ -193,6 +195,7 @@ export interface CrewProps {
 }
 
 interface AuthorDetails {
+  reviewerId: User | null;
   name: string;
   username: string;
   avatar_path: string;

@@ -16,6 +16,10 @@ export const config = {
       APPLICATION_PATH: "/movies",
       KEY: "movies",
     },
+    // {
+    //   APPLICATION_PATH: "/reviewsfeed",
+    //   KEY: "reviewsfeed",
+    // },
     {
       APPLICATION_PATH: "/news",
       KEY: "news",

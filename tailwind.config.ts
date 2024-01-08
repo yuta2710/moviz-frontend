@@ -22,6 +22,7 @@ const config: Config = {
         "dark-green": "#04364A",
         "spirit-lab": "#151027",
         "blue-dark": "#2FB8FF6B",
+        "blue-light": "#0077D3",
         "ai4biz-green-quite-light": "#64CCC5",
       },
       fontFamily: {

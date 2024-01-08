@@ -1,6 +1,6 @@
 "use client";
 
-import { FilmReviewProps, ReviewCustomization, Genre } from "@/types";
+import { FilmReviewProps, ReviewCustomization, Genre, User } from "@/types";
 import {
   Movie,
   Review,
@@ -9,7 +9,6 @@ import {
 } from "@/types";
 import axios from "axios";
 import letterboxd from "letterboxd-api";
-import { useRouter } from "next/navigation";
 
 // data
 export const saveUser = async (userData: UserRegisterRequestProps) => {
@@ -28,6 +27,18 @@ export const saveUser = async (userData: UserRegisterRequestProps) => {
   } catch (error) {
     throw error;
   }
+};
+
+export const getUserById = async (userId: string) => {
+  const res = await axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("accessToken")} `,
+    },
+  });
+
+  const json = res.data;
+
+  return json;
 };
 
 export const getAuthConfig = () => ({
@@ -407,3 +418,71 @@ export async function searchMovies(query: string) {
     }
   }
 }
+
+export async function getRecommendations(id: string) {
+  const url = `https://api.themoviedb.org/3/movie/${id}/recommendations`;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY",
+    },
+  };
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+
+    console.log("Json = ", json);
+    return json;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error; // Re-throw the error for the caller to handle
+  }
+}
+
+export const onFollow = async (visitorId: string) => {
+  try {
+    await axios.post(
+      `http://localhost:8080/api/v1/follow/${visitorId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const unFollow = async (visitorId: string) => {
+  try {
+    await axios.post(
+      `http://localhost:8080/api/v1/unfollow/${visitorId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const checkIsCurrentUserFollowOtherUser = (
+  currentUser: User,
+  otherUser: User
+) => {
+  return currentUser.followings.some(
+    (currentUserFollower) => currentUserFollower._id === otherUser._id
+  );
+};

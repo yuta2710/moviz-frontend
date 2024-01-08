@@ -181,7 +181,7 @@ const Header = (header: HeaderProps) => {
           <BurgerMenu isOpen={isBurgerMenuOpen} onClose={() => setBurgerMenuOpen(false)} />
         </div>
 
-        <div className='col-span-1 hidden md:flex'></div>
+        <div className='col-span-1 hidden md:flex '></div>
         <div className="col-span-3  hidden lg:flex">
           <ul className="items-container font-medium flex flex-row p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 border-0 md:border-0">
             {items.map(item => (
@@ -195,7 +195,7 @@ const Header = (header: HeaderProps) => {
           </ul>
         </div>
         <div className='lg:col-span-1 hidden'></div>
-        <div className='col-span-6 md:col-span-4 flex flex-col relative z-10'>
+        <div className='col-span-6 md:col-span-4 flex flex-col relative z-10 md:ml-24'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
           <form className='flex flex-row' style={{
             // backdropFilter: "blur(1rem)",
@@ -264,13 +264,14 @@ const Header = (header: HeaderProps) => {
             </button>
             : <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
 
-              <Image className='rounded-full  md:right-16' src={customer?.photo} width={50} height={50} alt=''></Image>
+              <Image className='rounded-full  md:right-16' src={customer?.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
+              <p className='text-white font-medium text-sm hover:text-gray-300' onClick={() => router.push('/profile')}>{customer.username}</p>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
             </div>
           }
 
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
               <DropdownItem
                 onClick={() => { }}

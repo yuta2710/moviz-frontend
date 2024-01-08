@@ -1,10 +1,10 @@
 "use client";
 
-import { UserLoginProps } from "@/types";
+import { User, UserLoginProps } from "@/types";
 import { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import { login as onLogin } from "../../utils/clients.utils"
 import { jwtDecode } from "jwt-decode";
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 
 export interface AuthContextProps {
   login: (props: UserLoginProps) => Promise<AxiosResponse<any, any>>;
@@ -12,6 +12,8 @@ export interface AuthContextProps {
   isAuthenticated: () => Boolean;
   setCustomerFromToken: () => void;
   user: UserResponse | null;
+  currentUser: User | null;
+  getCurrentUser: () => Promise<void>;
 }
 
 export type AuthProvideProps = {
@@ -27,6 +29,23 @@ const AuthContextDefaultValue: AuthContextProps = {
   login: () => { return new Promise((resolve, reject) => { }) },
   logout: () => { return new Promise((resolve, reject) => { }) },
   isAuthenticated: () => false,
+  currentUser: {
+    _id: "",
+    username: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    role: "",
+    gender: "",
+    photo: "",
+    reviews: [],
+    watchLists: [],
+    followers: [],
+    followings: [],
+    createdAt: "",
+  } || null,
+  getCurrentUser: () => { return new Promise((resolve, reject) => { }) },
   setCustomerFromToken: () => { },
   user: { _id: "", accessToken: "" } || null
 }
@@ -36,6 +55,22 @@ export const AuthContext = createContext<AuthContextProps>(AuthContextDefaultVal
 
 export function AuthProvider({ children }: AuthProvideProps) {
   const [user, setUser] = useState<UserResponse | null>({ _id: "", accessToken: "" });
+  const [currentUser, setCurrentUser] = useState<User | null>({
+    _id: "",
+    username: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    role: "",
+    gender: "",
+    photo: "",
+    reviews: [],
+    watchLists: [],
+    followers: [],
+    followings: [],
+    createdAt: "",
+  });
   const setCustomerFromToken = () => {
     let token = localStorage.getItem("accessToken");
 
@@ -95,7 +130,33 @@ export function AuthProvider({ children }: AuthProvideProps) {
     return true;
   }
 
-  const value = { login, logout, isAuthenticated, user, setCustomerFromToken };
+  const getCurrentUser = async () => {
+    const res = await axios.get("http://localhost:8080/api/v1/auth/me", {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accessToken")} `,
+      },
+    });
+
+    const json = res.data;
+
+    console.log(`Bearer ${localStorage.getItem("accessToken")} `);
+
+    return json;
+  }
+
+  const value = { login, logout, isAuthenticated, user, currentUser, getCurrentUser, setCustomerFromToken };
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const me = await getCurrentUser();
+
+      if (me !== null) {
+        setCurrentUser(me.data);
+      }
+    }
+
+    fetchCurrentUser();
+  }, [])
 
   return (
     <AuthContext.Provider value={value}>
