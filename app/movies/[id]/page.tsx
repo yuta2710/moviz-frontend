@@ -453,15 +453,17 @@ export default function Page({ params }: { params: { id: string } }) {
     <div className=" flex flex-col flex-wrap md:mt-8 justify-center container md:mx-auto">
       {/* <div className='three_bg opacity-10 absolute top-0 transparent'></div> */}
       <div className=' grid grid-cols-1 md:grid-cols-4 gap-3'>
-        <div className=" flex flex-col col-span-1">
+        <div className=" flex grid-cols-3 flex-col col-span-1">
+          
           <div className="flex justify-center col-span-3 py-2"><Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image></div>
+          <div className="col-span-1"></div>
+          <div className="col-span-1"></div>
           <button
             onClick={handleOpenPostReviewForm}
             type="button"
             className="relative linear-purple-pink rounded-lg  focus:outline-none text-white text-[1.8rem] font-medium text-sm px-1 py-3 me-2 mb-2 hover:scale-110 duration-500 md:mt-8">Post the review</button>
           <div className="col-span-1"></div>
-          <div className="col-span-1"></div>
-          <div className="col-span-1"></div>
+          
           {isInWatchlist && (
             <button
               onClick={handleRemoveFromWatchlist}

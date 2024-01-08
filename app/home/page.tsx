@@ -358,7 +358,7 @@ export default function Page(): ReactElement {
     return cleanup;
   })
 
-  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-1 py-2 md:grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto gap-4`}>
+  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-1 md:grid-cols-2  relative justify-center items-center top-0 mx-auto gap-4`}>
     {
       reviews
         // .sort((a: FilmReviewProps, b: FilmReviewProps) =>
