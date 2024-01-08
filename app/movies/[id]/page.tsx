@@ -642,13 +642,13 @@ export default function Page({ params }: { params: { id: string } }) {
                 .sort((a: FilmReviewProps, b: FilmReviewProps) =>
                   b.author_details.rating - a.author_details.rating
                 )
-                .map((review: FilmReviewProps) => review.author_details.reviewerId !== null && (
+                .map((review: FilmReviewProps) => review.author_details.reviewerId?._id !== undefined && (
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
                     <div className="flex flex-row justify-center items-center">
                       <div className="md:mt-4">
                         {/* <p className="text-white">/visitor/{review.author_details.reviewerId._id}</p> */}
                         <Link href={`/visitor/${review.author_details.reviewerId._id}`}>
-                          <Image src={review.author_details.avatar_path} width={55} height={0} style={{ height: "50px" }} className="rounded-full object-cover" alt="" objectFit="cover"
+                          <Image src={review.author_details.avatar_path} width={50} height={50} style={{ height: "50px" }} className="rounded-full object-cover" alt="" objectFit="cover"
                             objectPosition="center center"></Image>
                         </Link>
 

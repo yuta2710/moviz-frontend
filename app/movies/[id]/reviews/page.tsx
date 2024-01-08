@@ -62,7 +62,7 @@ export default function Page({ params }: { params: { id: string } }) {
             {reviews.length > 0 &&
               reviews
                 .sort((a: FilmReviewProps, b: FilmReviewProps) => b.author_details.rating - a.author_details.rating)
-                .map((review: FilmReviewProps) => (
+                .map((review: FilmReviewProps) => review.author_details.reviewerId?._id !== undefined && (
                   <div className='flex flex-col md:w-[500px] h-max review-section relative'>
                     <div className="flex flex-row">
                       <div className="">

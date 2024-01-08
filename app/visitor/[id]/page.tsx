@@ -17,11 +17,12 @@ export default function Page({ params }: { params: { id: string } }) {
   const [visitor, setVisitor] = useState<User | null>(null);
   const [shouldFetchVisitor, setShouldFetchVisitor] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [customer, setCustomer] = useState<User | null>(null);
-  const { user, logout, isAuthenticated } = useAuth();
+// const [customer, setCustomer] = useState<User | null>(null);
+  const { user, logout, isAuthenticated, currentUser } = useAuth();
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
   const [openFollowersInfo, setOpenFollowersInfo] = useState<boolean>(false);
   const [openFollowingsInfo, setOpenFollowingsInfo] = useState<boolean>(false);
+  const [checkFollowed, setCheckFollowed] = useState<boolean>(currentUser !== null && visitor !== null && checkIsCurrentUserFollowOtherUser(currentUser, visitor) as boolean);
 
   const handleOpenFollowersInfo = () => setOpenFollowersInfo(true);
   const handleCloseFollowersInfo = () => setOpenFollowersInfo(false);
@@ -46,30 +47,30 @@ export default function Page({ params }: { params: { id: string } }) {
   };
 
   // Handle authentication
-  useEffect(() => {
-    if (isAuthenticated() && user !== null) {
-      const fetchData = async () => {
-        try {
-          const json = await getMe();
-          setCustomer(json.data);
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(false);
-        }
-      };
+  // useEffect(() => {
+  //   if (isAuthenticated() && user !== null) {
+  //     const fetchData = async () => {
+  //       try {
+  //         const json = await getMe();
+  //         setCustomer(json.data);
+  //       } catch (error) {
+  //         console.log(error);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
 
-      fetchData();
-    }
-    if (APPLICATION_PATH.includes(path)) {
-      setLoading(false);
-      router.push(path);
-    }
-    else {
-      setLoading(false);
-      // router.push("/login");
-    }
-  }, [isAuthenticated]);
+  //     fetchData();
+  //   }
+  //   if (APPLICATION_PATH.includes(path)) {
+  //     setLoading(false);
+  //     router.push(path);
+  //   }
+  //   else {
+  //     setLoading(false);
+  //     // router.push("/login");
+  //   }
+  // }, [isAuthenticated]);
 
   useEffect(() => {
     const fetchVisitorById = async () => {
@@ -85,7 +86,7 @@ export default function Page({ params }: { params: { id: string } }) {
       fetchVisitorById();
       setShouldFetchVisitor(false);
     }
-  }, [shouldFetchVisitor, params.id]);
+  }, [shouldFetchVisitor, params.id, currentUser]);
 
   useEffect(() => {
     localStorage.setItem("isFollowed", String(isFollowed));
@@ -97,19 +98,29 @@ export default function Page({ params }: { params: { id: string } }) {
       await onFollow(visitor?._id)
       setShouldFetchVisitor(true);
       setIsFollowed(true);
+      // setCheckFollowed(true);
+      // window.location.reload();
     }
   }
-
+  // useEffect(() => {
+    
+  // })
+  
   const handleUnFollow = async () => {
     if (visitor !== null) {
       await unFollow(visitor?._id)
       setShouldFetchVisitor(true);
       setIsFollowed(false);
+      // window.location.reload();
     }
   }
 
-  customer !== null && visitor !== null && console.log(checkIsCurrentUserFollowOtherUser(customer, visitor));
+  currentUser !== null && visitor !== null && console.log(checkIsCurrentUserFollowOtherUser(currentUser, visitor));
 
+  // console.log(checkFollowed);
+
+  console.log("Day la current user = ", currentUser);
+  
   return visitor !== null &&
     <div className="flex flex-row justify-center items-start md:w-full md:mt-16">
       <div className="">
@@ -119,7 +130,7 @@ export default function Page({ params }: { params: { id: string } }) {
         {/** Username and follow button */}
         <div className="flex flex-row justify-center items-center">
           <div className="text-white">{visitor.username}</div>
-          {customer !== null && isFollowed ? <button
+          {currentUser !== null && visitor !== null && checkIsCurrentUserFollowOtherUser(currentUser, visitor)  ? <button
             onClick={handleUnFollow}
             type="button"
             className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
@@ -151,7 +162,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className="text-gray-400">
             Followed by
           </div>
-          {customer !== null &&
+          {currentUser !== null &&
             <div className="text-white md:ml-0 flex flex-row">
               {visitor.followings.map((friendFollow: User, index: number) =>  (
                 <div key={friendFollow._id} className="flex flex-row">
@@ -191,7 +202,7 @@ export default function Page({ params }: { params: { id: string } }) {
         >
          <ul className="z-10 relative md:mx-auto md:w-full">
          <div className="text-white text-center text-sm font-medium">You followed this user</div>
-            {visitor.followers.map((followings: User) => followings._id !== customer?._id && (
+            {visitor.followers.map((followings: User) => followings._id !== currentUser?._id && (
               <div className="">
                 <li className="flex flex-row justify-start apple-linear-glass md:p-4 md:mt-4 rounded-lg">
                 <div className="">
@@ -201,7 +212,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   <p className="text-white text-[0.8rem] relative">{followings.username}</p>
                   <p className="text-gray-500 relative text-[0.8rem]">{followings.lastName + " " + followings.firstName}</p>
                 </div>
-                {customer !== null && isFollowed ? 
+                {currentUser !== null && isFollowed ? 
                 <button
                   onClick={handleUnFollow}
                   type="button"
@@ -250,7 +261,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   <p className="text-white text-[0.8rem] relative">{follower.username}</p>
                   <p className="text-gray-500 relative text-[0.8rem]">{follower.lastName + " " + follower.firstName}</p>
                 </div>
-                {customer !== null && isFollowed ? 
+                {currentUser !== null && isFollowed ? 
                 <button
                   onClick={handleUnFollow}
                   type="button"

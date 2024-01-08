@@ -457,5 +457,7 @@ export const checkIsCurrentUserFollowOtherUser = (
   currentUser: User,
   otherUser: User
 ) => {
-  return currentUser.followings.includes(otherUser);
+  return currentUser.followings.some(
+    (currentUserFollower) => currentUserFollower._id === otherUser._id
+  );
 };
