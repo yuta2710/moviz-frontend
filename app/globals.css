@@ -29,7 +29,7 @@ body {
   );
   box-shadow: 0px 1px 0px 0px transparent inset,
     0px 20px 100px 0px rgba(74, 57, 127, 0.7);
-  background-repeat: no-repeat;
+ 
   background-origin: content-box;
   width: 100vw;
   min-height: 100vh;
