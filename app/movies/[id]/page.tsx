@@ -488,7 +488,7 @@ export default function Page({ params }: { params: { id: string } }) {
               </p>
             </div>
 
-            <p className=" col-span-1 font-light text-gray-400 md:px-10 md:mt-2">
+            <p className=" col-span-1 font-light text-gray-400 md:px-10 md:mt-2 md:w-[1000px]">
               Directed by{" "}
               <span
                 className="text-white text-sm font-bold cursor-pointer hover:scale-120 duration-500"
@@ -646,7 +646,8 @@ export default function Page({ params }: { params: { id: string } }) {
                   <div className='flex flex-col md:w-[500px] h-max review-section'>
                     <div className="flex flex-row justify-center items-center">
                       <div className="md:mt-4">
-                        <Link href={`/visitor/${review.author_details.reviewerId._id !== null ? review.author_details.reviewerId._id : "not-exist"}`}>
+                        {/* <p className="text-white">/visitor/{review.author_details.reviewerId._id}</p> */}
+                        <Link href={`/visitor/${review.author_details.reviewerId._id}`}>
                           <Image src={review.author_details.avatar_path} width={55} height={0} style={{ height: "50px" }} className="rounded-full object-cover" alt="" objectFit="cover"
                             objectPosition="center center"></Image>
                         </Link>

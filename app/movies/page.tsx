@@ -37,7 +37,7 @@ export default function Page(): ReactElement {
   const { user, logout, isAuthenticated } = useAuth();
   const path = usePathname();
 
-  const [title, setTitle] = useState("Popular Movies This Week");
+  const [title, setTitle] = useState("");
 
   const currentDate = new Date();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -368,7 +368,7 @@ export default function Page(): ReactElement {
                   <li className="">
                     <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
                       <div className="">
-                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-contain rounded-sm"></Image>
+                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} objectFit="cover" alt="" className="md:mx-auto rounded-sm"></Image>
                       </div>
                     </Link>
                     <h3 className="text-white text-[1rem] text-center font-semibold">{movie.title}</h3>
@@ -382,7 +382,8 @@ export default function Page(): ReactElement {
                 .map((movie) => movie.poster_path !== null && (
                   <li className="">
                     <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                      <div className=""><Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={500} objectFit="cover" alt="" className="md:mx-auto rounded-sm"></Image></div>
+                      <div className="">
+                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={500} objectFit="cover" alt="" className="md:mx-auto rounded-sm"></Image></div>
                     </Link>
                     <h3 className="text-white text-sm text-center font-semibold md:mt-1">{movie.title}</h3>
                   </li>
