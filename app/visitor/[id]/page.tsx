@@ -151,10 +151,28 @@ export default function Page({ params }: { params: { id: string } }) {
   console.log("Day la current user = ", currentUser);
  
   return visitor !== null &&
-    <div className="flex flex-col justify-center items-center">
-      <div className="flex flex-row justify-center items-start md:w-full md:mt-16">
-        <div className="">
-          <Image src={visitor?.photo} width={350} height={0} style={{ height: "350px" }} alt="" className="rounded-full"></Image>
+    <div className="flex flex-row justify-center items-start md:w-full md:mt-16">
+      <div className="">
+        <Image src={visitor?.photo} width={350} height={0} style={{ height: "350px" }} alt="" className="rounded-full"></Image>
+      </div>
+      <div className="flex flex-col justify-center items-start md:ml-8">
+        {/** Username and follow button */}
+        <div className="flex flex-row justify-center items-center">
+          <div className="text-white">{visitor.username}</div>
+          {isFollowed  ? <button
+            onClick={() => handleUnFollow(visitor)}
+            type="button"
+            className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
+          >
+            Unfollow
+          </button> : <button
+            onClick={() => handleOnFollow(visitor)}
+            type="button"
+            className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
+          >
+            Follow
+          </button>
+          }
         </div>
         <div className="flex flex-col justify-center items-start md:ml-8">
           {/** Username and follow button */}
