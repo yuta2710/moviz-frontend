@@ -114,7 +114,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
     
     console.log("visitor's id: ", visitor?._id);
-  }, [visitor]);
+  }, [visitor, isFollowed]);
 
 
   const handleOnFollow = async () => {
@@ -122,20 +122,14 @@ export default function Page({ params }: { params: { id: string } }) {
       await onFollow(visitor?._id)
       setShouldFetchVisitor(true);
       setIsFollowed(true);
-      // setCheckFollowed(true);
-      // window.location.reload();
     }
   }
-  // useEffect(() => {
-    
-  // })
   
   const handleUnFollow = async () => {
     if (visitor !== null) {
       await unFollow(visitor?._id)
       setShouldFetchVisitor(true);
       setIsFollowed(false);
-      // window.location.reload();
     }
   }
 
