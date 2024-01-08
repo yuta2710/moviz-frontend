@@ -116,17 +116,17 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [visitor, isFollowed]);
 
 
-  const handleOnFollow = async () => {
+  const handleOnFollow = async (user: User) => {
     if (visitor !== null) {
-      await onFollow(visitor?._id)
+      await onFollow(user?._id)
       setShouldFetchVisitor(true);
       setIsFollowed(true);
     }
   }
   
-  const handleUnFollow = async () => {
+  const handleUnFollow = async (user: User) => {
     if (visitor !== null) {
-      await unFollow(visitor?._id)
+      await unFollow(user?._id)
       setShouldFetchVisitor(true);
       setIsFollowed(false);
     }
@@ -148,13 +148,13 @@ export default function Page({ params }: { params: { id: string } }) {
         <div className="flex flex-row justify-center items-center">
           <div className="text-white">{visitor.username}</div>
           {isFollowed  ? <button
-            onClick={handleUnFollow}
+            onClick={() => handleUnFollow(visitor)}
             type="button"
             className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
           >
             Unfollow
           </button> : <button
-            onClick={handleOnFollow}
+            onClick={() => handleOnFollow(visitor)}
             type="button"
             className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
           >
@@ -229,15 +229,15 @@ export default function Page({ params }: { params: { id: string } }) {
                   <p className="text-white text-[0.8rem] relative">{followings.username}</p>
                   <p className="text-gray-500 relative text-[0.8rem]">{followings.lastName + " " + followings.firstName}</p>
                 </div>
-                {currentUser !== null && isFollowed ? 
+                {currentUser !== null && checkIsCurrentUserFollowOtherUser(currentUser, followings) ? 
                 <button
-                  onClick={handleUnFollow}
+                  onClick={() => handleUnFollow(followings)}
                   type="button"
                   className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 py-1 hover:scale-105 duration-500"
                 >
                   Unfollow
                 </button> : <button
-                  onClick={handleOnFollow}
+                  onClick={() => handleOnFollow(followings)}
                   type="button"
                   className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 py-1 hover:scale-105 duration-500"
                 >
@@ -278,15 +278,15 @@ export default function Page({ params }: { params: { id: string } }) {
                   <p className="text-white text-[0.8rem] relative">{follower.username}</p>
                   <p className="text-gray-500 relative text-[0.8rem]">{follower.lastName + " " + follower.firstName}</p>
                 </div>
-                {currentUser !== null && isFollowed ? 
+                {currentUser !== null && checkIsCurrentUserFollowOtherUser(currentUser, follower) ? 
                 <button
-                  onClick={handleUnFollow}
+                onClick={() => handleUnFollow(follower)}
                   type="button"
                   className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 hover:scale-105 duration-500"
                 >
                   Unfollow
                 </button> : <button
-                  onClick={handleOnFollow}
+                  onClick={() => handleOnFollow(follower)}
                   type="button"
                   className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 hover:scale-105 duration-500"
                 >
