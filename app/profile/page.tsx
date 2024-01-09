@@ -133,6 +133,7 @@ export default function Page() {
               <h1 className="text-white text-center md:text-left">
                 {currentUser.username}
               </h1>
+              {/* <button  className="text-sm text-white bg-dark-green p-2 rounded-lg hover:scale-105 duration-500">Access to social media profile</button> */}
             </div>
             <div className="col-span-2 justify-center items-center col-span-4">
               <div className="flex flex-col mr-5">
