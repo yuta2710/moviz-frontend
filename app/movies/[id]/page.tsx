@@ -192,8 +192,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const ISO_DATE = new Date().toISOString().toString();
 
-  // console.log(ISO)
-
   const onSubmit = (data: FieldValues) => {
     setError("content", { type: "", message: "" });
     setError("tag", { type: "", message: "" });
@@ -231,24 +229,6 @@ export default function Page({ params }: { params: { id: string } }) {
       });
   }
 
-  // const handleAddToWatchlist = async () => {
-  //   try {
-  //     const response = await axios.patch(
-  //       `http://localhost:8080/api/v1/users/${id}/watchlists`,
-  //       {},
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //           'Content-Type': 'application/json',
-  //         },
-  //       }
-  //     );
-  //     const json = response.data;
-  //     console.log(json);
-  //   } catch (error) {
-  //     console.error('Error adding to watchlist:', error);
-  //   }
-  // };
 
   useEffect(() => {
     if (isAuthenticated() && user !== null) {
@@ -259,6 +239,7 @@ export default function Page({ params }: { params: { id: string } }) {
           if (customer?.watchLists.includes(id)) {
             setIsInWatchlist(true);
           }
+          console.log("Customer: ", customer)
         } catch (error) {
           console.log(error);
         } finally {
