@@ -156,11 +156,6 @@ export async function getRelatedMovies(id: string) {
   }
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 2134aab (remove redundant functions)
-
 export async function getCasts(id: string) {
   const url = `https://api.themoviedb.org/3/movie/${id}/credits`;
   const ENDPOINT = `http://localhost:8080/api/v1/movies/${id}/casts`;
@@ -455,12 +450,6 @@ export const unFollow = async (visitorId: string) => {
     console.log(error);
   }
 };
-
-
-
-
-
-
 
 export const checkIsCurrentUserFollowOtherUser = (
   currentUser: User,
