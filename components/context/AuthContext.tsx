@@ -55,22 +55,7 @@ export const AuthContext = createContext<AuthContextProps>(AuthContextDefaultVal
 
 export function AuthProvider({ children }: AuthProvideProps) {
   const [user, setUser] = useState<UserResponse | null>({ _id: "", accessToken: "" });
-  const [currentUser, setCurrentUser] = useState<User | null>({
-    _id: "",
-    username: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    role: "",
-    gender: "",
-    photo: "",
-    reviews: [],
-    watchLists: [],
-    followers: [],
-    followings: [],
-    createdAt: "",
-  });
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const setCustomerFromToken = () => {
     let token = localStorage.getItem("accessToken");
 
@@ -102,6 +87,25 @@ export function AuthProvider({ children }: AuthProvideProps) {
             _id: decode.id as string,
             accessToken: localStorage.getItem("accessToken") as string,
           })
+          const fetchCurrentUser = async () => {
+            try {
+              console.log("It is prepare to authenticated");
+
+              if (isAuthenticated()) {
+                console.log("It is authenticated");
+                const me = await getCurrentUser();
+                if (me !== null) {
+                  setCurrentUser(me.data);
+                }
+              }
+              console.log("It is not authenticated");
+            } catch (error) {
+              console.error("Error fetching current user:", error);
+              // Handle errors as needed (e.g., show a notification to the user)
+            }
+          }
+
+          fetchCurrentUser();
         }
         resolve(res);
       }).catch((err) => { reject(err) })
@@ -111,6 +115,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
   const logout = async (): Promise<void> => {
     localStorage.removeItem("accessToken");
     setUser(null);
+    setCurrentUser(null);
     window.location.reload();
   }
 
@@ -148,15 +153,26 @@ export function AuthProvider({ children }: AuthProvideProps) {
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const me = await getCurrentUser();
+      try {
+        console.log("It is prepare to authenticated");
 
-      if (me !== null) {
-        setCurrentUser(me.data);
+        if (isAuthenticated()) {
+          console.log("It is authenticated");
+          const me = await getCurrentUser();
+          if (me !== null) {
+            setCurrentUser(me.data);
+          }
+        }
+        console.log("It is not authenticated");
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+        // Handle errors as needed (e.g., show a notification to the user)
       }
     }
 
     fetchCurrentUser();
-  }, [])
+  }, []);
+
 
   return (
     <AuthContext.Provider value={value}>

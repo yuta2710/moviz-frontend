@@ -17,7 +17,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const [visitor, setVisitor] = useState<User | null>(null);
   const [shouldFetchVisitor, setShouldFetchVisitor] = useState(true);
   const [loading, setLoading] = useState(true);
-// const [customer, setCustomer] = useState<User | null>(null);
   const { user, logout, isAuthenticated, currentUser } = useAuth();
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
   const [openFollowersInfo, setOpenFollowersInfo] = useState<boolean>(false);

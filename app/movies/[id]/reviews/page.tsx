@@ -5,6 +5,7 @@ import { getCasts, getMovie, getReviewsByMovieId } from "../../../../utils/clien
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { formatHistoryDate } from "@/utils/convert.utils";
+import Link from "next/link";
 
 export default function Page({ params }: { params: { id: string } }) {
   console.log(params.id);
@@ -57,24 +58,24 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
 
         <div className="flex flex-col justify-start translate-y-12 relative">
-          <h1 className="text-2xl font-bold relative text-white translate-y-4 text-gradient-cyan-blue">Recent Reviews</h1>
-          <ul className="md:mt-24">
+          <h1 className="text-xl font-bold relative text-white translate-y-4 text-gradient-cyan-blue">Recent Reviews</h1>
+          <ul className="md:mt-8">
             {reviews.length > 0 &&
               reviews
                 .sort((a: FilmReviewProps, b: FilmReviewProps) => b.author_details.rating - a.author_details.rating)
                 .map((review: FilmReviewProps) => review.author_details.reviewerId?._id !== undefined && (
-                  <div className='flex flex-col md:w-[500px] h-max review-section relative'>
-                    <div className="flex flex-row">
-                      <div className="">
+                  <div className='flex flex-col h-max review-section relative'>
+                    <div className="flex flex-row justify-start items-center relative">
+                      <Link href={`/visitor/${review.author_details.reviewerId._id}`} className="">
                         {review.author_details.reviewerId !== undefined && review.author_details.reviewerId !== null
                           ? <Image src={review.author_details.avatar_path} width={50} height={50} className="rounded-full object-cover relative" style={{ height: "50px" }} alt=""></Image>
                           : review.author_details.avatar_path !== null &&
                           <Image src={`https://image.tmdb.org/t/p/w500/${review.author_details.avatar_path}`} width={100} height={100} className="object-cover relative" alt=""></Image>
                         }
-                      </div>
+                      </Link>
+                      <h2 className='text-sm font-bold text-white md:ml-4'><span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
+                        <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
                     </div>
-                    <h2 className='text-sm font-bold text-white md:mt-6'>Review by <span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
-                      <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
                     <h2 className='text-[0.8rem] font-regular text-white md:mt-2 md:w-[800px] text-justify md:pb-8 md:leading-6'>{review.content}</h2>
                   </div>
                 ))}
