@@ -350,6 +350,7 @@ export default function Page(): ReactElement {
 
   useEffect(() => {
     if (!isAuthenticated()) {
+      router.refresh();
       router.push("/login")
     }
   }, [isAuthenticated()])

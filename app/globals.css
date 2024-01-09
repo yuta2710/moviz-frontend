@@ -17,18 +17,21 @@ html {
   font-family: "SF Pro";
   /* font-family: "Poppins"; */
   /* background: #000; */
-}
-
-body {
-  margin: 0;
-  position: relative;
   background: radial-gradient(
     73.19% 111.55% at 93.07% 74.31%,
     #1d1f47 0%,
     #0a0b14 100%
   );
+  background-repeat: no-repeat;
   box-shadow: 0px 1px 0px 0px transparent inset,
     0px 20px 100px 0px rgba(74, 57, 127, 0.7);
+  min-height: 100vh;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  position: relative;
   width: 100vw;
   min-height: 100vh;
 }

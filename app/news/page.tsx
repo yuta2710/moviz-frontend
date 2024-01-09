@@ -2,7 +2,7 @@
 
 import { ArticleProps } from "@/types";
 import { formatDate, formatHistoryDate } from "@/utils/convert.utils";
-import { Pagination, styled } from "@mui/material";
+import { CircularProgress, Pagination, styled } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -66,8 +66,8 @@ export default function Page() {
       <h1 className="text-white text-xl font-extrabold tracking-wide">Latest News</h1>
 
       <ul className="grid grid-cols-3 relative">
-        {news.length > 0 &&
-          news
+        {news.length > 0
+          ? news
             .slice(0, 3)
             .sort((a: ArticleProps, b: ArticleProps) => new Date(b.pub_date).getTime() - new Date(a.pub_date).getTime())
             .map((newsItem) =>
@@ -104,64 +104,71 @@ export default function Page() {
                 </article>
 
               </div>
-            )}
+            )
+          : <CircularProgress color="secondary" className="md:mt-2" />
+        }
       </ul>
       <h1 className="text-white text-xl font-extrabold tracking-wide md:mt-16">Another News</h1>
       <div className="flex flex-wrap -mx-1 lg:-mx-4">
         {/* <!-- Column --> */}
-        {news
-          .sort((a: ArticleProps, b: ArticleProps) => new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime())
-          .map((article, index) => (
-            <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+        {news.length > 0
+          ? news
+            .sort((a: ArticleProps, b: ArticleProps) => new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime())
+            .map((article, index) => (
+              <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
 
-              {/* <!-- Article --> */}
-              <article className="overflow-hidden rounded-lg shadow-lg ">
+                {/* <!-- Article --> */}
+                <article className="overflow-hidden rounded-lg shadow-lg ">
 
-                <Link href={article.web_url}>
-                  <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${article.multimedia[5].url}`} width={article.multimedia[5].width} height={article.multimedia[5].height}></Image>
-                </Link>
+                  <Link href={article.web_url}>
+                    <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${article.multimedia[5].url}`} width={article.multimedia[5].width} height={article.multimedia[5].height}></Image>
+                  </Link>
 
-                <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
-                  <h1 className="text-lg">
-                    <Link className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold" href={article.web_url} target="_blanket">
-                      <span className="text-white">{article.abstract}</span>
+                  <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
+                    <h1 className="text-lg">
+                      <Link className="no-underline hover:underline text-white md:text-[1.2rem] font-semibold" href={article.web_url} target="_blanket">
+                        <span className="text-white">{article.abstract}</span>
+                      </Link>
+                    </h1>
+                  </header>
+                  <p className="text-white text-left ellipsis md:ml-4 text-sm">{article.lead_paragraph}</p>
+
+                  <footer className="flex items-center justify-between leading-none p-2 md:p-4">
+                    <Link className="flex items-center no-underline hover:underline text-white" href={article.web_url}>
+                      <Image alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" width={32} height={32}></Image>
+                      <p className="ml-2 text-sm">
+                        {article.byline.original.split(" ")[0]} <span className="text-white font-semibold">{article.byline.original.split(" ")[1]} {article.byline.original.split(" ")[2]}</span>
+                      </p>
+                      <p className="text-white text-sm font-medium relative md:ml-4 opacity-60">{formatHistoryDate(article.pub_date)}</p>
                     </Link>
-                  </h1>
-                </header>
-                <p className="text-white text-left ellipsis md:ml-4 text-sm">{article.lead_paragraph}</p>
+                    <Link className="no-underline text-grey-darker hover:text-red-dark" href="#">
+                      <span className="hidden">Like</span>
+                      <i className="fa fa-heart"></i>
+                    </Link>
+                  </footer>
 
-                <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                  <Link className="flex items-center no-underline hover:underline text-white" href={article.web_url}>
-                    <Image alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" width={32} height={32}></Image>
-                    <p className="ml-2 text-sm">
-                      {article.byline.original.split(" ")[0]} <span className="text-white font-semibold">{article.byline.original.split(" ")[1]} {article.byline.original.split(" ")[2]}</span>
-                    </p>
-                    <p className="text-white text-sm font-medium relative md:ml-4 opacity-60">{formatHistoryDate(article.pub_date)}</p>
-                  </Link>
-                  <Link className="no-underline text-grey-darker hover:text-red-dark" href="#">
-                    <span className="hidden">Like</span>
-                    <i className="fa fa-heart"></i>
-                  </Link>
-                </footer>
+                </article>
 
-              </article>
-
-            </div>
-          ))}
+              </div>
+            ))
+          : <CircularProgress color="secondary" className="md:mt-2" />
+        }
         {/* 
         <!-- END Column --> */}
 
       </div>
-      <StyledPagination
-        count={Math.ceil(news.length / numberOfArticlesPerPage)}
-        page={currentPage}
-        onChange={(event, page) => paginate(page)}
-        size="large"
-        color="secondary"
-        className="relative md:rounded-sm md:m-auto"
-        variant="outlined"
-      // classes={ }
-      />
+      {news.length > 0 && (
+        <div className="flex justify-center w-full">
+          <StyledPagination
+            count={Math.ceil(news.length / numberOfArticlesPerPage)}
+            page={currentPage}
+            onChange={(event, page) => paginate(page)}
+            size="large"
+            color="secondary"
+            variant="outlined"
+          />
+        </div>
+      )}
     </div>
   </>
 
