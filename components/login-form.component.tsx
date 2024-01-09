@@ -60,11 +60,11 @@ export const LoginForm = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (isAuthenticated()) {
-  //     router.push("/home");
-  //   }
-  // }, [isAuthenticated])
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push("/home");
+    }
+  }, [isAuthenticated])
 
   const formErrors = errors as any;
 

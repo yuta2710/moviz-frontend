@@ -62,7 +62,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews, currentPage, itemsPerP
                   <h2 className='text-gray-500 text-sm'>{new Date(review.movieObject?.release_date as string).getFullYear()}</h2>
                   <h2 className='text-sm'>{review.author_details.rating}/10</h2>
                 </div>
-                <p className='text-white text-[0.8rem] line-clamp-4 md:max-w-[500px]'>{review.content}</p>
+                <p className='text-white text-[0.8rem] line-clamp-4 md:max-w-[500px] md:mt-2 text-justify'>{review.content}</p>
               </div>
             </div>
           ))}

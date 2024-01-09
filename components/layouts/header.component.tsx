@@ -198,6 +198,7 @@ const Header = (header: HeaderProps) => {
                 <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
                   {_.startCase(item.KEY.split("-").join(" "))}
                 </Link>
+
               </li>
 
             ))}
@@ -265,9 +266,10 @@ const Header = (header: HeaderProps) => {
         <div className='col-span-3 md:col-span-2 lg:col-span-1 flex flex-col relative'>
           {currentUser !== null && isAuthenticated()
             ? <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
-              <Image className='rounded-full  md:right-16' src={currentUser.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
+              <Image className='rounded-full' src={currentUser.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
               <p className='text-white font-medium text-sm hover:text-gray-300' onClick={() => router.push('/profile')}>{currentUser.username}</p>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
+
             </div>
             : <button
               className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg login-btn'
