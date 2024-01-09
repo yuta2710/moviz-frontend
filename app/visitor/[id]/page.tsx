@@ -122,6 +122,10 @@ export default function Page({ params }: { params: { id: string } }) {
       await onFollow(user?._id)
       setShouldFetchVisitor(true);
       setIsFollowed(true);
+      // setCheckFollowed(true);
+      if(user._id !== visitor._id){
+        window.location.reload();
+      }
     }
   }
   // useEffect(() => {
@@ -133,6 +137,9 @@ export default function Page({ params }: { params: { id: string } }) {
       await unFollow(user?._id)
       setShouldFetchVisitor(true);
       setIsFollowed(false);
+      if(user._id !== visitor._id){
+        window.location.reload();
+      }
     }
   }
 
