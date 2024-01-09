@@ -160,7 +160,8 @@ export default function Page({ params }: { params: { id: string } }) {
           {/** Username and follow button */}
           <div className="flex flex-row justify-center items-center">
             <div className="text-white">{visitor.username}</div>
-            {isFollowed  ? <button
+            {isFollowed ? 
+            <button
               onClick={() => handleUnFollow(visitor)}
               type="button"
               className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"

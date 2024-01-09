@@ -656,10 +656,10 @@ export default function Page({ params }: { params: { id: string } }) {
                           </Link>
                           <span className='text-white md:ml-8 font-bold'>Rating:</span>
                           <span className='md:ml-2'>{review.author_details.rating.toFixed(1)}/10</span>
-                          <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span>
                         </h2>
                       </div>
                     </div>
+                    <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span>
                     <h2 className='text-sm font-regular text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
                   </div>
                 ))}
