@@ -278,7 +278,24 @@ export default function Page({ params }: { params: { id: string } }) {
       console.log("Reviews data = ", reviewsData);
       setReviews(reviewsData);
     };
+    const checkIsInWatchlists = async () =>{
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/v1/users/${id}/check-watchlists`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        console.log("Check is in watchlists: ", response.data.isInWatchLists)
+        setIsInWatchlist(response.data.isInWatchLists);
+      } catch (error) {
+        console.error("Error checking watchlist:", error);
+      }
+    }
     fetchMovie();
+    checkIsInWatchlists();
     fetchCasts();
     fetchReviewsByMovieId();
   }, [id]);
