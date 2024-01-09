@@ -136,13 +136,13 @@ export default function Page() {
   if (customer !== null) {
     html = (
 
-      <div className="flex flex-col justify-center  relative md:top-[10rem] w-3/5 mx-auto text-white">
+      <div className="flex flex-col justify-center relative md:top-[10rem] w-3/5 mx-auto text-white">
         <div className="flex flex-row">
           {/* <div className="blob relative"></div> */}
           <div className="blob-linear-green-blue relative"></div>
         </div>
         <div className="grid grid-cols-3 items-center">
-          <div className="">
+          <div className="col-span-3 md:col-span-1">
             <Image
               className="text-white text-center rounded-full md:mr-36 hover:cursor-pointer"
               width={250}
@@ -153,13 +153,13 @@ export default function Page() {
             />
             <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
           </div>
-          <div className="grid col-span-2 grid-rows-4 gap-5 w2/3">
+          <div className="grid md:col-span-2 grid-cols-4 gap-5 w2/3 col-span-3">
             <div className="col-span-4 justify-center items-center text-3xl font-medium my-auto">
-              <h1 className="text-white text-center md:text-left ">
+              <h1 className="text-white text-center md:text-left">
                 {customer.username}
               </h1>
             </div>
-            <div className="col-span-2 justify-center items-center">
+            <div className="col-span-2 justify-center items-center col-span-4">
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">First Name</h3>
                 {!isEditingFirstname &&
@@ -177,7 +177,7 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
-            <div className="col-span-2 justify-center items-center">
+            <div className="col-span-2 justify-center items-center col-span-4">
               <div className="flex flex-col">
                 <h3 className="mb-3">Last Name</h3>
                 {!isEditingLastname &&
@@ -195,7 +195,7 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
-            <div className="col-span-2 justify-center items-center">
+            <div className="col-span-2 justify-center items-center col-span-4">
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">Email</h3>
                 {!isEditingEmail &&
@@ -245,7 +245,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className="flex flex-row gap-10 items-start">
+        <div className="flex flex-row gap-10 items-start col-span-3">
           <h1 className={`${selected == 1 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(1)}>Reviews</h1>
           <h1 className={`${selected == 2 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(2)}>Watchlist</h1>
           <h1 className={`${selected == 3 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(3)}>Like</h1>

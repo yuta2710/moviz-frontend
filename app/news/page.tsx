@@ -65,7 +65,7 @@ export default function Page() {
       </div>
       <h1 className="text-white text-xl font-extrabold tracking-wide">Latest News</h1>
 
-      <ul className="grid grid-cols-3 relative">
+      <ul className="grid grid-cols-3 relative gap-3">
         {news.length > 0
           ? news
             .slice(0, 3)
