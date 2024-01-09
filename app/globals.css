@@ -13,8 +13,8 @@
 
 html {
   position: relative;
-  /* font-family: "Noto Sans"; */
-  font-family: "SF Pro";
+  font-family: "Noto Sans";
+  /* font-family: "SF Pro"; */
   /* font-family: "Poppins"; */
   /* background: #000; */
   background: radial-gradient(
@@ -22,7 +22,10 @@ html {
     #1d1f47 0%,
     #0a0b14 100%
   );
+  background-color: #130f40;
+  /* background-image: linear-gradient(315deg, #130f40 0%, #000000 74%); */
   background-repeat: no-repeat;
+  background-attachment: fixed; /* This will fix the gradient to the viewport */
   background-origin: content-box;
   box-shadow: 0px 1px 0px 0px transparent inset,
     0px 20px 100px 0px rgba(74, 57, 127, 0.7);
@@ -33,6 +36,7 @@ html {
 body {
   margin: 0;
   position: relative;
+  background: transparent;
   background-repeat: no-repeat;
   width: 100vw;
   min-height: 100vh;
@@ -508,4 +512,20 @@ button:focus {
     ); /* Adjust the number of columns as needed */
     gap: 2px; /* Adjust the gap between items as needed */
   }
+}
+
+.css-1scal0h-MuiPaginationItem-root {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  border-radius: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  min-width: 40px;
+  padding: 0 10px;
+  margin: 0 3px;
+  color: rgba(255, 255, 255, 0.87);
+  height: auto;
 }

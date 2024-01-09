@@ -459,3 +459,7 @@ export const checkIsCurrentUserFollowOtherUser = (
     (currentUserFollower) => currentUserFollower._id === otherUser._id
   );
 };
+
+export const getRandomPhotoUrl = (randomId: number) => {
+  return `https://api.slingacademy.com/public/sample-photos/${randomId}.jpeg`;
+};

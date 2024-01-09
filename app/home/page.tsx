@@ -364,7 +364,7 @@ export default function Page(): ReactElement {
           b.author_details.rating - a.author_details.rating
         )
         .slice(0, 4).map((review: FilmReviewProps) => (
-          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
+          <li onClick={() => router.push(`/movies/${review.movie}/reviews`)} className="cursor-pointer apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
             <Image
               src={`https://image.tmdb.org/t/p/w500/${review.movieObject?.poster_path}`}
               width={200}

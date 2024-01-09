@@ -48,16 +48,9 @@ export default function Page({ params }: { params: { id: string } }) {
   console.log("Review data = ", reviews);
   return (
     movie !== null &&
-    <div className="flex flex-row justify-center md:mt-24">
+    <div className="flex flex-row-reverse justify-center">
       <div className="relative flex flex-col justify-center items-start md:ml-24"> {/* Added justify-center and items-center */}
-        <div className="flex flex-row justify-between items-start">
-          <h1 className="text-white font-semibold text-xl md:w-9/12">{movie?.title}</h1>
-          <h1 className="text-white font-medium text-lg md:ml-8">{new Date(movie.release_date).getFullYear()}</h1>
-          <h1 className="text-white font-medium text-lg md:ml-24 md:w-[600px]">Directed By {director?.name}</h1>
-          {/* <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={306} height={391} alt="" className="md:ml-24"></Image> */}
-        </div>
-
-        <div className="flex flex-col justify-start translate-y-12 relative">
+        <div className="flex flex-col justify-start relative">
           <h1 className="text-xl font-bold relative text-white translate-y-4 text-gradient-cyan-blue">Recent Reviews</h1>
           <ul className="md:mt-8">
             {reviews.length > 0 &&
@@ -82,8 +75,14 @@ export default function Page({ params }: { params: { id: string } }) {
           </ul>
         </div>
       </div>
-      <div className="relative md:mr-64 md:mt-24">
-        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={506} height={591} alt="" className="md:ml-24"></Image>
+      <div className="relative md:mt-24">
+        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={306} height={391} alt="" className=""></Image>
+        <div className="flex flex-col justify-between items-center">
+          <h1 className="text-white font-semibold text-xl text-center md:w-[306px]">{movie?.title}</h1>
+          {/* <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={306} height={391} alt="" className="md:ml-24"></Image> */}
+          <h1 className="text-white font-medium text-sm text-center">{new Date(movie.release_date).getFullYear()}</h1>
+          <h1 className="text-white font-medium text-sm text-center">Directed By <span className="font-bold text-ai4biz-green-quite-light">{director?.name}</span></h1>
+        </div>
       </div>
     </div>
   )

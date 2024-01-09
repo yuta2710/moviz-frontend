@@ -13,8 +13,7 @@ import MovieList from "@/components/movies-list.component";
 import ReviewList from "@/components/review-list.component";
 
 export default function Page() {
-  const [customer, setCustomer] = useState<User | null>(null);
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(1);
   const [isEditingFirstname, setIsEditingFirstname] = useState(false);
@@ -22,42 +21,18 @@ export default function Page() {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 3; 
+  const reviewsPerPage = 3;
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
-  useEffect(() => {
-    if (isAuthenticated() && user !== null) {
-      const fetchData = async () => {
-        try {
-          const json = await getMe();
-          setCustomer(json.data);
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchData();
-      console.log("Watchlist: " , customer?.watchLists);
-      console.log("customer id: ",  customer?._id)
-      console.log("customer name: ", customer?.lastName);
-      console.log("customer reviews: ", customer?.reviews);
-    } else {
-      setLoading(false);
-      router.push("/login")
-    }
-  }, [isAuthenticated]);
-
-   
   const handleAvatarClick = () => {
     // Trigger click on the hidden file input
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.click();
   };
+
   const isFileValidType = (file: File) => {
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
     return allowedTypes.includes(file.type);
@@ -71,7 +46,7 @@ export default function Page() {
       const formData = new FormData();
       formData.append('file', file);
       try {
-        const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/photo`, formData, {
+        const response = await axios.patch(`http://localhost:8080/api/v1/users/${currentUser?._id}/photo`, formData, {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             'Content-Type': 'multipart/form-data',
@@ -102,13 +77,13 @@ export default function Page() {
     // Repeat similar steps for lastname and email
 
     const data = {
-      firstName: updatedFirstName || customer?.firstName,
-      lastName: updatedLastName || customer?.lastName,
-      email: updatedEmail || customer?.email,
+      firstName: updatedFirstName || currentUser?.firstName,
+      lastName: updatedLastName || currentUser?.lastName,
+      email: updatedEmail || currentUser?.email,
     };
 
     try {
-      const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/update-profile`, JSON.stringify(data), {
+      const response = await axios.patch(`http://localhost:8080/api/v1/users/${currentUser?._id}/update-profile`, JSON.stringify(data), {
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           'Content-Type': 'application/json',
@@ -133,7 +108,7 @@ export default function Page() {
     html = <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>;
   }
 
-  if (customer !== null) {
+  if (currentUser !== null) {
     html = (
 
       <div className="flex flex-col justify-center relative md:top-[10rem] w-3/5 mx-auto text-white">
@@ -147,8 +122,8 @@ export default function Page() {
               className="text-white text-center rounded-full md:mr-36 hover:cursor-pointer"
               width={250}
               height={250}
-              alt="Customer Photo"
-              src={customer.photo}
+              alt="currentUser Photo"
+              src={currentUser.photo}
               onClick={handleAvatarClick}
             />
             <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
@@ -156,7 +131,7 @@ export default function Page() {
           <div className="grid md:col-span-2 grid-cols-4 gap-5 w2/3 col-span-3">
             <div className="col-span-4 justify-center items-center text-3xl font-medium my-auto">
               <h1 className="text-white text-center md:text-left">
-                {customer.username}
+                {currentUser.username}
               </h1>
             </div>
             <div className="col-span-2 justify-center items-center col-span-4">
@@ -164,12 +139,12 @@ export default function Page() {
                 <h3 className="mb-3">First Name</h3>
                 {!isEditingFirstname &&
                   (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
-                    {customer.firstName}
+                    {currentUser.firstName}
                     <p className={`${isEditingEmail || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingFirstname(true))}>Edit</p>
                   </div>)}
                 {isEditingFirstname &&
                   (<form className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="text-sm border-none bg-transparent w-auto" id="fname" placeholder={`${customer.firstName}`}></input>
+                    <input type="text" className="text-sm border-none bg-transparent w-auto" id="fname" placeholder={`${currentUser.firstName}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit" >Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingFirstname(false)}>Cancel</button>
@@ -182,12 +157,12 @@ export default function Page() {
                 <h3 className="mb-3">Last Name</h3>
                 {!isEditingLastname &&
                   (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
-                    {customer.lastName}
+                    {currentUser.lastName}
                     <p className={`${isEditingEmail || isEditingFirstname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingLastname(true))}>Edit</p>
                   </div>)}
                 {isEditingLastname &&
                   (<form className="flex flex-row py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="lname" placeholder={`${customer.lastName}`}></input>
+                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="lname" placeholder={`${currentUser.lastName}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit">Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingLastname(false)}>Cancel</button>
@@ -200,12 +175,12 @@ export default function Page() {
                 <h3 className="mb-3">Email</h3>
                 {!isEditingEmail &&
                   (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
-                    {customer.email}
+                    {currentUser.email}
                     <p className={`${isEditingFirstname || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingEmail(true))}>Edit</p>
                   </div>)}
                 {isEditingEmail &&
                   (<form className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="email" placeholder={`${customer.email}`}></input>
+                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="email" placeholder={`${currentUser.email}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit">Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingEmail(false)}>Cancel</button>
@@ -217,29 +192,11 @@ export default function Page() {
               <div className="flex flex-col">
                 <h3 className="mb-3 text-gray-500 underline">Review Tags</h3>
                 <div className="grid grid-cols-5 gap-2">
-                  {customer.reviews.map((review, index) => review.tag && (
+                  {currentUser.reviews.map((review, index) => review.tag && (
                     <button className=" bg-cyan-700 rounded-lg">
                       {review.tag}
                     </button>
                   ))}
-                  {/* <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button> */}
                 </div>
               </div>
             </div>
@@ -252,27 +209,31 @@ export default function Page() {
         </div>
         {selected == 1 && (
           <div>
-          
-            <ReviewList reviews={customer.reviews} currentPage={currentPage} itemsPerPage={reviewsPerPage} />
-            <div className="items-center justify-center">
-              <Pagination
-                count={Math.ceil(customer.reviews.length / reviewsPerPage)}
-                // variant="outlined"
-                color="secondary"
-                size="large"
-                page={currentPage}
-                onChange={(event, page) => handlePageChange(page)}
 
-              />
-            </div>
+            <ReviewList reviews={currentUser.reviews} currentPage={currentPage} itemsPerPage={reviewsPerPage} />
+            {currentUser.reviews.length > 0
+              && <>
+                <div className="items-center justify-center">
+                  {/* <Pagination
+                    count={Math.ceil(currentUser.reviews.length / reviewsPerPage)}
+                    // variant="outlined"
+                    color="secondary"
+                    size="large"
+                    page={currentPage}
+                    onChange={(event, page) => handlePageChange(page)}
 
-      
-            
+                  /> */}
+                </div>
+              </>
+            }
+
+
+
           </div>
         )}
         {selected == 2 && (
           <div>
-            <MovieList ids={customer.watchLists} />
+            <MovieList ids={currentUser.watchLists} />
           </div>
         )}
         {selected == 3 && (
@@ -284,6 +245,8 @@ export default function Page() {
 
     );
   }
+
+  console.log("Current user in here", currentUser);
 
   return html;
 }

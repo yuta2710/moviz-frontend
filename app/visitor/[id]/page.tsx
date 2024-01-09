@@ -218,7 +218,7 @@ export default function Page({ params }: { params: { id: string } }) {
           className="util-box-shadow-purple-mode black-linear"
         >
          <ul className="z-10 relative md:mx-auto md:w-full">
-         <div className="text-white text-center text-sm font-medium">You followed this user</div>
+         {isFollowed && <div className="text-white text-center text-sm font-medium">You followed this user</div> }
             {visitor.followers.map((followings: User) => followings._id !== currentUser?._id && (
               <div className="">
                 <li className="flex flex-row justify-start apple-linear-glass md:p-4 md:mt-4 rounded-lg">
@@ -282,13 +282,13 @@ export default function Page({ params }: { params: { id: string } }) {
                 <button
                   onClick={handleUnFollow}
                   type="button"
-                  className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 py-1 hover:scale-105 duration-500"
+                  className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 hover:scale-105 duration-500"
                 >
                   Unfollow
                 </button> : <button
                   onClick={handleOnFollow}
                   type="button"
-                  className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 py-1 hover:scale-105 duration-500"
+                  className="relative md:ml-8 bg-dark-green rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-6 hover:scale-105 duration-500"
                 >
                   Follow
                 </button>
