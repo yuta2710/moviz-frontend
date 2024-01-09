@@ -103,6 +103,12 @@ const Header = (header: HeaderProps) => {
     }
   }, [isAuthenticated]);
 
+  // useEffect(() => {
+  //   if (!isAuthenticated()) {
+
+  //   }
+  // }, [])
+
   useEffect(() => {
     handleSearchMovie(searchQuery);
   }, [searchQuery])
@@ -257,14 +263,14 @@ const Header = (header: HeaderProps) => {
         </div>
         <div className='col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-1'></div>
         <div className='col-span-3 md:col-span-2 lg:col-span-1 flex flex-col relative'>
-          {currentUser !== null
+          {currentUser !== null && isAuthenticated()
             ? <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
               <Image className='rounded-full  md:right-16' src={currentUser.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
               <p className='text-white font-medium text-sm hover:text-gray-300' onClick={() => router.push('/profile')}>{currentUser.username}</p>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
             </div>
             : <button
-              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg '
+              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg login-btn'
               onClick={() => router.push("/login")}
             >
               Login

@@ -102,6 +102,12 @@ export default function Page() {
     }
   };
 
+  useEffect(() => {
+    if (currentUser === null && !isAuthenticated()) {
+      router.push("/login");
+    }
+  }, [])
+
 
   let html: ReactElement<any, any> = <></>;
   if (loading) {
@@ -123,6 +129,7 @@ export default function Page() {
               width={250}
               height={250}
               alt="currentUser Photo"
+              style={{ height: "250px" }}
               src={currentUser.photo}
               onClick={handleAvatarClick}
             />

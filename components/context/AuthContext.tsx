@@ -81,7 +81,6 @@ export function AuthProvider({ children }: AuthProvideProps) {
         localStorage.setItem("accessToken", accessToken);
         // console.log(res.data.accessToken);
         const decode = jwtDecode(accessToken);
-
         if ("id" in decode) {
           setUser({
             _id: decode.id as string,
