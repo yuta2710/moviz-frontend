@@ -156,7 +156,6 @@ export async function getRelatedMovies(id: string) {
   }
 }
 
-
 export async function getCasts(id: string) {
   const url = `https://api.themoviedb.org/3/movie/${id}/credits`;
   const ENDPOINT = `http://localhost:8080/api/v1/movies/${id}/casts`;
@@ -462,4 +461,8 @@ export const checkIsCurrentUserFollowOtherUser = (
   return currentUser.followings.some(
     (currentUserFollower) => currentUserFollower._id === otherUser._id
   );
+};
+
+export const getRandomPhotoUrl = (randomId: number) => {
+  return `https://api.slingacademy.com/public/sample-photos/${randomId}.jpeg`;
 };

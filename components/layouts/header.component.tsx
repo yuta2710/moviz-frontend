@@ -33,7 +33,7 @@ const Header = (header: HeaderProps) => {
   const { logo, items, background, height, fontLogo, fontItem } = header
   const [customer, setCustomer] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, currentUser } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
   const path = usePathname();
@@ -77,20 +77,20 @@ const Header = (header: HeaderProps) => {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated() && user !== null) {
-      const fetchData = async () => {
-        try {
-          const json = await getMe();
-          setCustomer(json.data);
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(false);
-        }
-      };
+    // if (isAuthenticated() && user !== null) {
+    //   const fetchData = async () => {
+    //     try {
+    //       const json = await getMe();
+    //       setCustomer(json.data);
+    //     } catch (error) {
+    //       console.log(error);
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   };
 
-      fetchData();
-    }
+    //   fetchData();
+    // }
 
     console.log(APPLICATION_PATH, path)
     if (APPLICATION_PATH.includes(path)) {
@@ -102,6 +102,12 @@ const Header = (header: HeaderProps) => {
       // router.push("/login");
     }
   }, [isAuthenticated]);
+
+  // useEffect(() => {
+  //   if (!isAuthenticated()) {
+
+  //   }
+  // }, [])
 
   useEffect(() => {
     handleSearchMovie(searchQuery);
@@ -143,6 +149,9 @@ const Header = (header: HeaderProps) => {
       </div>
       {index < 4 && <div className='md:w-full bg-white md:h-[2px] md:mt-2 opacity-50'></div>}
     </li>
+
+  console.log("Current user = ", currentUser);
+
 
   return (
     <header className={`lg:container mx-auto px-3 py-3 relative bg-transparent rounded-sm`}>
@@ -254,20 +263,18 @@ const Header = (header: HeaderProps) => {
         </div>
         <div className='col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-1'></div>
         <div className='col-span-3 md:col-span-2 lg:col-span-1 flex flex-col relative'>
-          {customer === null
-            ?
-            <button
-              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg '
+          {currentUser !== null && isAuthenticated()
+            ? <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
+              <Image className='rounded-full  md:right-16' src={currentUser.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
+              <p className='text-white font-medium text-sm hover:text-gray-300' onClick={() => router.push('/profile')}>{currentUser.username}</p>
+              <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
+            </div>
+            : <button
+              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg login-btn'
               onClick={() => router.push("/login")}
             >
               Login
             </button>
-            : <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
-
-              <Image className='rounded-full  md:right-16' src={customer?.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
-              <p className='text-white font-medium text-sm hover:text-gray-300' onClick={() => router.push('/profile')}>{customer.username}</p>
-              <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
-            </div>
           }
 
           {dropdownOpen && (

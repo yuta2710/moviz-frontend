@@ -42,11 +42,11 @@ const MovieList: React.FC<MovieListProps> = ({ ids }) => {
         <div className='text-white'>Nothing here yet!</div>
       )}
       {movies && (
-        <div className='grid grid-cols-6 gap-5'>
+        <div className='grid grid-cols-6 gap-2'>
           {movies.map((movie) => (
             <div>
-              <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+              <Link href={`/movies/${movie.id}`} className="block p-6 rounded-lg shadow movie-obj">
+                <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={120} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
               </Link>
             </div>
           ))}

@@ -358,7 +358,7 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
-            <ul className={`grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8`}>
+            <ul className={`grid grid-cols-2 md:grid-cols-4 md:mx-auto relative gap-4 justify-center items-center md:mt-8`}>
               {[...movies]
                 .slice(0, 6)
                 .map((movie) => movie.poster_path !== null && (
@@ -373,7 +373,7 @@ export default function Page(): ReactElement {
                 ))}
             </ul>
             <h1 className="text-white text-2xl font-semibold relative text-center md:mt-24">Other Similar Films</h1>
-            <ul className="grid grid-cols-4 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
+            <ul className="grid grid-cols-2 md:grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(6,)
                 .map((movie) => movie.poster_path !== null && (

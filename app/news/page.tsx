@@ -1,8 +1,9 @@
 "use client";
 
 import { ArticleProps } from "@/types";
+import { getRandomPhotoUrl } from "@/utils/clients.utils";
 import { formatDate, formatHistoryDate } from "@/utils/convert.utils";
-import { Pagination, styled } from "@mui/material";
+import { CircularProgress, Pagination, styled } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -18,7 +19,7 @@ export default function Page() {
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(page || 1);
-  const [numberOfArticlesPerPage] = useState(1);
+  const [numberOfArticlesPerPage] = useState(0.5);
   const router = useRouter();
   const path = usePathname();
 
@@ -57,59 +58,61 @@ export default function Page() {
     router.push(`/news?page=${pageNumber}`);
   };
 
-  return <>
-    <div className="container my-12 mx-auto px-4 md:px-12 relative md:mt-16">
-      <div className="flex flex-row">
-        {/* <div className="blob relative"></div> */}
-        <div className="blob-linear-yellow-blue relative"></div>
-      </div>
-      <h1 className="text-white text-xl font-extrabold tracking-wide">Latest News</h1>
+  return <div className="container my-12 mx-auto px-4 md:px-12 relative md:mt-16">
+    <div className="flex flex-row">
+      {/* <div className="blob relative"></div> */}
+      <div className="blob-linear-yellow-blue relative"></div>
+    </div>
+    <h1 className="text-white text-xl font-extrabold tracking-wide">Latest News</h1>
 
-      <ul className="grid grid-cols-3 relative">
-        {news.length > 0 &&
-          news
-            .slice(0, 3)
-            .sort((a: ArticleProps, b: ArticleProps) => new Date(b.pub_date).getTime() - new Date(a.pub_date).getTime())
-            .map((newsItem) =>
-              <div className="my-1 px-1 lg:my-4 lg:px-0 ">
-                {/* <!-- Article --> */}
-                <article className="overflow-hidden rounded-lg shadow-lg">
-                  <a href="#" className="">
-                    <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${newsItem.multimedia[5].url}`} width={120} height={0} style={{}}></Image>
-                  </a>
+    <ul className="grid grid-cols-3 relative gap-3">
+      {news.length > 0
+        ? news
+          .slice(0, 3)
+          .sort((a: ArticleProps, b: ArticleProps) => new Date(b.pub_date).getTime() - new Date(a.pub_date).getTime())
+          .map((newsItem) =>
+            <div className="my-1 px-1 lg:my-4 lg:px-0 ">
+              {/* <!-- Article --> */}
+              <article className="overflow-hidden rounded-lg shadow-lg">
+                <a href="#" className="">
+                  <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${newsItem.multimedia[5].url}`} width={120} height={0} style={{}}></Image>
+                </a>
 
-                  <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
-                    <h1 className="md:text-sm font-regular md:w-full">
-                      <a className="no-underline hover:underline text-white" href="#">
-                        <span className="text-white">{newsItem.abstract}</span>
-                      </a>
-                    </h1>
-                  </header>
-                  <p className="text-white text-left ellipsis md:ml-4 text-sm">{newsItem.lead_paragraph}</p>
-
-                  <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                    <a className="flex items-center no-underline hover:underline text-white" href="#">
-                      <Image alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" width={32} height={32}></Image>
-                      <p className="ml-2 text-sm">
-                        {newsItem.byline.original.split(" ")[0]} <span className="text-white font-semibold">{newsItem.byline.original.split(" ")[1]} {newsItem.byline.original.split(" ")[2]}</span>
-                      </p>
+                <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
+                  <h1 className="md:text-sm font-regular md:w-full">
+                    <a className="no-underline hover:underline text-white" href="#">
+                      <span className="text-white">{newsItem.abstract}</span>
                     </a>
-                    {/* <a className="no-underline text-grey-darker hover:text-red-dark" href="#">
+                  </h1>
+                </header>
+                <p className="text-white text-left ellipsis md:ml-4 text-sm">{newsItem.lead_paragraph}</p>
+
+                <footer className="flex items-center justify-between leading-none p-2 md:p-4">
+                  <a className="flex items-center no-underline hover:underline text-white" href="#">
+                    <Image alt="Placeholder" className="block rounded-full" src={getRandomPhotoUrl(Math.floor(Math.random() * 131) + 1)} width={32} height={32} style={{ height: "32px" }}></Image>
+                    <p className="ml-2 text-sm">
+                      {newsItem.byline.original.split(" ")[0]} <span className="text-white font-semibold">{newsItem.byline.original.split(" ")[1]} {newsItem.byline.original.split(" ")[2]}</span>
+                    </p>
+                  </a>
+                  {/* <a className="no-underline text-grey-darker hover:text-red-dark" href="#">
                   <span className="hidden">Like</span>
                   <i className="fa fa-heart"></i>
                 </a> */}
-                    <p className="text-white text-sm font-semibold">{formatHistoryDate(newsItem.pub_date)}</p>
-                  </footer>
+                  <p className="text-white text-sm font-semibold">{formatHistoryDate(newsItem.pub_date)}</p>
+                </footer>
 
-                </article>
+              </article>
 
-              </div>
-            )}
-      </ul>
-      <h1 className="text-white text-xl font-extrabold tracking-wide md:mt-16">Another News</h1>
-      <div className="flex flex-wrap -mx-1 lg:-mx-4">
-        {/* <!-- Column --> */}
-        {news
+            </div>
+          )
+        : <CircularProgress color="secondary" className="md:mt-2" />
+      }
+    </ul>
+    <h1 className="text-white text-xl font-extrabold tracking-wide md:mt-16">Another News</h1>
+    <div className="flex flex-wrap -mx-1 lg:-mx-4">
+      {/* <!-- Column --> */}
+      {news.length > 0
+        ? news
           .sort((a: ArticleProps, b: ArticleProps) => new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime())
           .map((article, index) => (
             <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
@@ -132,7 +135,7 @@ export default function Page() {
 
                 <footer className="flex items-center justify-between leading-none p-2 md:p-4">
                   <Link className="flex items-center no-underline hover:underline text-white" href={article.web_url}>
-                    <Image alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" width={32} height={32}></Image>
+                    <Image alt="Placeholder" className="block rounded-full" src={getRandomPhotoUrl(Math.floor(Math.random() * 131) + 1)} width={32} height={32} style={{ height: "32px" }}></Image>
                     <p className="ml-2 text-sm">
                       {article.byline.original.split(" ")[0]} <span className="text-white font-semibold">{article.byline.original.split(" ")[1]} {article.byline.original.split(" ")[2]}</span>
                     </p>
@@ -147,23 +150,27 @@ export default function Page() {
               </article>
 
             </div>
-          ))}
-        {/* 
+          ))
+        : <CircularProgress color="secondary" className="md:mt-2" />
+      }
+      {/* 
         <!-- END Column --> */}
 
-      </div>
-      <StyledPagination
-        count={Math.ceil(news.length / numberOfArticlesPerPage)}
-        page={currentPage}
-        onChange={(event, page) => paginate(page)}
-        size="large"
-        color="secondary"
-        className="relative md:rounded-sm md:m-auto"
-        variant="outlined"
-      // classes={ }
-      />
     </div>
-  </>
+    {news.length > 0 && (
+      <div className="flex justify-center w-full">
+        <StyledPagination
+          count={Math.ceil(news.length / numberOfArticlesPerPage)}
+          page={currentPage}
+          onChange={(event, page) => paginate(page)}
+          size="large"
+          color="secondary"
+          variant="outlined"
+        />
+      </div>
+    )}
+  </div>
+
 
 }
 

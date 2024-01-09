@@ -13,24 +13,31 @@
 
 html {
   position: relative;
-  /* font-family: "Noto Sans"; */
+  font-family: "Noto Sans";
   /* font-family: "SF Pro"; */
-  font-family: "Poppins";
+  /* font-family: "Poppins"; */
   /* background: #000; */
-}
-
-body {
-  margin: 0;
-  position: relative;
   background: radial-gradient(
     73.19% 111.55% at 93.07% 74.31%,
     #1d1f47 0%,
     #0a0b14 100%
   );
+  background-color: #130f40;
+  /* background-image: linear-gradient(315deg, #130f40 0%, #000000 74%); */
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* This will fix the gradient to the viewport */
+  background-origin: content-box;
   box-shadow: 0px 1px 0px 0px transparent inset,
     0px 20px 100px 0px rgba(74, 57, 127, 0.7);
+  min-height: 100vh;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  position: relative;
+  background: transparent;
   background-repeat: no-repeat;
-  background-origin: content-box;
   width: 100vw;
   min-height: 100vh;
 }
@@ -352,6 +359,7 @@ button:focus {
   box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.6),
     inset 100px 100px 0 0px #fa709a, inset 200px 200px 0 0px #784ba8,
     inset 300px 300px 0 0px #2bb6c5;
+  z-index: -10;
 }
 
 .blob-linear-green-blue {
@@ -371,6 +379,7 @@ button:focus {
   box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.6),
     inset 100px 100px 0 0px #0a959c, inset 200px 200px 0 0px #784ba8,
     inset 300px 300px 0 0px #27d492;
+  z-index: -10;
 }
 
 .blob-linear-yellow-blue {
@@ -391,6 +400,7 @@ button:focus {
   box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.2),
     inset 100px 100px 0 0px #0cece5, inset 200px 200px 0 0px #784ba8,
     inset 300px 300px 0 0px #ffbf00;
+  z-index: -10;
 }
 
 @-webkit-keyframes move {
@@ -493,8 +503,8 @@ button:focus {
 
 .MuiPagination-root {
   button {
-    color: #FFFFFF;
- }
+    color: #ffffff;
+  }
 }
 @media screen and (max-width: 768px) {
   .grid-container {
@@ -505,4 +515,20 @@ button:focus {
     ); /* Adjust the number of columns as needed */
     gap: 2px; /* Adjust the gap between items as needed */
   }
+}
+
+.css-1scal0h-MuiPaginationItem-root {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  border-radius: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  min-width: 40px;
+  padding: 0 10px;
+  margin: 0 3px;
+  color: rgba(255, 255, 255, 0.87);
+  height: auto;
 }

@@ -24,7 +24,7 @@ export const LoginForm = () => {
     setError,
     formState: { errors }
   } = useForm();
-  const { login, logout, isAuthenticated, user, setCustomerFromToken } = useAuth(); // Destructure the login function from the context
+  const { login, logout, isAuthenticated, user, currentUser, setCustomerFromToken } = useAuth(); // Destructure the login function from the context
   const router = useRouter();
   const onSubmit = async (data: FieldValues) => {
 
@@ -43,6 +43,7 @@ export const LoginForm = () => {
 
       // Redirect on successful login
       if (isAuthenticated()) {
+        router.refresh();
         router.push("/home");
       }
     } catch (err) {
@@ -59,13 +60,15 @@ export const LoginForm = () => {
     }
   };
 
-  useEffect(() => {
-    if (isAuthenticated()) {
-      router.push("/home");
-    }
-  }, [isAuthenticated])
+  // useEffect(() => {
+  //   if (isAuthenticated()) {
+  //     router.push("/home");
+  //   }
+  // }, [isAuthenticated])
 
   const formErrors = errors as any;
+
+  console.log(currentUser)
 
   return (
     <div className="flex justify-center items-center min-h-screen relative">

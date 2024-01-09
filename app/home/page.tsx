@@ -173,7 +173,7 @@ export default function Page(): ReactElement {
         setLoading(false);
       }
     };
-  
+
     fetchAllReviews();
   }, []);
 
@@ -205,19 +205,12 @@ export default function Page(): ReactElement {
         console.log("All Recommendations:", allRecommendations);
       }
     };
-  
+
     // Call the function to fetch user watchlist and recommendations
     if (isAuthenticated() && user !== null) {
       fetchUserWatchlist();
     }
   }, [isAuthenticated, user, customer?.watchLists, getRecommendations, setRecommendedMovies]);
-  
-
-    
-
-
-
-
 
   const indexLastMovie = currentPage * numberOfMoviesPerPage;
   const indexOfFirstMovie = indexLastMovie - numberOfMoviesPerPage;
@@ -355,6 +348,13 @@ export default function Page(): ReactElement {
     return cleanup;
   })
 
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.refresh();
+      router.push("/login")
+    }
+  }, [isAuthenticated()])
+
   const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto gap-4`}>
     {
       reviews
@@ -364,7 +364,7 @@ export default function Page(): ReactElement {
           b.author_details.rating - a.author_details.rating
         )
         .slice(0, 4).map((review: FilmReviewProps) => (
-          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
+          <li onClick={() => router.push(`/movies/${review.movie}/reviews`)} className="cursor-pointer apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
             <Image
               src={`https://image.tmdb.org/t/p/w500/${review.movieObject?.poster_path}`}
               width={200}
@@ -450,15 +450,15 @@ export default function Page(): ReactElement {
             <h1 className="text-white text-2xl font-semibold relative text-center">Recommended For You</h1>
             <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...recommendedMovies]
-                  .sort((a, b) => b.popularity - a.popularity) 
-                  .slice(0, 6)
-                  .map((movie) => (
-                    <li className=" m-0 rounded-2xl">
-                      <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-                      </Link>
-                    </li>
-                  ))}
+                .sort((a, b) => b.popularity - a.popularity)
+                .slice(0, 6)
+                .map((movie) => (
+                  <li className=" m-0 rounded-2xl">
+                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </div>
         )}

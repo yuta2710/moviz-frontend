@@ -467,7 +467,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <p className=" col-span-1 font-light text-gray-400 md:px-10 md:mt-2 md:w-[1000px]">
               Directed by{" "}
               <span
-                className="text-white text-sm font-bold cursor-pointer hover:scale-120 duration-500"
+                className="text-ai4biz-green-quite-light text-sm font-bold cursor-pointer hover:scale-120 duration-500"
                 onClick={handleOpenDirectorInfo}
               >
                 {director?.name}
