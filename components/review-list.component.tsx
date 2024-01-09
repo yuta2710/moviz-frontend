@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 
 
-interface ReviewListProps {
+export interface ReviewListProps {
   reviews: FilmReviewProps[];
   currentPage: number;
   itemsPerPage: number;

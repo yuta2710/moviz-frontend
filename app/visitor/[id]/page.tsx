@@ -3,7 +3,7 @@
 import { useAuth } from "@/components/context/AuthContext";
 import MovieList from "@/components/movie-list.component";
 import { FilmReviewProps, User } from "@/types";
-import { APPLICATION_PATH, checkIsCurrentUserFollowOtherUser, getMe, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
+import { APPLICATION_PATH, checkIsCurrentUserFollowOtherUser, getMe, getMovie, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
 import { Box, Modal } from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
@@ -24,7 +24,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const [openFollowersInfo, setOpenFollowersInfo] = useState<boolean>(false);
   const [openFollowingsInfo, setOpenFollowingsInfo] = useState<boolean>(false);
   const [checkFollowed, setCheckFollowed] = useState<boolean>(currentUser !== null && visitor !== null && checkIsCurrentUserFollowOtherUser(currentUser, visitor) as boolean);
-
   const handleOpenFollowersInfo = () => setOpenFollowersInfo(true);
   const handleCloseFollowersInfo = () => setOpenFollowersInfo(false);
 
@@ -323,7 +322,7 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className="flex flex-col justify-center items-start">
         <h1 className="text-left font-bold text-xl text-white">Recent Reviews</h1>
         {visitor.reviews.length > 0 && 
-          visitor.reviews.map((review: FilmReviewProps) => (
+          visitor.reviews.map((review: FilmReviewProps) => review.movieObject !== null && (
             <div className='flex flex-row gap-5 mt-5 items-center'>
               <Image src={`https://image.tmdb.org/t/p/w500/${review.movieObject?.poster_path}`} style={{ height: "100px" }} alt='movie-poster' width={60} height={100} />
               <div className='flex flex-col justify-center items-start'>
