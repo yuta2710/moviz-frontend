@@ -462,24 +462,6 @@ export default function Page(): ReactElement {
 
           </div>
         )}
-
-        {recommendedMovies.length > 0 && (
-          <div className="flex flex-col justify-center relative md:mt-16">
-            <h1 className="text-white text-2xl font-semibold relative text-center">Recommended For You</h1>
-            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
-              {[...recommendedMovies]
-                .sort((a, b) => b.popularity - a.popularity)
-                .slice(0, 6)
-                .map((movie) => (
-                  <li className=" m-0 rounded-2xl">
-                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
       </div>
     </div>
   )
