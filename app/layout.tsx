@@ -9,12 +9,20 @@ import { useEffect, useState } from 'react';
 export const config = {
   HEADER_ITEM_PATH: [
     {
+      APPLICATION_PATH: "/home",
+      KEY: "home",
+    },
+    {
       APPLICATION_PATH: "/movies",
       KEY: "movies",
     },
+    // {
+    //   APPLICATION_PATH: "/reviewsfeed",
+    //   KEY: "reviewsfeed",
+    // },
     {
-      APPLICATION_PATH: "/reviews",
-      KEY: "reviews",
+      APPLICATION_PATH: "/news",
+      KEY: "news",
     },
   ],
 };
@@ -26,7 +34,7 @@ export default function RootLayout({
 }) {
 
   return (
-    <html lang="en">
+    <html lang="en" className=''>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com"></link>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin='anonymous'></link>
@@ -34,7 +42,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossOrigin="anonymous" referrerPolicy="no-referrer"></link>
       </head>
-      <body className='overflow-x-hidden md:overflow-x-hidden'>
+      <body className='overflow-x-hidden md:overflow-x-hidden '>
         <AuthProvider>
           <Header
             logo={
@@ -44,6 +52,7 @@ export default function RootLayout({
               }
             }
             items={config.HEADER_ITEM_PATH}
+            background='glass'
             height='90px'
             fontItem={
               {
@@ -56,8 +65,10 @@ export default function RootLayout({
                 size: "text-4xl",
                 color: "text-white"
               }
-            }></Header>
+            }>
+          </Header>
           {children}
+
         </AuthProvider>
       </body>
     </html>
