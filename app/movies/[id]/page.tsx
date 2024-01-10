@@ -278,7 +278,7 @@ export default function Page({ params }: { params: { id: string } }) {
       console.log("Reviews data = ", reviewsData);
       setReviews(reviewsData);
     };
-    const checkIsInWatchlists = async () =>{
+    const checkIsInWatchlists = async () => {
       try {
         const response = await axios.get(
           `http://localhost:8080/api/v1/users/${id}/check-watchlists`,
@@ -500,25 +500,25 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className="md:w-[1200px] col-span-4">
             <div className="flex flex-row  font-bold text-gray-400 my-5 grid-container md:space-x-5">
               <h2
-                className="text-base hover:opacity-50 duration-500 cursor-pointer"
+                className="text-[0.8rem] font-medium hover:opacity-50 duration-500 cursor-pointer"
                 onClick={() => setChoice(1)}
               >
                 Cast
               </h2>
               <h2
-                className="text-base hover:opacity-50 duration-500 cursor-pointer"
+                className="text-[0.8rem] font-medium hover:opacity-50 duration-500 cursor-pointer"
                 onClick={() => setChoice(2)}
               >
                 Genres
               </h2>
               <h2
-                className="text-base hover:opacity-50 duration-500 cursor-pointer"
+                className="text-[0.8rem] font-medium hover:opacity-50 duration-500 cursor-pointer"
                 onClick={() => setChoice(3)}
               >
                 Details
               </h2>
               <h2
-                className="text-base hover:opacity-50 duration-500 cursor-pointer"
+                className="text-[0.8rem] font-medium hover:opacity-50 duration-500 cursor-pointer"
                 onClick={() => setChoice(4)}
               >
                 Release
@@ -654,11 +654,11 @@ export default function Page({ params }: { params: { id: string } }) {
                           </Link>
                           <span className='text-white md:ml-8 font-bold'>Rating:</span>
                           <span className='md:ml-2'>{review.author_details.rating.toFixed(1)}/10</span>
-                          <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span>
                         </h2>
                       </div>
                     </div>
-                    <h2 className='text-sm font-regular text-gray-400 ellipsis md:mt-2'>{review.content}</h2>
+                    <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span>
+                    <h2 className='text-sm font-regular text-gray-400 ellipsis md:mt-2 line-clamp-4'>{review.content}</h2>
                   </div>
                 ))}
           </div>

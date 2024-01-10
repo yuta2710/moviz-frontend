@@ -15,7 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 export default function Page() {
   const [customer, setCustomer] = useState<User | null>(null);
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(1);
   const [isEditingFirstname, setIsEditingFirstname] = useState(false);
@@ -159,7 +159,9 @@ export default function Page() {
     html = <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>;
   }
 
-  if (customer !== null) {
+  const uniqueTags = new Set();
+
+  if (currentUser !== null && customer != null) {
     html = (
 
       <div className="flex flex-col justify-center  relative md:top-[10rem] w-3/5 mx-auto text-white">
@@ -243,29 +245,22 @@ export default function Page() {
               <div className="flex flex-col">
                 <h3 className="mb-3 text-gray-500 underline">Review Tags</h3>
                 <div className="grid grid-cols-5 gap-2">
-                  {customer.reviews.map((review, index) => review.tag && (
-                    <button className=" bg-cyan-700 rounded-lg">
-                      {review.tag}
-                    </button>
-                  ))}
-                  {/* <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button>
-                  <button className=" bg-cyan-700 rounded-lg">
-                    Netflix
-                  </button> */}
+                  {currentUser.reviews.map((review, index) => {
+                    // Check if the tag is not in the set of unique tags
+                    if (!uniqueTags.has(review.tag)) {
+                      // Add the tag to the set of unique tags
+                      uniqueTags.add(review.tag);
+                      // Render the button
+                      return (
+                        <button key={index} className="bg-cyan-700 rounded-lg">
+                          {review.tag}
+                        </button>
+                      );
+                    } else {
+                      // Skip rendering for duplicates
+                      return null;
+                    }
+                  })}
                 </div>
               </div>
             </div>
@@ -336,5 +331,3 @@ export default function Page() {
 
   return html;
 }
-
-

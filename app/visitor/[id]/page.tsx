@@ -2,8 +2,8 @@
 
 import { useAuth } from "@/components/context/AuthContext";
 import MovieList from "@/components/movie-list.component";
-import { User } from "@/types";
-import { APPLICATION_PATH, checkIsCurrentUserFollowOtherUser, getMe, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
+import { FilmReviewProps, User } from "@/types";
+import { APPLICATION_PATH, checkIsCurrentUserFollowOtherUser, getMe, getMovie, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
 import { Box, Modal } from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
@@ -24,7 +24,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const [openFollowersInfo, setOpenFollowersInfo] = useState<boolean>(false);
   const [openFollowingsInfo, setOpenFollowingsInfo] = useState<boolean>(false);
   const [checkFollowed, setCheckFollowed] = useState<boolean>(currentUser !== null && visitor !== null && checkIsCurrentUserFollowOtherUser(currentUser, visitor) as boolean);
-
   const handleOpenFollowersInfo = () => setOpenFollowersInfo(true);
   const handleCloseFollowersInfo = () => setOpenFollowersInfo(false);
 
@@ -149,6 +148,7 @@ export default function Page({ params }: { params: { id: string } }) {
   // console.log(checkFollowed);
 
   console.log("Day la current user = ", currentUser);
+  console.log("Day la visitor = ", visitor);
  
   return visitor !== null &&
     <div className="flex flex-col justify-center items-center">
@@ -280,7 +280,6 @@ export default function Page({ params }: { params: { id: string } }) {
             className="util-box-shadow-purple-mode black-linear"
           >
             <ul className="z-10 relative md:mx-auto md:w-full">
-
               {visitor.followings.map((follower: User) => (
                 <li className="flex flex-row justify-start apple-linear-glass md:p-4 md:mt-4 rounded-lg">
                   <div className="">
@@ -315,10 +314,28 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
       <div className="flex flex-col justify-center items-start">
         <h1 className="text-left font-bold text-xl text-white">Watchlists</h1>
-      {visitor.watchLists.length > 0 && 
-        <MovieList ids={visitor.watchLists} />
-      }
-    </div>
+        {visitor.watchLists.length > 0 && 
+          <MovieList ids={visitor.watchLists} />
+        }
+      </div>
+
+      <div className="flex flex-col justify-center items-start">
+        <h1 className="text-left font-bold text-xl text-white">Recent Reviews</h1>
+        {visitor.reviews.length > 0 && 
+          visitor.reviews.map((review: FilmReviewProps) => review.movieObject !== null && (
+            <div className='flex flex-row gap-5 mt-5 items-center'>
+              <Image src={`https://image.tmdb.org/t/p/w500/${review.movieObject?.poster_path}`} style={{ height: "100px" }} alt='movie-poster' width={60} height={100} />
+              <div className='flex flex-col justify-center items-start'>
+                <div className='flex flex-row justify-between gap-4 items-center'>
+                  <h1 className='text-[1rem] font-semibold italic'>{review.movieObject?.title}</h1>
+                  <h2 className='text-gray-500 text-sm'>{new Date(review.movieObject?.release_date as string).getFullYear()}</h2>
+                  {/* <h2 className='text-sm'>{review.author_details.rating}/10</h2> */}
+                </div>
+                <p className='text-white text-[0.8rem] line-clamp-4 md:max-w-[500px] md:mt-2 text-justify'>{review.content}</p>
+              </div>
+            </div>
+        ))}
+      </div>
     </div>
 }
 

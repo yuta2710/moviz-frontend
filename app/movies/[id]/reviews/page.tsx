@@ -57,7 +57,7 @@ export default function Page({ params }: { params: { id: string } }) {
               reviews
                 .sort((a: FilmReviewProps, b: FilmReviewProps) => b.author_details.rating - a.author_details.rating)
                 .map((review: FilmReviewProps) => review.author_details.reviewerId?._id !== undefined && (
-                  <div className='flex flex-col h-max review-section relative'>
+                  <div className='flex flex-col h-max review-section relative md:mt-4'>
                     <div className="flex flex-row justify-start items-center relative">
                       <Link href={`/visitor/${review.author_details.reviewerId._id}`} className="">
                         {review.author_details.reviewerId !== undefined && review.author_details.reviewerId !== null
@@ -66,10 +66,11 @@ export default function Page({ params }: { params: { id: string } }) {
                           <Image src={`https://image.tmdb.org/t/p/w500/${review.author_details.avatar_path}`} width={100} height={100} className="object-cover relative" alt=""></Image>
                         }
                       </Link>
-                      <h2 className='text-sm font-bold text-white md:ml-4'><span className='text-ai4biz-green-quite-light font-semibold'>{review.author}</span>
+                      <h2 className='text-sm font-bold text-white md:ml-4'><span className='text-ai4biz-green-quite-light font-semibold text-[0.7rem]'><span className="text-white font-light opacity-50">Review by</span> {review.author_details.username}</span>
                         <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
                     </div>
                     <h2 className='text-[0.8rem] font-regular text-white md:mt-2 md:w-[800px] text-justify md:pb-8 md:leading-6'>{review.content}</h2>
+                    <div className="absolute md:w-full md:h-[1px] bg-white bottom-0 opacity-50"></div>
                   </div>
                 ))}
           </ul>
