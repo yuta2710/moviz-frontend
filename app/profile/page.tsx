@@ -8,12 +8,14 @@ import { getCurrentReviewsFromLetterboxdServer, getMe, getMovie } from "@/utils/
 import { FilmReviewProps, User } from "@/types";
 import letterboxd from "letterboxd-api";
 import axios from "axios";
-import { CircularProgress, Pagination } from "@mui/material";
+import { CircularProgress, IconButton, Pagination, Snackbar } from "@mui/material";
 import MovieList from "@/components/movies-list.component";
 import ReviewList from "@/components/review-list.component";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Page() {
-  const { user, isAuthenticated, currentUser } = useAuth();
+  const [customer, setCustomer] = useState<User | null>(null);
+  const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(1);
   const [isEditingFirstname, setIsEditingFirstname] = useState(false);
@@ -21,18 +23,66 @@ export default function Page() {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 3;
+  const reviewsPerPage = 3; 
+  const [openToastWarning, setOpenToastWarning] = useState<boolean>();
+  const [warningMessage, setWarningMessage] = useState("");
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
+    setOpenToastWarning(false);
+  };
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="error"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="large" className="hover-scale-105 duration-500" />
+      </IconButton>
+    </React.Fragment>
+  );
+
+  useEffect(() => {
+    if (isAuthenticated() && user !== null) {
+      const fetchData = async () => {
+        try {
+          const json = await getMe();
+          setCustomer(json.data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+      console.log("Watchlist: " , customer?.watchLists);
+      console.log("customer id: ",  customer?._id)
+      console.log("customer name: ", customer?.lastName);
+      console.log("customer reviews: ", customer?.reviews);
+    } else {
+      setLoading(false);
+      router.push("/login")
+    }
+  }, [isAuthenticated]);
+
+   
   const handleAvatarClick = () => {
     // Trigger click on the hidden file input
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.click();
   };
-
   const isFileValidType = (file: File) => {
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
     return allowedTypes.includes(file.type);
@@ -40,13 +90,13 @@ export default function Page() {
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
-    console.log(file);
-    console.log("token token " + localStorage.getItem("accessToken"));
-    if (file && isFileValidType(file)) {
+    const maxSize = 100000;
+    
+    if (file && isFileValidType(file) && file.size <= maxSize) {
       const formData = new FormData();
       formData.append('file', file);
       try {
-        const response = await axios.patch(`http://localhost:8080/api/v1/users/${currentUser?._id}/photo`, formData, {
+        const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/photo`, formData, {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             'Content-Type': 'multipart/form-data',
@@ -62,7 +112,8 @@ export default function Page() {
         console.error('Error updating profile picture:', error);
       }
     } else {
-      alert("Invalid file type!");
+      setOpenToastWarning(true);
+      setWarningMessage("Invalid file type or file is too large!");
     }
 
   };
@@ -77,13 +128,13 @@ export default function Page() {
     // Repeat similar steps for lastname and email
 
     const data = {
-      firstName: updatedFirstName || currentUser?.firstName,
-      lastName: updatedLastName || currentUser?.lastName,
-      email: updatedEmail || currentUser?.email,
+      firstName: updatedFirstName || customer?.firstName,
+      lastName: updatedLastName || customer?.lastName,
+      email: updatedEmail || customer?.email,
     };
 
     try {
-      const response = await axios.patch(`http://localhost:8080/api/v1/users/${currentUser?._id}/update-profile`, JSON.stringify(data), {
+      const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/update-profile`, JSON.stringify(data), {
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           'Content-Type': 'application/json',
@@ -102,57 +153,49 @@ export default function Page() {
     }
   };
 
-  useEffect(() => {
-    if (currentUser === null && !isAuthenticated()) {
-      router.push("/login");
-    }
-  }, [])
-
 
   let html: ReactElement<any, any> = <></>;
   if (loading) {
     html = <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>;
   }
 
-  if (currentUser !== null) {
+  if (customer !== null) {
     html = (
 
-      <div className="flex flex-col justify-center relative md:top-[10rem] w-3/5 mx-auto text-white">
+      <div className="flex flex-col justify-center  relative md:top-[10rem] w-3/5 mx-auto text-white">
         <div className="flex flex-row">
           {/* <div className="blob relative"></div> */}
           <div className="blob-linear-green-blue relative"></div>
         </div>
         <div className="grid grid-cols-3 items-center">
-          <div className="col-span-3 md:col-span-1">
+          <div className="">
             <Image
               className="text-white text-center rounded-full md:mr-36 hover:cursor-pointer"
               width={250}
               height={250}
-              alt="currentUser Photo"
-              style={{ height: "250px" }}
-              src={currentUser.photo}
+              alt="Customer Photo"
+              src={customer.photo}
               onClick={handleAvatarClick}
             />
             <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
           </div>
-          <div className="grid md:col-span-2 grid-cols-4 gap-5 w2/3 col-span-3">
+          <div className="grid col-span-2 grid-rows-4 gap-5 w2/3">
             <div className="col-span-4 justify-center items-center text-3xl font-medium my-auto">
-              <h1 className="text-white text-center md:text-left">
-                {currentUser.username}
+              <h1 className="text-white text-center md:text-left ">
+                {customer.username}
               </h1>
-              {/* <button  className="text-sm text-white bg-dark-green p-2 rounded-lg hover:scale-105 duration-500">Access to social media profile</button> */}
             </div>
-            <div className="col-span-2 justify-center items-center col-span-4">
+            <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">First Name</h3>
                 {!isEditingFirstname &&
                   (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
-                    {currentUser.firstName}
+                    {customer.firstName}
                     <p className={`${isEditingEmail || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingFirstname(true))}>Edit</p>
                   </div>)}
                 {isEditingFirstname &&
                   (<form className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="text-sm border-none bg-transparent w-auto" id="fname" placeholder={`${currentUser.firstName}`}></input>
+                    <input type="text" className="text-sm border-none bg-transparent w-auto" id="fname" placeholder={`${customer.firstName}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit" >Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingFirstname(false)}>Cancel</button>
@@ -160,17 +203,17 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
-            <div className="col-span-2 justify-center items-center col-span-4">
+            <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col">
                 <h3 className="mb-3">Last Name</h3>
                 {!isEditingLastname &&
                   (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
-                    {currentUser.lastName}
+                    {customer.lastName}
                     <p className={`${isEditingEmail || isEditingFirstname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingLastname(true))}>Edit</p>
                   </div>)}
                 {isEditingLastname &&
                   (<form className="flex flex-row py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="lname" placeholder={`${currentUser.lastName}`}></input>
+                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="lname" placeholder={`${customer.lastName}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit">Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingLastname(false)}>Cancel</button>
@@ -178,17 +221,17 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
-            <div className="col-span-2 justify-center items-center col-span-4">
+            <div className="col-span-2 justify-center items-center">
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">Email</h3>
                 {!isEditingEmail &&
                   (<div className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between text-sm">
-                    {currentUser.email}
+                    {customer.email}
                     <p className={`${isEditingFirstname || isEditingLastname ? 'hidden' : ''} text-sm text-gray-500 hover:cursor-pointer`} onClick={() => (setIsEditingEmail(true))}>Edit</p>
                   </div>)}
                 {isEditingEmail &&
                   (<form className="flex flex-row apple-linear-glass px-4 rounded-xl py-2 justify-between" onSubmit={handleSubmit}>
-                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="email" placeholder={`${currentUser.email}`}></input>
+                    <input type="text" className="border-none bg-transparent w-auto text-sm" id="email" placeholder={`${customer.email}`}></input>
                     <div className="flex gap-3">
                       <button className="text-sm text-gray-500" type="submit">Save</button>
                       <button className="text-sm text-gray-500" type="button" onClick={() => setIsEditingEmail(false)}>Cancel</button>
@@ -200,48 +243,62 @@ export default function Page() {
               <div className="flex flex-col">
                 <h3 className="mb-3 text-gray-500 underline">Review Tags</h3>
                 <div className="grid grid-cols-5 gap-2">
-                  {currentUser.reviews.map((review, index) => review.tag && (
+                  {customer.reviews.map((review, index) => review.tag && (
                     <button className=" bg-cyan-700 rounded-lg">
                       {review.tag}
                     </button>
                   ))}
+                  {/* <button className=" bg-cyan-700 rounded-lg">
+                    Netflix
+                  </button>
+                  <button className=" bg-cyan-700 rounded-lg">
+                    Netflix
+                  </button>
+                  <button className=" bg-cyan-700 rounded-lg">
+                    Netflix
+                  </button>
+                  <button className=" bg-cyan-700 rounded-lg">
+                    Netflix
+                  </button>
+                  <button className=" bg-cyan-700 rounded-lg">
+                    Netflix
+                  </button>
+                  <button className=" bg-cyan-700 rounded-lg">
+                    Netflix
+                  </button> */}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-row gap-10 items-start col-span-3">
+        <div className="flex flex-row gap-10 items-start">
           <h1 className={`${selected == 1 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(1)}>Reviews</h1>
           <h1 className={`${selected == 2 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(2)}>Watchlist</h1>
           <h1 className={`${selected == 3 ? 'text-white' : 'text-gray-500'} hover:cursor-pointer`} onClick={() => setSelected(3)}>Like</h1>
         </div>
         {selected == 1 && (
           <div>
+          
+            <ReviewList reviews={customer.reviews} currentPage={currentPage} itemsPerPage={reviewsPerPage} />
+            <div>
+            <Pagination
+              count={Math.ceil(customer.reviews.length / reviewsPerPage)}
+              // variant="outlined"
+              color="secondary"
+              size="large"
+              page={currentPage}
+              onChange={(event, page) => handlePageChange(page)}
 
-            <ReviewList reviews={currentUser.reviews} currentPage={currentPage} itemsPerPage={reviewsPerPage} />
-            {currentUser.reviews.length > 0
-              && <>
-                <div className="items-center justify-center">
-                  {/* <Pagination
-                    count={Math.ceil(currentUser.reviews.length / reviewsPerPage)}
-                    // variant="outlined"
-                    color="secondary"
-                    size="large"
-                    page={currentPage}
-                    onChange={(event, page) => handlePageChange(page)}
+            />
+            </div>
 
-                  /> */}
-                </div>
-              </>
-            }
-
-
-
+      
+            
           </div>
         )}
         {selected == 2 && (
           <div>
-            <MovieList ids={currentUser.watchLists} />
+            <MovieList ids={customer.watchLists} />
           </div>
         )}
         {selected == 3 && (
@@ -249,12 +306,33 @@ export default function Page() {
 
           </div>
         )}
+
+        <Snackbar
+          style={{}}
+          open={openToastWarning}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={warningMessage}
+          action={action}
+          ContentProps={{
+            sx: {
+              paddingX: "4rem",
+              paddingY: "2rem",
+              borderRadiusL: "8px",
+              background:
+                "linear-gradient(270deg, #072434 3.17%, #000 50.35%, #072434 97.53%)",
+              color: "#FF6D60",
+              fontFamily: "Poppins",
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+            },
+        }}
+      />
       </div>
 
     );
   }
-
-  console.log("Current user in here", currentUser);
 
   return html;
 }
