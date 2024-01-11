@@ -360,7 +360,7 @@ export default function Page(): ReactElement {
             </div>
             <ul className={`grid grid-cols-2 md:grid-cols-4 md:mx-auto relative gap-4 justify-center items-center md:mt-8`}>
               {[...movies]
-                .slice(0, 6)
+                .slice(0, 7)
                 .map((movie) => movie.poster_path !== null && (
                   <li className="">
                     <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
