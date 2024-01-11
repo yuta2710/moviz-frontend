@@ -2,9 +2,10 @@
 
 import { useAuth } from "@/components/context/AuthContext";
 import MovieList from "@/components/movie-list.component";
+import ReviewList from "@/components/review-list.component";
 import { FilmReviewProps, User } from "@/types";
 import { APPLICATION_PATH, checkIsCurrentUserFollowOtherUser, getMe, getMovie, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
-import { Box, Modal } from "@mui/material";
+import { Box, Modal, Pagination } from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,6 +30,11 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const handleOpenFollowingsInfo = () => setOpenFollowingsInfo(true);
   const handleCloseFollowingsInfo = () => setOpenFollowingsInfo(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
   const style = {
     position: "absolute" as "absolute",
@@ -319,22 +325,18 @@ export default function Page({ params }: { params: { id: string } }) {
         }
       </div>
 
-      <div className="flex flex-col justify-center items-start">
+      <div className="flex flex-col justify-center items-start text-white">
         <h1 className="text-left font-bold text-xl text-white">Recent Reviews</h1>
-        {visitor.reviews.length > 0 && 
-          visitor.reviews.map((review: FilmReviewProps) => review.movieObject !== null && (
-            <div className='flex flex-row gap-5 mt-5 items-center'>
-              <Image src={`https://image.tmdb.org/t/p/w500/${review.movieObject?.poster_path}`} style={{ height: "100px" }} alt='movie-poster' width={60} height={100} />
-              <div className='flex flex-col justify-center items-start'>
-                <div className='flex flex-row justify-between gap-4 items-center'>
-                  <h1 className='text-[1rem] font-semibold italic'>{review.movieObject?.title}</h1>
-                  <h2 className='text-gray-500 text-sm'>{new Date(review.movieObject?.release_date as string).getFullYear()}</h2>
-                  {/* <h2 className='text-sm'>{review.author_details.rating}/10</h2> */}
-                </div>
-                <p className='text-white text-[0.8rem] line-clamp-4 md:max-w-[500px] md:mt-2 text-justify'>{review.content}</p>
-              </div>
-            </div>
-        ))}
+        <ReviewList reviews={visitor.reviews} currentPage={currentPage} itemsPerPage= {3}/>
+        <Pagination
+              count={Math.ceil(visitor.reviews.length / 3)}
+              // variant="outlined"
+              color="secondary"
+              size="large"
+              page={currentPage}
+              onChange={(event, page) => handlePageChange(page)}
+
+            />
       </div>
     </div>
 }
