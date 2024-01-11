@@ -214,8 +214,8 @@ export default function Page() {
               </h1>
 
               <div className="flex flex-row justify-center items-center md:mt-1 md:ml-8">
-                <p className="text-white text-[1.05rem] hover:text-blue-light cursor-pointer">{currentUser.followers.length} <span className="text-[0.8rem]">Followers</span></p>
-                <p className="text-white text-[1.05rem] md:ml-8 hover:text-blue-light cursor-pointer" onClick={handleOpenFollowingsInfo}>{currentUser.followings.length} <span className="text-[0.8rem]">Followings</span></p>
+                <p className="text-white text-[1.05rem] hover:text-blue-light cursor-pointer">{customer.followers.length} <span className="text-[0.8rem]">Followers</span></p>
+                <p className="text-white text-[1.05rem] md:ml-8 hover:text-blue-light cursor-pointer" onClick={handleOpenFollowingsInfo}>{customer.followings.length} <span className="text-[0.8rem]">Followings</span></p>
               </div>
             </div>
             <div className="col-span-2 justify-center items-center">
