@@ -134,9 +134,9 @@ export default function Page({ params }: { params: { id: string } }) {
       }
     }
   }
-  // useEffect(() => {
-    
-  // })
+  useEffect(() => {
+    router.push("/profile");
+  }, [currentUser !== null && visitor !== null && visitor._id === currentUser._id])
   
   const handleUnFollow = async (user: User) => {
     if (visitor !== null) {
@@ -156,11 +156,11 @@ export default function Page({ params }: { params: { id: string } }) {
   console.log("Day la current user = ", currentUser);
   console.log("Day la visitor = ", visitor);
  
-  return visitor !== null &&
+  return visitor !== null && visitor._id !== currentUser?._id &&
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-row justify-center items-start md:w-full md:mt-16">
         <div className="">
-          <Image src={visitor?.photo} width={350} height={0} style={{ height: "350px" }} alt="" className="rounded-full"></Image>
+          <Image src={visitor.photo} width={350} height={0} style={{ height: "350px" }} alt="" className="rounded-full"></Image>
         </div>
         <div className="flex flex-col justify-center items-start md:ml-8">
           {/** Username and follow button */}

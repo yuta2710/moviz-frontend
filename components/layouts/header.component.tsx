@@ -267,7 +267,7 @@ const Header = (header: HeaderProps) => {
           {currentUser !== null && isAuthenticated()
             ? <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
               <Image className='rounded-full' src={currentUser.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
-              <p className='text-white font-medium text-sm hover:text-gray-300' onClick={() => router.push('/profile')}>{currentUser.username}</p>
+              <Link className='text-white font-medium text-sm hover:text-gray-300' href={`/profile`}>{currentUser.username}</Link>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
 
             </div>
