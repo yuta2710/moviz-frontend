@@ -24,7 +24,9 @@ export const LoginForm = () => {
     setError,
     formState: { errors }
   } = useForm();
-  const { login, logout, isAuthenticated, user, currentUser, setCustomerFromToken } = useAuth(); // Destructure the login function from the context
+  const { login, logout, isAuthenticated, user, setCustomerFromToken } = useAuth(); // Destructure the login function from the context
+  const [loginError, setLoginError] = useState("");
+  const [showLoginError, setShowLoginError] = useState(false);
   const router = useRouter();
   const onSubmit = async (data: FieldValues) => {
 
@@ -43,7 +45,6 @@ export const LoginForm = () => {
 
       // Redirect on successful login
       if (isAuthenticated()) {
-        router.refresh();
         router.push("/home");
       }
     } catch (err) {
@@ -53,10 +54,15 @@ export const LoginForm = () => {
       // Set error messages based on your error response
       setError("email", { type: "manual", message: "" });
       setError("password", { type: "manual", message: "" });
-      setError("login", {
-        type: "manual",
-        message: "Incorrect email or password",
-      });
+      // setError("login", {
+      //   type: "manual",
+      //   message: "Incorrect email or password",
+      // });
+      setLoginError("Incorrect email or password");
+      setShowLoginError(true);
+
+      // Set a timer to hide the message after 5 seconds
+      setTimeout(() => setShowLoginError(false), 5000);
     }
   };
 
@@ -67,8 +73,6 @@ export const LoginForm = () => {
   }, [isAuthenticated])
 
   const formErrors = errors as any;
-
-  console.log(currentUser)
 
   return (
     <div className="flex justify-center items-center min-h-screen relative">
@@ -100,8 +104,9 @@ export const LoginForm = () => {
             <div className="text-red-500 text-sm mt-2">{formErrors.password.message}</div>
           )}
 
-          {formErrors.login && (
-            <div className="text-red-500 text-sm mt-2">{formErrors.login.message}</div>
+
+          {showLoginError && (
+            <div className="text-red-500 text-sm mt-2 fade-out">{loginError}</div>
           )}
 
           <div className="mt-10">
