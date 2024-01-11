@@ -135,7 +135,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }
   useEffect(() => {
-    router.push("/profile");
+    // router.push("/profile");
   }, [currentUser !== null && visitor !== null && visitor._id === currentUser._id])
   
   const handleUnFollow = async (user: User) => {

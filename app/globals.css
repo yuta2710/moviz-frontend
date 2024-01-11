@@ -17,12 +17,23 @@ html {
   font-family: "SF Pro";
   /* font-family: "Poppins"; */
   /* background: #000; */
-  background: radial-gradient(
+  /* background: radial-gradient(
     73.19% 111.55% at 93.07% 74.31%,
     #1d1f47 0%,
     #0a0b14 100%
+  ); */
+  /* background-image: linear-gradient( 109.6deg,  rgba(33,25,180,1) 11.2%, rgba(253,29,29,1) 55.2%, rgba(252,176,69,1) 91.1% ); */
+  background-image: linear-gradient(
+    180deg,
+    rgba(21, 13, 107, 1) 1.1%,
+    rgba(188, 16, 80, 1) 130.5%
   );
-  background-color: #130f40;
+  /* background-color: #130f40;  */
+  /* background-image: radial-gradient(
+    circle farthest-corner at 83.7% 4.3%,
+    rgba(173, 0, 171, 1) 0%,
+    rgba(15, 51, 92, 1) 90%
+  ); */
   /* background-image: linear-gradient(315deg, #130f40 0%, #000000 74%); */
   background-repeat: no-repeat;
   background-attachment: fixed; /* This will fix the gradient to the viewport */

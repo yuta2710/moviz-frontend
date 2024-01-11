@@ -89,14 +89,17 @@ export function AuthProvider({ children }: AuthProvideProps) {
           const fetchCurrentUser = async () => {
             try {
               console.log("It is prepare to authenticated");
-
-              if (isAuthenticated()) {
-                console.log("It is authenticated");
-                const me = await getCurrentUser();
-                if (me !== null) {
-                  setCurrentUser(me.data);
-                }
+              const me = await getCurrentUser();
+              if (me !== null) {
+                setCurrentUser(me.data);
               }
+              // if (isAuthenticated()) {
+              //   console.log("It is authenticated");
+              //   const me = await getCurrentUser();
+              //   if (me !== null) {
+              //     setCurrentUser(me.data);
+              //   }
+              // }
               console.log("It is not authenticated");
             } catch (error) {
               console.error("Error fetching current user:", error);

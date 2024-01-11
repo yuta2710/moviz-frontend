@@ -32,7 +32,7 @@ export default function Page(): ReactElement {
   const router = useRouter();
   const [ref, inView] = useInView();
   const [customer, setCustomer] = useState<User | null>(null);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, currentUser } = useAuth();
   const path = usePathname();
 
   const handleOnChangeYear = (event: any) => {
@@ -353,7 +353,7 @@ export default function Page(): ReactElement {
       router.refresh();
       router.push("/login")
     }
-  }, [isAuthenticated()])
+  }, [currentUser === null])
 
   const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto gap-4`}>
     {
@@ -370,7 +370,7 @@ export default function Page(): ReactElement {
               width={200}
               height={150}
               alt=""
-              className="relative object-cover md:ml-2"
+              className="relative object-cover md:ml-2 rounded-xl"
             >
             </Image>
             <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
@@ -382,7 +382,7 @@ export default function Page(): ReactElement {
                   {review.author_details.rating.toFixed(1)} / 10
                 </span>
               </h2>
-              <h2 className="text-[0.8rem] font-regular text-gray-400 md:mt-2 relative md:w-[300px] line-clamp-4 text-justify">{review.content}</h2>
+              <h2 className="text-[0.8rem] font-regular text-white md:mt-2 relative md:w-[300px] line-clamp-4 text-justify leading-6">{review.content}</h2>
             </div>
           </li>
         ))
@@ -396,7 +396,7 @@ export default function Page(): ReactElement {
         {loading
           ? <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>
           : <div className="relative flex flex-col top-0">
-            <h1 className="text-white text-center relative md:mt-16 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+            <h1 className="text-white text-center relative md:mt-16 text-2xl italic">Welcome back, <span className="hover:scale-105 duration-500 cursor-pointer font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
             </h1>
           </div>
         }

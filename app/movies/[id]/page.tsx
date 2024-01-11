@@ -527,7 +527,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <div className="flex flex-col space-x-3 ">
               {/*Need fixing for mobile UI */}
               {choice == 1 && (
-                <div className="flex flex-row justify-center items-center md:left-[10rem] md:top-[1rem] grid grid-cols-3 md:grid-cols-8 gap-2">
+                <div className="grid grid-cols-3 md:mr-auto md:grid-cols-8 gap-2 relative">
                   {/* <Casts id={id} /> */}
                   {casts?.slice(0, 6).map((cast, index) => {
                     if (cast.profile_path !== null) {
