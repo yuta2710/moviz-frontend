@@ -207,10 +207,16 @@ const Header = (header: HeaderProps) => {
         <div className='lg:col-span-1 hidden'></div>
         <div className='col-span-6 md:col-span-4 flex flex-col relative z-10 md:ml-24'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
-          <form className='flex flex-row' style={{
+          <form className='flex flex-row' 
+            style={{
             // backdropFilter: "blur(1rem)",
             // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
-          }}>
+            }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              router.push(`/search?query=${searchQuery}`);
+            }}
+            >
             <TextField
               id="search-bar"
               className="text-[0.75rem] apple-linear-glass md:w-[350px] px-8 py-2 border-none font-poppins focus:outline-none"
@@ -231,7 +237,7 @@ const Header = (header: HeaderProps) => {
               placeholder="Enter the movie name..."
               size="small"
             />
-            <IconButton type="submit" aria-label="search" className=''>
+            <IconButton type='submit' onClick={() => router.push(`/search?query=${searchQuery}`)} aria-label="search" className=''>
               <SearchIcon style={{ fill: "white" }} />
             </IconButton>
           </form>
@@ -256,7 +262,7 @@ const Header = (header: HeaderProps) => {
               <Box textAlign='center' marginTop={4}>
                 <Button
                   variant="contained"
-                  className='md:m-auto hover:opacity-60 md:w-full font-poppins' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />}>
+                  className='md:m-auto hover:opacity-60 md:w-full font-poppins' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />} onClick={() => router.push(`/search?query=${searchQuery}`)}>
                   More
                 </Button>
               </Box>
