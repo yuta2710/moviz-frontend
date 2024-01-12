@@ -52,6 +52,12 @@ export default function Page({ params }: { params: { id: string } }) {
   const [warningMessage, setWarningMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [directorInfo, setDirectorInfo] = useState<Cast|null>();
+  const [expandedBiography, setExpandedBiography] = useState(false);
+
+  const toggleBiographyExpansion = () => {
+    setExpandedBiography(!expandedBiography);
+  };
 
   const id = params.id;
 
@@ -65,9 +71,29 @@ export default function Page({ params }: { params: { id: string } }) {
   } = useForm();
   const formErrors = errors as any;
 
-  const handleOpenDirectorInfo = () => setOpenDirectorInfo(true);
-  const handleCloseDirectorInfo = () => setOpenDirectorInfo(false);
-
+  const handleOpenDirectorInfo = async () => {
+    try {
+      const response = await axios.get(`https://api.themoviedb.org/3/person/${director?.id}`, {
+        headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY',
+        },
+      });
+  
+      const data = response.data;
+      setDirectorInfo(data as Cast);
+      console.log(directorInfo)
+    } catch (error) {
+      console.error('Error fetching cast details');
+      // You might want to throw the error here if needed
+    }
+    setOpenDirectorInfo(true);
+    
+  }
+  const handleCloseDirectorInfo = () => {
+    setOpenDirectorInfo(false);
+    setExpandedBiography(false);
+  }
   const handleOpenPostReviewForm = () => setPostReviewForm(true);
   const handleClosePostReviewForm = () => setPostReviewForm(false);
 
@@ -188,6 +214,9 @@ export default function Page({ params }: { params: { id: string } }) {
     p: 4,
     outline: "none",
     overflow: "auto",
+    display: 'flex',
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   const ISO_DATE = new Date().toISOString().toString();
@@ -299,6 +328,8 @@ export default function Page({ params }: { params: { id: string } }) {
     fetchCasts();
     fetchReviewsByMovieId();
   }, [id]);
+
+ 
 
   useEffect(() => {
     if (reviews.length > 0) {
@@ -675,6 +706,8 @@ export default function Page({ params }: { params: { id: string } }) {
         onClose={handleCloseDirectorInfo}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        style={{borderRadius: 'xl'}}
+        
       >
         <Box
           sx={style}
@@ -684,46 +717,47 @@ export default function Page({ params }: { params: { id: string } }) {
               //   "radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );"
             }
           }
-          className="linear-reusable"
+          className="linear-reusable util-box-shadow-purple-mode"
         >
-          <div className="z-10 relative md:mx-auto">
-            <Image
-              src={`https://image.tmdb.org/t/p/w500/${director?.profile_path}`}
-              width={250}
-              height={250}
-              className="rounded-sm md:m-auto"
-              alt={`${director?.original_name}`}
-            ></Image>
-            <h1 className="text-white text-center md:mt-8 text-[1.6rem]">
-              {director?.name}
-            </h1>
-            <p className="text-white text-center md:mt-2">
-              {director?.known_for_department}
-            </p>
-            <p className="text-white text-center md:mt-2">{director?.job}</p>
-          </div>
-          <div className="glowing">
-            <span className="--i:1;"></span>
-            <span className="--i:2;"></span>
-            <span className="--i:3;"></span>
-          </div>
-
-          <div className="glowing">
-            <span className="--i:1;"></span>
-            <span className="--i:2;"></span>
-            <span className="--i:3;"></span>
-          </div>
-
-          <div className="glowing">
-            <span className="--i:1;"></span>
-            <span className="--i:2;"></span>
-            <span className="--i:3;"></span>
-          </div>
-          <div className="glowing">
-            <span className="--i:1;"></span>
-            <span className="--i:2;"></span>
-            <span className="--i:3;"></span>
-          </div>
+          <div className="z-10 relative items-center justify-center">
+                    <div className='grid grid-cols-2 gap-5'>
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w500/${directorInfo?.profile_path}`}
+                        width={300}
+                        height={300}
+                        className="rounded-sm md:mx-auto md:my-auto"
+                        alt={`${directorInfo?.name}`}
+                      ></Image>
+                      <div className='flex flex-col'>
+                        <h1 className="text-white font-bold text-[1.6rem]">
+                          {directorInfo?.name}
+                        </h1>
+                        <p className="text-white md:mt-2 font-thin">
+                          D.O.B: {directorInfo?.birthday || "N/A"}
+                        </p>
+                        <p className="text-white md:mt-2 font-thin">Place of Birth: {directorInfo?.place_of_birth || "N/A"}</p>
+                        <p className="text-white text-sm italic md:mt-5">
+                          {directorInfo?.biography && directorInfo?.biography.length > 1000
+                            ? expandedBiography
+                              ? directorInfo?.biography
+                              : `${directorInfo?.biography.slice(0, 1000)}...`
+                            : directorInfo?.biography}
+                          {directorInfo?.biography && directorInfo?.biography.length > 1000 && (
+                            <button
+                              className='text-blue-500 hover:underline focus:outline-none'
+                              onClick={toggleBiographyExpansion}
+                            >
+                              {expandedBiography ? ' Read Less' : ' Read More'}
+                            </button>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    
+                    
+                   
+                  </div>
         </Box>
       </Modal>
 
