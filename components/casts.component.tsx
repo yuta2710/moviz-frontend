@@ -36,7 +36,6 @@ const Casts = ({ id }: { id: string }) => {
       console.error('Error fetching cast details:', error);
     }
   };
-
   const toggleBiographyExpansion = () => {
     setExpandedBiography(!expandedBiography);
   };

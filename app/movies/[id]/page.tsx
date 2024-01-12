@@ -79,7 +79,6 @@ export default function Page({ params }: { params: { id: string } }) {
           Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY',
         },
       });
-
       const data = response.data;
       setDirectorInfo(data as Cast);
       console.log(directorInfo)
@@ -88,7 +87,6 @@ export default function Page({ params }: { params: { id: string } }) {
       // You might want to throw the error here if needed
     }
     setOpenDirectorInfo(true);
-
   }
   const handleCloseDirectorInfo = () => {
     setOpenDirectorInfo(false);
@@ -328,7 +326,6 @@ export default function Page({ params }: { params: { id: string } }) {
     fetchCasts();
     fetchReviewsByMovieId();
   }, [id]);
-
 
 
   useEffect(() => {
