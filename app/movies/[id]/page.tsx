@@ -52,7 +52,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [warningMessage, setWarningMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isInWatchlist, setIsInWatchlist] = useState(false);
-  const [directorInfo, setDirectorInfo] = useState<Cast|null>();
+  const [directorInfo, setDirectorInfo] = useState<Cast | null>();
   const [expandedBiography, setExpandedBiography] = useState(false);
 
   const toggleBiographyExpansion = () => {
@@ -79,7 +79,6 @@ export default function Page({ params }: { params: { id: string } }) {
           Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOTVhODkyNmVmNjJmYzJhNWMzY2EyMmI4YTk1YjkxYiIsInN1YiI6IjY0YjBlOTRjNGU0ZGZmMDBlMmY4OWM4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uNP0Bt35sJlucLBeFZUCRvUv_1Si-S9CxsN_8cLhrBY',
         },
       });
-  
       const data = response.data;
       setDirectorInfo(data as Cast);
       console.log(directorInfo)
@@ -88,7 +87,6 @@ export default function Page({ params }: { params: { id: string } }) {
       // You might want to throw the error here if needed
     }
     setOpenDirectorInfo(true);
-    
   }
   const handleCloseDirectorInfo = () => {
     setOpenDirectorInfo(false);
@@ -329,7 +327,6 @@ export default function Page({ params }: { params: { id: string } }) {
     fetchReviewsByMovieId();
   }, [id]);
 
- 
 
   useEffect(() => {
     if (reviews.length > 0) {
@@ -503,26 +500,26 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
         <div className="col-span-3 text-white content-center grid grid-cols-4 md:ml-24">
           <div className="grid grid-cols-1 md:grid-cols-4 my-5 col-span-4">
-            <h1 className="col-span-1 text-2xl font-bold pr-10 md:w-[400px]">
+            <h1 className="col-span-1 text-3xl font-bold">
               {movie.title}
             </h1>
             <div className="md:flex justify-center col-span-1">
-              <p className=" font-light text-gray-400 px-10 md:mt-2">
+              <p className=" font-semibold text-white px-10 md:mt-2">
                 {date.getFullYear()}
               </p>
             </div>
 
-            <p className=" col-span-1 font-light text-gray-400 md:px-10 md:mt-2 md:w-[1000px]">
+            <p className=" col-span-1 font-regular text-sm text-white md:px-10 md:mt-2 md:w-[1000px]">
               Directed by{" "}
               <span
-                className="text-ai4biz-green-quite-light text-sm font-bold cursor-pointer hover:scale-120 duration-500"
+                className="text-ai4biz-green-quite-light text-xl font-bold cursor-pointer hover:scale-120 duration-500"
                 onClick={handleOpenDirectorInfo}
               >
                 {director?.name}
               </span>
             </p>
 
-            <p className="col-span-1 md:col-span-3 text-sm text-gray-400 md:max-w-6xl text-justify leading-6 md:mt-2">
+            <p className="col-span-1 md:col-span-3 text-sm text-gray-300 md:max-w-6xl text-justify leading-6 md:mt-2">
               {movie.overview}
             </p>
             <div className="col-span-1"></div>
@@ -689,14 +686,14 @@ export default function Page({ params }: { params: { id: string } }) {
                       </div>
                     </div>
                     <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span>
-                    <h2 className='text-sm font-regular text-gray-400 ellipsis md:mt-2 line-clamp-4'>{review.content}</h2>
+                    <h2 className='text-sm font-regular text-gray-300 ellipsis md:mt-2 line-clamp-4'>{review.content}</h2>
                   </div>
                 ))}
           </div>
         </div>
       </div>
       <div className="flex flex-col my-10 relative md:top-[2rem]">
-        <h1 className="text-2xl font-bold text-gray-400 text-center">
+        <h1 className="text-2xl font-bold text-white text-center">
           Recommended similar films
         </h1>
         <Related id={id}></Related>
@@ -706,8 +703,8 @@ export default function Page({ params }: { params: { id: string } }) {
         onClose={handleCloseDirectorInfo}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        style={{borderRadius: 'xl'}}
-        
+        style={{ borderRadius: 'xl' }}
+
       >
         <Box
           sx={style}
@@ -720,44 +717,44 @@ export default function Page({ params }: { params: { id: string } }) {
           className="linear-reusable util-box-shadow-purple-mode"
         >
           <div className="z-10 relative items-center justify-center">
-                    <div className='grid grid-cols-2 gap-5'>
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w500/${directorInfo?.profile_path}`}
-                        width={300}
-                        height={300}
-                        className="rounded-sm md:mx-auto md:my-auto"
-                        alt={`${directorInfo?.name}`}
-                      ></Image>
-                      <div className='flex flex-col'>
-                        <h1 className="text-white font-bold text-[1.6rem]">
-                          {directorInfo?.name}
-                        </h1>
-                        <p className="text-white md:mt-2 font-thin">
-                          D.O.B: {directorInfo?.birthday || "N/A"}
-                        </p>
-                        <p className="text-white md:mt-2 font-thin">Place of Birth: {directorInfo?.place_of_birth || "N/A"}</p>
-                        <p className="text-white text-sm italic md:mt-5">
-                          {directorInfo?.biography && directorInfo?.biography.length > 1000
-                            ? expandedBiography
-                              ? directorInfo?.biography
-                              : `${directorInfo?.biography.slice(0, 1000)}...`
-                            : directorInfo?.biography}
-                          {directorInfo?.biography && directorInfo?.biography.length > 1000 && (
-                            <button
-                              className='text-blue-500 hover:underline focus:outline-none'
-                              onClick={toggleBiographyExpansion}
-                            >
-                              {expandedBiography ? ' Read Less' : ' Read More'}
-                            </button>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    
-                    
-                   
-                  </div>
+            <div className='grid grid-cols-2 gap-5'>
+              <Image
+                src={`https://image.tmdb.org/t/p/w500/${directorInfo?.profile_path}`}
+                width={300}
+                height={300}
+                className="rounded-sm md:mx-auto md:my-auto"
+                alt={`${directorInfo?.name}`}
+              ></Image>
+              <div className='flex flex-col'>
+                <h1 className="text-white font-bold text-[1.6rem]">
+                  {directorInfo?.name}
+                </h1>
+                <p className="text-white md:mt-2 font-thin">
+                  D.O.B: {directorInfo?.birthday || "N/A"}
+                </p>
+                <p className="text-white md:mt-2 font-thin">Place of Birth: {directorInfo?.place_of_birth || "N/A"}</p>
+                <p className="text-white text-sm italic md:mt-5">
+                  {directorInfo?.biography && directorInfo?.biography.length > 1000
+                    ? expandedBiography
+                      ? directorInfo?.biography
+                      : `${directorInfo?.biography.slice(0, 1000)}...`
+                    : directorInfo?.biography}
+                  {directorInfo?.biography && directorInfo?.biography.length > 1000 && (
+                    <button
+                      className='text-blue-500 hover:underline focus:outline-none'
+                      onClick={toggleBiographyExpansion}
+                    >
+                      {expandedBiography ? ' Read Less' : ' Read More'}
+                    </button>
+                  )}
+                </p>
+              </div>
+            </div>
+
+
+
+
+          </div>
         </Box>
       </Modal>
 

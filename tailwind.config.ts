@@ -17,6 +17,7 @@ const config: Config = {
       },
       backgroundColor: {
         "green-dark": "#176B87",
+        "status-error": "#FEEFEF",
       },
       colors: {
         "dark-green": "#04364A",
@@ -24,6 +25,7 @@ const config: Config = {
         "blue-dark": "#2FB8FF6B",
         "blue-light": "#0077D3",
         "ai4biz-green-quite-light": "#64CCC5",
+        "status-error": "#DA1414",
       },
       fontFamily: {
         poppins: "'Poppins', sans-serif",

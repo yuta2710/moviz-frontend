@@ -214,8 +214,8 @@ export default function Page() {
               </h1>
 
               <div className="flex flex-row justify-center items-center md:mt-1 md:ml-8">
-                <p className="text-white text-[1.05rem] hover:text-blue-light cursor-pointer">{currentUser.followers.length} <span className="text-[0.8rem]">Followers</span></p>
-                <p className="text-white text-[1.05rem] md:ml-8 hover:text-blue-light cursor-pointer" onClick={handleOpenFollowingsInfo}>{currentUser.followings.length} <span className="text-[0.8rem]">Followings</span></p>
+                <p className="text-white text-[1.05rem] hover:text-blue-light cursor-pointer">{customer.followers.length} <span className="text-[0.8rem]">Followers</span></p>
+                <p className="text-white text-[1.05rem] md:ml-8 hover:text-blue-light cursor-pointer" onClick={handleOpenFollowingsInfo}>{customer.followings.length} <span className="text-[0.8rem]">Followings</span></p>
               </div>
             </div>
             <div className="col-span-2 justify-center items-center">
@@ -368,7 +368,7 @@ export default function Page() {
           >
             <ul className="z-10 relative md:mx-auto md:w-full">
               <h1 className="text-white text-xl font-semibold text-center md:mt-8">Your Followings</h1>
-              {currentUser.followings.map((follower: User) => (
+              {customer.followings.map((follower: User) => (
                 <li className="flex flex-row justify-start apple-linear-glass md:p-4 md:mt-4 rounded-lg">
                   <div className="">
                     <Image src={follower.photo} width={50} height={50} style={{ height: "50px" }} alt="" className="rounded-full"></Image>
