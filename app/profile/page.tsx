@@ -368,7 +368,7 @@ export default function Page() {
           >
             <ul className="z-10 relative md:mx-auto md:w-full">
               <h1 className="text-white text-xl font-semibold text-center md:mt-8">Your Followings</h1>
-              {currentUser.followings.map((follower: User) => (
+              {customer.followings.map((follower: User) => (
                 <li className="flex flex-row justify-start apple-linear-glass md:p-4 md:mt-4 rounded-lg">
                   <div className="">
                     <Image src={follower.photo} width={50} height={50} style={{ height: "50px" }} alt="" className="rounded-full"></Image>

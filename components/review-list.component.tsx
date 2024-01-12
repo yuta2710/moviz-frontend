@@ -16,7 +16,6 @@ export interface ReviewListProps {
 const ReviewList: React.FC<ReviewListProps> = ({ reviews, currentPage, itemsPerPage }) => {
   const [reviewList, setReviewList] = useState<FilmReviewProps[]>([]);
 
-
   // Loop through all reviews and set movie poster path 
   useEffect(() => {
     const fetchPosters = async () => {
@@ -24,7 +23,6 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews, currentPage, itemsPerP
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const paginatedReviews = reviews.slice(startIndex, endIndex);
-
         const reviewsWithMovies = await Promise.all(
           paginatedReviews.map(async (review: FilmReviewProps) => {
             try {
