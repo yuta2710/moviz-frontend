@@ -11,6 +11,7 @@ const Casts = ({ id }: { id: string }) => {
   const [casts, setCasts] = useState<Cast[]>([]);
   const [openCastInfo, setOpenCastInfo] = useState<boolean>(false);
   const [selectedCast, setSelectedCast] = useState<Cast | null>(null);
+  const [expandedBiography, setExpandedBiography] = useState(false);
 
   const handleOpenCastInfo = async (id: string) => {
     try {
@@ -25,22 +26,24 @@ const Casts = ({ id }: { id: string }) => {
       const response = await fetch(`https://api.themoviedb.org/3/person/${id}`, options);
       
       if (!response.ok) {
-        // Handle error, maybe show an error message to the user
         console.error('Error fetching cast details:', response.statusText);
         return;
       }
   
       const data = await response.json();
-      setSelectedCast(data); // Adjust this based on the actual structure of your API response
+      setSelectedCast(data); 
     } catch (error) {
-      // Handle error
       console.error('Error fetching cast details:', error);
     }
   };
   
+  const toggleBiographyExpansion = () => {
+    setExpandedBiography(!expandedBiography);
+  };
 
   const handleCloseCastInfo = () => {
     setSelectedCast(null);
+    setExpandedBiography(false);
   };
   
 
@@ -82,7 +85,7 @@ const Casts = ({ id }: { id: string }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 800,
+    width: 850,
     height: 600,
     bgcolor: "background.paper",
     border: "none",
@@ -91,6 +94,9 @@ const Casts = ({ id }: { id: string }) => {
     p: 4,
     outline: "none",
     overflow: "auto",
+    display: 'flex',
+    alignItems: "center",
+    justifyContent: "center",
   };
 
 
@@ -119,6 +125,8 @@ const Casts = ({ id }: { id: string }) => {
           onClose={handleCloseCastInfo}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
+          style={{borderRadius: 'xl'}}
+          
         >
           <Box
             sx={style}
@@ -128,49 +136,48 @@ const Casts = ({ id }: { id: string }) => {
                //   "radial-gradient( circle farthest-corner at 10% 20%,  rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90% );"
               }
                   }
-                  className="linear-reusable"
+                  className="linear-reusable util-box-shadow-purple-mode"
                 >
-                  <div className="z-10 relative md:mx-auto">
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w500/${selectedCast.profile_path}`}
-                      width={250}
-                      height={250}
-                      className="rounded-sm md:m-auto"
-                      alt={`${selectedCast.name}`}
-                    ></Image>
-                    <h1 className="text-white text-center md:mt-8 text-[1.6rem]">
-                      {selectedCast.name}
-                    </h1>
-                    <p className="text-white text-center md:mt-2">
-                      D.O.B: {selectedCast.birthday}
-                    </p>
-                    <p className="text-white text-center md:mt-2">Place of Birth: {selectedCast.place_of_birth}</p>
-                    <p className="text-white text-xl font-bold text-center md:mt-7">Biography</p>
-                    <p className="text-white text-left md:mt-2">{selectedCast.biography}</p>
-                    <p className="text-white text-center md:mt-2">{selectedCast.character}</p>
+                  <div className="z-10 relative items-center justify-center">
+                    <div className='grid grid-cols-2 gap-5'>
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w500/${selectedCast.profile_path}`}
+                        width={300}
+                        height={300}
+                        className="rounded-sm md:mx-auto md:my-auto"
+                        alt={`${selectedCast.name}`}
+                      ></Image>
+                      <div className='flex flex-col'>
+                        <h1 className="text-white font-bold text-[1.6rem]">
+                          {selectedCast.name}
+                        </h1>
+                        <p className="text-white md:mt-2 font-thin">
+                          D.O.B: {selectedCast.birthday || "N/A"}
+                        </p>
+                        <p className="text-white md:mt-2 font-thin">Place of Birth: {selectedCast.place_of_birth || "N/A"}</p>
+                        <p className="text-white text-sm italic md:mt-5">
+                        {selectedCast.biography.length > 1000
+                          ? expandedBiography
+                            ? selectedCast.biography
+                            : `${selectedCast.biography.slice(0, 1000)}...`
+                          : selectedCast.biography}
+                        {selectedCast.biography.length > 1000 && (
+                          <button
+                            className='text-blue-500 hover:underline focus:outline-none'
+                            onClick={toggleBiographyExpansion}
+                          >
+                            {expandedBiography ? ' Read Less' : ' Read More'}
+                          </button>
+                        )}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    
+                    
+                   
                   </div>
-                  <div className="glowing">
-                    <span className="--i:1;"></span>
-                    <span className="--i:2;"></span>
-                    <span className="--i:3;"></span>
-                  </div>
-
-                  <div className="glowing">
-                    <span className="--i:1;"></span>
-                    <span className="--i:2;"></span>
-                    <span className="--i:3;"></span>
-                  </div>
-
-                  <div className="glowing">
-                    <span className="--i:1;"></span>
-                    <span className="--i:2;"></span>
-                    <span className="--i:3;"></span>
-                  </div>
-                  <div className="glowing">
-                    <span className="--i:1;"></span>
-                    <span className="--i:2;"></span>
-                    <span className="--i:3;"></span>
-                  </div>
+                  
                 </Box>
         </Modal>
       )}
