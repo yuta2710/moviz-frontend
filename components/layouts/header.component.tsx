@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext'
 import { APPLICATION_PATH, getMe, searchMovies } from '../../utils/clients.utils'
 import { Autocomplete, Box, Button, Grid, Icon, IconButton, InputBase, TextField, Typography, alpha, styled } from '@mui/material';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import LogoutIcon from '@mui/icons-material/Logout';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { usePathname, useRouter } from 'next/navigation'
 import gsap from "gsap";
@@ -163,31 +164,8 @@ const Header = (header: HeaderProps) => {
           </span>
 
         </Link>
-
-        <div className="lg:hidden">
-          <button id="burger-btn" className="text-white focus:outline-none">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              ></path>
-            </svg>
-          </button>
-        </div>
-
-        <div className="burger-menu-wrapper lg:hidden">
-          <button onClick={handleBurgerMenuToggle}>
-            {/* <FontAwesomeIcon icon={faBars} /> */}
-          </button>
-          <BurgerMenu isOpen={isBurgerMenuOpen} onClose={() => setBurgerMenuOpen(false)} />
+        <div className="col-span-2 lg:hidden">
+          <BurgerMenu />
         </div>
 
         <div className='col-span-1 hidden md:flex '></div>
@@ -242,7 +220,7 @@ const Header = (header: HeaderProps) => {
             </IconButton>
           </form>
           {searchQuery &&
-            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl glass-effect z-10'>
+            <ul className='absolute mt-16 md:w-[500px] p-4 rounded-xl glass-effect z-10 space-y-2'>
               <h1 className='text-white text-sm font-medium text-center md:w-full'>Founded <span className='font-bold' style={{ color: "#45FFCA" }}>{totalSearchResults}</span> results</h1>
               {suggestions
                 .slice(0, 5)
@@ -268,12 +246,12 @@ const Header = (header: HeaderProps) => {
               </Box>
             </ul>}
         </div>
-        <div className='col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-1'></div>
+        <div className='sm:col-span-1 md:col-span-2 lg:col-span-1'></div>
         <div className='col-span-3 md:col-span-2 lg:col-span-1 flex flex-col relative'>
           {currentUser !== null && isAuthenticated()
             ? <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
               <Image className='rounded-full' src={currentUser.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
-              <Link className='text-white font-medium text-sm hover:text-gray-300' href={`/profile`}>{currentUser.username}</Link>
+              <Link className='text-white font-medium text-sm hover:text-gray-300 hidden md:flex' href={`/profile`}>{currentUser.username}</Link>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
 
             </div>
@@ -286,7 +264,7 @@ const Header = (header: HeaderProps) => {
           }
 
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
               <DropdownItem
                 onClick={() => { }}
@@ -296,7 +274,7 @@ const Header = (header: HeaderProps) => {
                 logout().then(() => {
                   router.refresh();
                 });
-              }} icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#fff" }}></AddToQueueIcon>} text='Log out' />
+              }} icon={<LogoutIcon className='md:ml-[1rem]' style={{ color: "#fff" }}></LogoutIcon>} text='Log out' />
             </ul>
           )}
 
