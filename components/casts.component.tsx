@@ -134,18 +134,20 @@ const Casts = ({ id }: { id: string }) => {
                     "linear-gradient(-225deg, #FF3CAC 0%, #562B7C 52%, #2B86C5 100%)"
                 }
               }
-              className="util-box-shadow-purple-mode"
+              className="util-box-shadow-purple-mode container mx-auto"
             >
               <div className="z-10 relative items-center justify-center">
-                <div className='grid grid-cols-2 gap-5 justify-center items-center'>
+                <div className='grid grid-cols-2 justify-center items-center'>
+                  <div className='col-span-2 md:col-span-1 flex justify-center'>
                   <Image
                     src={`https://image.tmdb.org/t/p/w500/${selectedCast.profile_path}`}
                     width={300}
                     height={300}
-                    className="rounded-full md:mx-auto md:my-auto"
+                    className="rounded-full md:mx-auto md:my-auto "
                     alt={`${selectedCast.name}`}
                   ></Image>
-                  <div className='flex flex-col'>
+                  </div>
+                  <div className='flex flex-col col-span-2 md:col-span-1 justify-center'>
                     <h1 className="text-white font-bold text-[1.6rem]">
                       {selectedCast.name}
                     </h1>
