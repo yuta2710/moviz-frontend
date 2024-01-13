@@ -74,26 +74,26 @@ export default function Page() {
             <div className="my-1 px-1 lg:my-4 lg:px-0 ">
               {/* <!-- Article --> */}
               <article className="overflow-hidden rounded-lg shadow-lg">
-                <a href="#" className="">
+                <Link href={newsItem.web_url} className="" target="_blanket">
                   <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${newsItem.multimedia[5].url}`} width={120} height={0} style={{}}></Image>
-                </a>
+                </Link>
 
                 <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
                   <h1 className="md:text-sm font-regular md:w-full">
-                    <a className="no-underline hover:underline text-white" href="#">
+                    <Link className="no-underline hover:underline text-white" href={newsItem.web_url} target="_blanket">
                       <span className="text-white">{newsItem.abstract}</span>
-                    </a>
+                    </Link>
                   </h1>
                 </header>
                 <p className="text-white text-left ellipsis md:ml-4 text-sm">{newsItem.lead_paragraph}</p>
 
                 <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                  <a className="flex items-center no-underline hover:underline text-white" href="#">
+                  <Link className="flex items-center no-underline hover:underline text-white" href={newsItem.web_url} target="_blanket">
                     <Image alt="Placeholder" className="block rounded-full" src={getRandomPhotoUrl(Math.floor(Math.random() * 131) + 1)} width={32} height={32} style={{ height: "32px" }}></Image>
                     <p className="ml-2 text-sm">
                       {newsItem.byline.original.split(" ")[0]} <span className="text-white font-semibold">{newsItem.byline.original.split(" ")[1]} {newsItem.byline.original.split(" ")[2]}</span>
                     </p>
-                  </a>
+                  </Link>
                   {/* <a className="no-underline text-grey-darker hover:text-red-dark" href="#">
                   <span className="hidden">Like</span>
                   <i className="fa fa-heart"></i>
@@ -115,12 +115,12 @@ export default function Page() {
         ? news
           .sort((a: ArticleProps, b: ArticleProps) => new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime())
           .map((article, index) => (
-            <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+            <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3 cursor-pointer">
 
               {/* <!-- Article --> */}
               <article className="overflow-hidden rounded-lg shadow-lg ">
 
-                <Link href={article.web_url}>
+                <Link href={article.web_url} target="_blanket">
                   <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${article.multimedia[5].url}`} width={article.multimedia[5].width} height={article.multimedia[5].height}></Image>
                 </Link>
 
@@ -134,14 +134,14 @@ export default function Page() {
                 <p className="text-white text-left ellipsis md:ml-4 text-sm">{article.lead_paragraph}</p>
 
                 <footer className="flex items-center justify-between leading-none p-2 md:p-4">
-                  <Link className="flex items-center no-underline hover:underline text-white" href={article.web_url}>
+                  <Link className="flex items-center no-underline hover:underline text-white" href={article.web_url} target="_blanket">
                     <Image alt="Placeholder" className="block rounded-full" src={getRandomPhotoUrl(Math.floor(Math.random() * 131) + 1)} width={32} height={32} style={{ height: "32px" }}></Image>
                     <p className="ml-2 text-sm">
                       {article.byline.original.split(" ")[0]} <span className="text-white font-semibold">{article.byline.original.split(" ")[1]} {article.byline.original.split(" ")[2]}</span>
                     </p>
                     <p className="text-white text-sm font-medium relative md:ml-4 opacity-60">{formatHistoryDate(article.pub_date)}</p>
                   </Link>
-                  <Link className="no-underline text-grey-darker hover:text-red-dark" href="#">
+                  <Link className="no-underline text-grey-darker hover:text-red-dark" href={article.web_url} target="_blanket">
                     <span className="hidden">Like</span>
                     <i className="fa fa-heart"></i>
                   </Link>
