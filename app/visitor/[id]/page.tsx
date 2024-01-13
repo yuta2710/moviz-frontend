@@ -158,18 +158,18 @@ export default function Page({ params }: { params: { id: string } }) {
  
   return visitor !== null && visitor._id !== currentUser?._id &&
     <div className="flex flex-col justify-center items-center">
-      <div className="flex flex-row justify-center items-start md:w-full md:mt-16">
-        <div className="">
+      <div className="grid grid-cols-2 flex flex-row justify-center items-start md:w-full md:mt-16">
+        <div className="col-span-2 md:col-span-1 flex justify-center md:justify-end">
           <Image src={visitor.photo} width={350} height={0} style={{ height: "350px" }} alt="" className="rounded-full"></Image>
         </div>
-        <div className="flex flex-col justify-center items-start md:ml-8">
+        <div className="col-span-2 md:col-span-1 flex flex-col justify-center items-start md:ml-8 px-2 py-3 md:py-1">
           {/** Username and follow button */}
-          <div className="flex flex-row justify-center items-center">
+          <div className="grid grid-cols-2 flex flex-row justify-center items-center">
             <div className="text-white">{visitor.username}</div>
             {isFollowed  ? <button
               onClick={() => handleUnFollow(visitor)}
               type="button"
-              className="relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
+              className="col-span-1 px-2 relative md:ml-8 bg-green-600 rounded-lg focus:outline-none text-white text-[1.8rem] font-medium text-sm md:px-10 py-2 hover:scale-105 duration-500"
             >
               Unfollow
             </button> : <button
@@ -327,7 +327,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
       <div className="flex flex-col justify-center items-start text-white">
         <h1 className="text-left font-bold text-xl text-white">Recent Reviews</h1>
-        <ReviewList reviews={visitor.reviews} currentPage={currentPage} itemsPerPage= {3}/>
+        <div className="px-3 md:px-1"><ReviewList reviews={visitor.reviews} currentPage={currentPage} itemsPerPage= {3}/></div>
         <Pagination
               count={Math.ceil(visitor.reviews.length / 3)}
               // variant="outlined"
