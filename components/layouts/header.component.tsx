@@ -207,16 +207,16 @@ const Header = (header: HeaderProps) => {
         <div className='lg:col-span-1 hidden'></div>
         <div className='col-span-6 md:col-span-4 flex flex-col relative z-10 md:ml-24'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
-          <form className='flex flex-row' 
+          <form className='flex flex-row'
             style={{
-            // backdropFilter: "blur(1rem)",
-            // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
+              // backdropFilter: "blur(1rem)",
+              // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
             }}
             onSubmit={(e) => {
               e.preventDefault();
               router.push(`/search?query=${searchQuery}`);
             }}
-            >
+          >
             <TextField
               id="search-bar"
               className="text-[0.75rem] apple-linear-glass md:w-[350px] px-8 py-2 border-none font-poppins focus:outline-none"
