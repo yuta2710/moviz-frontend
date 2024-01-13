@@ -196,7 +196,7 @@ export default function Page() {
           <div className="blob-linear-green-blue relative"></div>
         </div>
         <div className="grid grid-cols-3 items-center">
-          <div className="">
+          <div className="col-span-3 md:col-span-1">
             <Image
               className="text-white text-center rounded-full md:mr-36 hover:cursor-pointer"
               width={250}
@@ -207,18 +207,21 @@ export default function Page() {
             />
             <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
           </div>
-          <div className="grid col-span-2 grid-rows-4 gap-5 w2/3">
-            <div className="flex flex-row text-3xl font-medium my-auto">
-              <h1 className="text-white text-center md:text-left ">
-                {customer.username}
-              </h1>
+          <div className="grid col-span-2 gap-5 w2/3">
+            <div className="flex flex-row text-3xl font-medium my-auto grid grid-cols-3">
+              <div className="col-span-3 md:col-span-1">
+                <h1 className="text-white text-center md:text-left ">
+                  {customer.username}
+                </h1>
+              </div>
 
-              <div className="flex flex-row justify-center items-center md:mt-1 md:ml-8">
-                <p className="text-white text-[1.05rem] hover:text-blue-light cursor-pointer">{customer.followers.length} <span className="text-[0.8rem]">Followers</span></p>
+              <div className="flex flex-row justify-center items-center md:mt-1 md:ml-8 col-span-3 md:col-span-1">
+                <p className="text-white text-[1.05rem] hover:text-blue-light cursor-pointer">{customer.followers.length} <span className="text-[0.8rem]">Followers</span></p></div>
+              <div className="flex flex-row justify-center items-center md:mt-1 md:ml-8 col-span-3 md:col-span-1">
                 <p className="text-white text-[1.05rem] md:ml-8 hover:text-blue-light cursor-pointer" onClick={handleOpenFollowingsInfo}>{customer.followings.length} <span className="text-[0.8rem]">Followings</span></p>
               </div>
             </div>
-            <div className="col-span-2 justify-center items-center">
+            <div className="col-span-3 md:col-span-2 justify-center items-center">
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">First Name</h3>
                 {!isEditingFirstname &&
@@ -236,7 +239,7 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
-            <div className="col-span-2 justify-center items-center">
+            <div className="col-span-3 md:col-span-2 justify-center items-center">
               <div className="flex flex-col">
                 <h3 className="mb-3">Last Name</h3>
                 {!isEditingLastname &&
@@ -254,7 +257,7 @@ export default function Page() {
                   </form>)}
               </div>
             </div>
-            <div className="col-span-2 justify-center items-center">
+            <div className="col-span-3 md:col-span-2 justify-center items-center">
               <div className="flex flex-col mr-5">
                 <h3 className="mb-3">Email</h3>
                 {!isEditingEmail &&

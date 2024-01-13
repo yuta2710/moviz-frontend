@@ -48,11 +48,20 @@ export default function Page({ params }: { params: { id: string } }) {
   console.log("Review data = ", reviews);
   return (
     movie !== null &&
-    <div className="flex flex-row-reverse justify-center">
-      <div className="relative flex flex-col justify-center items-start md:ml-24"> {/* Added justify-center and items-center */}
+    <div className="flex flex-row-reverse justify-center grid grid-cols-5">
+      <div className="relative md:mt-24 col-span-5 md:col-span-2">
+        <div className="flex justify-center"><Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={306} height={391} alt="" className=""></Image></div>
+        <div className="flex flex-col justify-between items-center">
+          <h1 className="text-white font-semibold text-xl text-center md:w-[306px]">{movie?.title}</h1>
+          {/* <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={306} height={391} alt="" className="md:ml-24"></Image> */}
+          <h1 className="text-white font-medium text-sm text-center">{new Date(movie.release_date).getFullYear()}</h1>
+          <h1 className="text-white font-medium text-sm text-center">Directed By <span className="font-bold text-ai4biz-green-quite-light">{director?.name}</span></h1>
+        </div>
+      </div>
+      <div className="relative flex flex-col justify-center items-start col-span-5 md:col-span-3 px-3 py-2"> {/* Added justify-center and items-center */}
         <div className="flex flex-col justify-start relative">
-          <h1 className="text-xl font-bold relative text-white translate-y-4 text-gradient-cyan-blue">Recent Reviews</h1>
-          <ul className="md:mt-8">
+          <h1 className="text-xl font-bold relative text-white translate-y-4 text-gradient-cyan-blue pb-5 md:pb-1">Recent Reviews</h1>
+          <ul className="md:mt-8 space-y-3">
             {reviews.length > 0 &&
               reviews
                 .sort((a: FilmReviewProps, b: FilmReviewProps) => b.author_details.rating - a.author_details.rating)
@@ -67,7 +76,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         }
                       </Link>
                       <h2 className='text-sm font-bold text-white md:ml-4'><span className='text-ai4biz-green-quite-light font-semibold text-[0.7rem]'><span className="text-white font-light opacity-50">Review by</span> {review.author_details.username}</span>
-                        <span className='text-white md:ml-8 font-bold'>Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
+                        <span className='text-white md:ml-8 font-bold'> Rating:</span> <span className='md:ml-2'>{review.author_details.rating.toFixed(1)} / 10</span> <span className='text-white opacity-50 text-[0.7rem] md:ml-16'>{formatHistoryDate(review.createdAt)}</span></h2>
                     </div>
                     <h2 className='text-[0.8rem] font-regular text-white md:mt-2 md:w-[800px] text-justify md:pb-8 md:leading-6'>{review.content}</h2>
                     <div className="absolute md:w-full md:h-[1px] bg-white bottom-0 opacity-50"></div>
@@ -76,15 +85,7 @@ export default function Page({ params }: { params: { id: string } }) {
           </ul>
         </div>
       </div>
-      <div className="relative md:mt-24">
-        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={306} height={391} alt="" className=""></Image>
-        <div className="flex flex-col justify-between items-center">
-          <h1 className="text-white font-semibold text-xl text-center md:w-[306px]">{movie?.title}</h1>
-          {/* <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={306} height={391} alt="" className="md:ml-24"></Image> */}
-          <h1 className="text-white font-medium text-sm text-center">{new Date(movie.release_date).getFullYear()}</h1>
-          <h1 className="text-white font-medium text-sm text-center">Directed By <span className="font-bold text-ai4biz-green-quite-light">{director?.name}</span></h1>
-        </div>
-      </div>
+      
     </div>
   )
 }
