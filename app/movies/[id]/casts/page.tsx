@@ -19,7 +19,7 @@ export default function Page(): ReactElement {
 
   console.log("ID = ", id);
   return <>
-    <div className="relative md:top-[25rem]">
+    <div className="relative md:mt-16">
       <Casts id={id} />
     </div>
   </>

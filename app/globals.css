@@ -4,7 +4,7 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap");
-
+@import url("https://fonts.cdnfonts.com/css/sf-pro-display");
 * {
   padding: 0;
   margin: 0;
@@ -14,15 +14,30 @@
 html {
   position: relative;
   /* font-family: "Noto Sans"; */
-  font-family: "SF Pro";
+  font-family: "SF Pro Display", sans-serif;
   /* font-family: "Poppins"; */
   /* background: #000; */
-  background: radial-gradient(
+  /* background: radial-gradient(
     73.19% 111.55% at 93.07% 74.31%,
     #1d1f47 0%,
     #0a0b14 100%
+  ); */
+  /* background-image: linear-gradient( 109.6deg,  rgba(33,25,180,1) 11.2%, rgba(253,29,29,1) 55.2%, rgba(252,176,69,1) 91.1% ); */
+  /* background-image: linear-gradient(
+    180deg,
+    rgba(21, 13, 107, 1) 1.1%,
+    rgba(188, 16, 80, 1) 130.5%
+  ); */
+  /* background-color: #130f40;  */
+  background-image: radial-gradient(
+    circle farthest-corner at 83.7% 4.3%,
+    rgba(173, 0, 171, 1) 0%,
+    rgba(15, 51, 92, 1) 90%
   );
+  /* background-image: linear-gradient(315deg, #130f40 0%, #000000 74%); */
   background-repeat: no-repeat;
+  background-attachment: fixed; /* This will fix the gradient to the viewport */
+  background-origin: content-box;
   box-shadow: 0px 1px 0px 0px transparent inset,
     0px 20px 100px 0px rgba(74, 57, 127, 0.7);
   min-height: 100vh;
@@ -32,8 +47,11 @@ html {
 body {
   margin: 0;
   position: relative;
+  background: transparent;
+  background-repeat: no-repeat;
   width: 100vw;
   min-height: 100vh;
+  font-family: "SF Pro Display", sans-serif;
 }
 
 header {
@@ -353,6 +371,7 @@ button:focus {
   box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.6),
     inset 100px 100px 0 0px #fa709a, inset 200px 200px 0 0px #784ba8,
     inset 300px 300px 0 0px #2bb6c5;
+  z-index: -10;
 }
 
 .blob-linear-green-blue {
@@ -372,6 +391,7 @@ button:focus {
   box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.6),
     inset 100px 100px 0 0px #0a959c, inset 200px 200px 0 0px #784ba8,
     inset 300px 300px 0 0px #27d492;
+  z-index: -10;
 }
 
 .blob-linear-yellow-blue {
@@ -392,6 +412,7 @@ button:focus {
   box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.2),
     inset 100px 100px 0 0px #0cece5, inset 200px 200px 0 0px #784ba8,
     inset 300px 300px 0 0px #ffbf00;
+  z-index: -10;
 }
 
 @-webkit-keyframes move {
@@ -506,4 +527,20 @@ button:focus {
     ); /* Adjust the number of columns as needed */
     gap: 2px; /* Adjust the gap between items as needed */
   }
+}
+
+.css-1scal0h-MuiPaginationItem-root {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  border-radius: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  min-width: 40px;
+  padding: 0 10px;
+  margin: 0 3px;
+  color: rgba(255, 255, 255, 0.87);
+  height: auto;
 }

@@ -451,6 +451,9 @@ export const unFollow = async (visitorId: string) => {
   }
 };
 
+
+
+
 export const checkIsCurrentUserFollowOtherUser = (
   currentUser: User,
   otherUser: User
@@ -458,4 +461,8 @@ export const checkIsCurrentUserFollowOtherUser = (
   return currentUser.followings.some(
     (currentUserFollower) => currentUserFollower._id === otherUser._id
   );
+};
+
+export const getRandomPhotoUrl = (randomId: number) => {
+  return `https://api.slingacademy.com/public/sample-photos/${randomId}.jpeg`;
 };

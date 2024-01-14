@@ -32,7 +32,7 @@ export default function Page(): ReactElement {
   const router = useRouter();
   const [ref, inView] = useInView();
   const [customer, setCustomer] = useState<User | null>(null);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, currentUser } = useAuth();
   const path = usePathname();
 
   const handleOnChangeYear = (event: any) => {
@@ -353,9 +353,9 @@ export default function Page(): ReactElement {
       router.refresh();
       router.push("/login")
     }
-  }, [isAuthenticated()])
+  }, [currentUser === null])
 
-  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-${colIndex} relative justify-center items-center top-0 mx-auto gap-4`}>
+  const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-1 md:grid-cols-2 relative justify-center items-center top-0 mx-auto gap-4`}>
     {
       reviews
         // .sort((a: FilmReviewProps, b: FilmReviewProps) =>
@@ -364,13 +364,13 @@ export default function Page(): ReactElement {
           b.author_details.rating - a.author_details.rating
         )
         .slice(0, 4).map((review: FilmReviewProps) => (
-          <li className="apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
+          <li onClick={() => router.push(`/movies/${review.movie}/reviews`)} className="cursor-pointer apple-linear-glass rounded-2xl util-box-shadow-purple-mode flex flex-row justify-between review-section md:px-8 md:py-8 md:mt-8" key={review.author}>
             <Image
               src={`https://image.tmdb.org/t/p/w500/${review.movieObject?.poster_path}`}
               width={200}
               height={150}
               alt=""
-              className="relative object-cover md:ml-2"
+              className="relative object-cover md:ml-2 rounded-xl"
             >
             </Image>
             <div className="flex flex-col justify-center h-max review-section relative md:ml-8">
@@ -382,7 +382,7 @@ export default function Page(): ReactElement {
                   {review.author_details.rating.toFixed(1)} / 10
                 </span>
               </h2>
-              <h2 className="text-[0.8rem] font-regular text-gray-400 md:mt-2 relative md:w-[300px] line-clamp-4 text-justify">{review.content}</h2>
+              <h2 className="text-[0.8rem] font-regular text-white md:mt-2 relative md:w-[300px] line-clamp-4 text-justify leading-6">{review.content}</h2>
             </div>
           </li>
         ))
@@ -396,7 +396,7 @@ export default function Page(): ReactElement {
         {loading
           ? <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>
           : <div className="relative flex flex-col top-0">
-            <h1 className="text-white text-center relative md:mt-16 text-2xl italic">Welcome back, <span className="font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+            <h1 className="text-white text-center relative md:mt-16 text-2xl italic">Welcome back, <span onClick={() => router.push("/profile")} className="hover:scale-105 duration-500 cursor-pointer font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
             </h1>
           </div>
         }
@@ -444,24 +444,6 @@ export default function Page(): ReactElement {
           </div>
         )}
 
-        {recommendedMovies.length > 0 && (
-          <div className="flex flex-col justify-center relative md:mt-16">
-            <h1 className="text-white text-2xl font-semibold relative text-center">Recommended For You</h1>
-            <ul className="grid grid-cols-3 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
-              {[...recommendedMovies]
-                .sort((a, b) => b.popularity - a.popularity)
-                .slice(0, 6)
-                .map((movie) => (
-                  <li className=" m-0 rounded-2xl">
-                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
-                      <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={0} alt="" className="md:mx-auto object-cover rounded-sm"></Image>
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-
-          </div>
-        )}
 
         {recommendedMovies.length > 0 && (
           <div className="flex flex-col justify-center relative md:mt-16">

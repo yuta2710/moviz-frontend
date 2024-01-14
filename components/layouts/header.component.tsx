@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext'
 import { APPLICATION_PATH, getMe, searchMovies } from '../../utils/clients.utils'
 import { Autocomplete, Box, Button, Grid, Icon, IconButton, InputBase, TextField, Typography, alpha, styled } from '@mui/material';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import LogoutIcon from '@mui/icons-material/Logout';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { usePathname, useRouter } from 'next/navigation'
 import gsap from "gsap";
@@ -103,6 +104,12 @@ const Header = (header: HeaderProps) => {
     }
   }, [isAuthenticated]);
 
+  // useEffect(() => {
+  //   if (!isAuthenticated()) {
+
+  //   }
+  // }, [])
+
   useEffect(() => {
     handleSearchMovie(searchQuery);
   }, [searchQuery])
@@ -157,31 +164,8 @@ const Header = (header: HeaderProps) => {
           </span>
 
         </Link>
-
-        <div className="lg:hidden">
-          <button id="burger-btn" className="text-white focus:outline-none">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              ></path>
-            </svg>
-          </button>
-        </div>
-
-        <div className="burger-menu-wrapper lg:hidden">
-          <button onClick={handleBurgerMenuToggle}>
-            {/* <FontAwesomeIcon icon={faBars} /> */}
-          </button>
-          <BurgerMenu isOpen={isBurgerMenuOpen} onClose={() => setBurgerMenuOpen(false)} />
+        <div className="col-span-2 lg:hidden">
+          <BurgerMenu />
         </div>
 
         <div className='col-span-1 hidden md:flex '></div>
@@ -192,6 +176,7 @@ const Header = (header: HeaderProps) => {
                 <Link href={item.APPLICATION_PATH} className={`z-10 item-mapper relative md:block custom-link-underline white block font-medium px-8 md:px-0 md:py-2 md:pl-3 md:pr-4 ${fontItem?.size} ${fontItem?.color}`}>
                   {_.startCase(item.KEY.split("-").join(" "))}
                 </Link>
+
               </li>
 
             ))}
@@ -200,10 +185,16 @@ const Header = (header: HeaderProps) => {
         <div className='lg:col-span-1 hidden'></div>
         <div className='col-span-6 md:col-span-4 flex flex-col relative z-10 md:ml-24'>
           {/* <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
-          <form className='flex flex-row' style={{
-            // backdropFilter: "blur(1rem)",
-            // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
-          }}>
+          <form className='flex flex-row'
+            style={{
+              // backdropFilter: "blur(1rem)",
+              // boxShadow: "1.3rem 1.3rem 1.3rem rgba(0, 0, 0, 0.5)",
+            }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              router.push(`/search?query=${searchQuery}`);
+            }}
+          >
             <TextField
               id="search-bar"
               className="text-[0.75rem] apple-linear-glass md:w-[350px] px-8 py-2 border-none font-poppins focus:outline-none"
@@ -224,12 +215,12 @@ const Header = (header: HeaderProps) => {
               placeholder="Enter the movie name..."
               size="small"
             />
-            <IconButton type="submit" aria-label="search" className=''>
+            <IconButton type='submit' onClick={() => router.push(`/search?query=${searchQuery}`)} aria-label="search" className=''>
               <SearchIcon style={{ fill: "white" }} />
             </IconButton>
           </form>
           {searchQuery &&
-            <ul className='absolute md:mt-16 md:w-[500px] p-4 rounded-xl glass-effect z-10'>
+            <ul className='absolute mt-16 md:w-[500px] p-4 rounded-xl glass-effect z-10 space-y-2'>
               <h1 className='text-white text-sm font-medium text-center md:w-full'>Founded <span className='font-bold' style={{ color: "#45FFCA" }}>{totalSearchResults}</span> results</h1>
               {suggestions
                 .slice(0, 5)
@@ -249,22 +240,23 @@ const Header = (header: HeaderProps) => {
               <Box textAlign='center' marginTop={4}>
                 <Button
                   variant="contained"
-                  className='md:m-auto hover:opacity-60 md:w-full font-poppins' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />}>
+                  className='md:m-auto hover:opacity-60 md:w-full font-poppins' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />} onClick={() => router.push(`/search?query=${searchQuery}`)}>
                   More
                 </Button>
               </Box>
             </ul>}
         </div>
-        <div className='col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-1'></div>
+        <div className='sm:col-span-1 md:col-span-2 lg:col-span-1'></div>
         <div className='col-span-3 md:col-span-2 lg:col-span-1 flex flex-col relative'>
-          {currentUser !== null
+          {currentUser !== null && isAuthenticated()
             ? <div className='col-span-2 flex flex-row justify-center items-center relative gap-4 cursor-pointer'>
-              <Image className='rounded-full  md:right-16' src={currentUser.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
-              <p className='text-white font-medium text-sm hover:text-gray-300' onClick={() => router.push('/profile')}>{currentUser.username}</p>
+              <Image className='rounded-full' src={currentUser.photo} width={50} height={50} style={{ height: "50px" }} alt=''></Image>
+              <Link className='text-white font-medium text-sm hover:text-gray-300 hidden md:flex' href={`/profile`}>{currentUser.username}</Link>
               <ArrowDropDownIcon onClick={toggleDropdown} style={{ color: "#fff" }}></ArrowDropDownIcon>
+
             </div>
             : <button
-              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg '
+              className='text-white bg-red-500 py-2 px-6 text-sm z-10 relative rounded-lg login-btn'
               onClick={() => router.push("/login")}
             >
               Login
@@ -272,7 +264,7 @@ const Header = (header: HeaderProps) => {
           }
 
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode md:top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
               <DropdownItem
                 onClick={() => { }}
@@ -282,7 +274,7 @@ const Header = (header: HeaderProps) => {
                 logout().then(() => {
                   router.refresh();
                 });
-              }} icon={<AddToQueueIcon className='md:ml-[1rem]' style={{ color: "#fff" }}></AddToQueueIcon>} text='Log out' />
+              }} icon={<LogoutIcon className='md:ml-[1rem]' style={{ color: "#fff" }}></LogoutIcon>} text='Log out' />
             </ul>
           )}
 

@@ -8,6 +8,7 @@ import { reject } from "lodash";
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 interface LoginError {
   email: {
@@ -24,7 +25,9 @@ export const LoginForm = () => {
     setError,
     formState: { errors }
   } = useForm();
-  const { login, logout, isAuthenticated, user, currentUser, setCustomerFromToken } = useAuth(); // Destructure the login function from the context
+  const { login, logout, isAuthenticated, user, setCustomerFromToken } = useAuth(); // Destructure the login function from the context
+  const [loginError, setLoginError] = useState("");
+  const [showLoginError, setShowLoginError] = useState(false);
   const router = useRouter();
   const onSubmit = async (data: FieldValues) => {
 
@@ -43,7 +46,6 @@ export const LoginForm = () => {
 
       // Redirect on successful login
       if (isAuthenticated()) {
-        router.refresh();
         router.push("/home");
       }
     } catch (err) {
@@ -53,28 +55,31 @@ export const LoginForm = () => {
       // Set error messages based on your error response
       setError("email", { type: "manual", message: "" });
       setError("password", { type: "manual", message: "" });
-      setError("login", {
-        type: "manual",
-        message: "Incorrect email or password",
-      });
+      // setError("login", {
+      //   type: "manual",
+      //   message: "Incorrect email or password",
+      // });
+      setLoginError("Incorrect email or password");
+      setShowLoginError(true);
+
+      // Set a timer to hide the message after 5 seconds
+      setTimeout(() => setShowLoginError(false), 3000);
     }
   };
 
-  // useEffect(() => {
-  //   if (isAuthenticated()) {
-  //     router.push("/home");
-  //   }
-  // }, [isAuthenticated])
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push("/home");
+    }
+  }, [isAuthenticated])
 
   const formErrors = errors as any;
-
-  console.log(currentUser)
 
   return (
     <div className="flex justify-center items-center min-h-screen relative">
       <div className="md:w-1/2 max-w-lg mx-auto my-24 px-4 py-5 shadow-none">
-        <div className="text-left p-0 font-sans">
-          <h1 className=" text-white text-3xl font-semibold text-center font-noto">Login to become members</h1>
+        <div className="text-left p-0">
+          <h1 className=" text-white text-3xl font-semibold text-center">Login to become members</h1>
         </div>
         <form action="#" onSubmit={handleSubmit(onSubmit)} className="p-0">
           <div className="mt-5">
@@ -89,7 +94,7 @@ export const LoginForm = () => {
               })} type="text" className="md:mt-4 block w-full p-2 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent " placeholder="Email" />
           </div>
           {formErrors.email && (
-            <div className="text-red-500 text-sm mt-2">{formErrors.email.message}</div>
+            <div className="text-status-error text-sm mt-2">{formErrors.email.message}</div>
           )}
 
           <div className="mt-5">
@@ -97,11 +102,14 @@ export const LoginForm = () => {
             <input type="password" {...register("password", { required: "Please enter a password" })} className="md:mt-4 block w-full p-2 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent" placeholder="Password" />
           </div>
           {formErrors.password && (
-            <div className="text-red-500 text-sm mt-2">{formErrors.password.message}</div>
+            <div className="text-status-error text-sm mt-2">{formErrors.password.message}</div>
           )}
 
-          {formErrors.login && (
-            <div className="text-red-500 text-sm mt-2">{formErrors.login.message}</div>
+
+          {showLoginError && (
+            <div className="text-status-error text-sm mt-2 fade-out md:px-[2px] rounded-full md:py-[8px] bg-status-error md:pl-4 flex flex-row justify-start">
+              <Image src={"/assets/icons/error.png"} width={20} height={15} alt=""></Image><div className="md:ml-2">{loginError}</div>
+            </div>
           )}
 
           <div className="mt-10">
