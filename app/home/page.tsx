@@ -350,10 +350,11 @@ export default function Page(): ReactElement {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      router.refresh();
       router.push("/login")
     }
-  }, [currentUser === null])
+  }, [])
+
+  console.log(isAuthenticated());
 
   const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-1 md:grid-cols-2 relative justify-center items-center top-0 mx-auto gap-4`}>
     {
