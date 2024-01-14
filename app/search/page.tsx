@@ -24,7 +24,7 @@ const Search = () => {
   return (
     <div className='relative'>
       <h1 className='text-3xl text-white text-center md:mt-10'>You searched for: <span className='font-bold' style={{ color: "#45FFCA" }}>"{query}"</span></h1>
-      <ul className="grid grid-cols-2 md:grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8 md:px-20">
+      <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8 md:px-20">
         {results &&
           results
             .map((movie) => movie.poster_path !== null && (
