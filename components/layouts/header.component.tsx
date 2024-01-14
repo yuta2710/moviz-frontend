@@ -102,7 +102,7 @@ const Header = (header: HeaderProps) => {
       setLoading(false);
       // router.push("/login");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated()]);
 
   // useEffect(() => {
   //   if (!isAuthenticated()) {
@@ -197,7 +197,7 @@ const Header = (header: HeaderProps) => {
           >
             <TextField
               id="search-bar"
-              className="text-[0.75rem] apple-linear-glass md:w-[350px] px-8 py-2 border-none font-poppins focus:outline-none"
+              className="text-[0.75rem] apple-linear-glass w-[650px] md:w-[350px] md:px-8 md:py-2 border-none font-poppins focus:outline-none"
               style={{
                 color: "#fff",
                 // backgroundColor: "rgba(225, 225, 225, 0.1)",
@@ -264,7 +264,7 @@ const Header = (header: HeaderProps) => {
           }
 
           {dropdownOpen && (
-            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode top-[4rem] apple-linear-glass md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
+            <ul className='flex flex-col justify-center items-center dropdown-container absolute md:left-4 util-box-shadow-light-mode top-[4rem] apple-linear-glass px-8 md:px-2 md:w-[180px] w-full rounded-2xl z-10' style={{ paddingTop: "0rem", paddingBottom: "2rem" }}>
               { /* Render dropdown items here */}
               <DropdownItem
                 onClick={() => { }}

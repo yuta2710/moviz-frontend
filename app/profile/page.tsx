@@ -207,10 +207,10 @@ export default function Page() {
             />
             <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
           </div>
-          <div className="grid col-span-2 gap-5 w2/3">
+          <div className="grid col-span-2 gap-5 w2/3 ">
             <div className="flex flex-row text-3xl font-medium my-auto grid grid-cols-3">
               <div className="col-span-3 md:col-span-1">
-                <h1 className="text-white text-center md:text-left ">
+                <h1 className="text-white text-center md:text-left s">
                   {customer.username}
                 </h1>
               </div>

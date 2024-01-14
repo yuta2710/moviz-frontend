@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState } from 'react';
 
 const BurgerMenu = () => {
@@ -18,44 +19,43 @@ const BurgerMenu = () => {
         onClick={toggleMenu}
       >
         <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              ></path>
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          ></path>
         </svg>
       </button>
       <div
-        className={`fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center transition-transform transform z-50 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center transition-transform transform z-50 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
-        <div className="bg-white p-4 rounded shadow-md">
-          
-          <ul className="space-y-2">
-            <li>
+        <div className="linear-dark-purple p-24 rounded shadow-md h-screen w-full">
+
+          <ul className="space-y-16 text-center">
+            <li className=''>
               <button
-              className="left-0 text-gray-700"
-              onClick={closeMenu}
-            >
-              X
-            </button>
+                className="left-0 text-white float-right top-0 text-4xl"
+                onClick={closeMenu}
+              >
+                X
+              </button>
             </li>
             <li>
-              <a href="/">Home</a>
+              <Link href="/" className='text-white text-2xl font-medium text-center' >Home</Link>
             </li>
             <li>
-              <a href="/movies">Movies</a>
+              <Link href="/movies" className='text-white text-2xl font-medium text-center'>Movies</Link>
             </li>
             <li>
-              <a href="/news">News</a>
+              <Link href="/news" className='text-white text-2xl font-medium text-center'>News</Link>
             </li>
           </ul>
         </div>

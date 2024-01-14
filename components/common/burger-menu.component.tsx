@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState } from 'react';
 import { slide as Menu } from 'react-burger-menu';
 
@@ -8,19 +9,19 @@ interface BurgerMenuProps {
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
   return (
-    <Menu isOpen={isOpen} onClose={onClose}>
-      <div className='py-2 px-2 grid grid-row-3 gap-5'>
+    <Menu isOpen={isOpen} onClose={onClose} className=''>
+      <div className='py-2 px-2 grid grid-row-3 gap-5' >
         <div className='menu-item row-span-1 text-white text-2xl px-3 py-6 menu-item'>
-          <a href="/home">Home</a>
+          <Link href="/home">Home</Link>
         </div>
         <div className='menu-item row-span-1 text-white text-2xl px-3 py-6 menu-item'>
-          <a href="/movies">Movies</a>
+          <Link href="/movies">Movies</Link>
         </div>
         <div className='menu-item row-span-1 text-white text-2xl px-3 py-6 menu-item'>
-          <a href="/news">News</a>
+          <Link href="/news">News</Link>
         </div>
       </div>
-    </Menu>
+    </Menu >
   );
 };
 
