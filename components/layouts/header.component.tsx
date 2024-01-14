@@ -132,7 +132,7 @@ const Header = (header: HeaderProps) => {
   // Search HTML 
   let searchResultHTML = (suggestion: Movie, index: number) =>
     <li
-      className={"flex flex-col hover:scale-105 duration-500 rounded-xl cursor-pointer md:mt-4"}
+      className={"flex flex-col hover:scale-105 duration-500 rounded-xl cursor-pointer"}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       onClick={() => router.push(`/movies/${suggestion.id}`)
@@ -146,7 +146,7 @@ const Header = (header: HeaderProps) => {
           className='rounded-sm'
           alt="Random Picture"
         ></Image>
-        <p className='text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4'> {suggestion.title}</p>
+        <p className='text-white text-[0.8rem] text-left overflow-hidden whitespace-nowrap relative md:ml-4 ml-4 w-[250px]'> {suggestion.title}</p>
       </div>
       {index < 4 && <div className='md:w-full bg-white md:h-[2px] md:mt-2 opacity-50'></div>}
     </li>
@@ -201,6 +201,10 @@ const Header = (header: HeaderProps) => {
               style={{
                 color: "#fff",
                 // backgroundColor: "rgba(225, 225, 225, 0.1)",
+                paddingTop: "0.4rem",
+                paddingBottom: "0.4rem",
+                paddingLeft: "1.2rem",
+                paddingRight: "1.2rem",
                 borderRadius: "8px", outline: "none", border: "none",
               }}
               onInput={(e: any) => {
@@ -216,11 +220,12 @@ const Header = (header: HeaderProps) => {
               size="small"
             />
             <IconButton type='submit' onClick={() => router.push(`/search?query=${searchQuery}`)} aria-label="search" className=''>
-              <SearchIcon style={{ fill: "white" }} />
+              {/* <SearchIcon style={{ fill: "white" }} /> */}
+              <Image src={`/assets/icons/Search.svg`} width={25} height={25} alt=''></Image>
             </IconButton>
           </form>
           {searchQuery &&
-            <ul className='absolute mt-16 md:w-[500px] p-4 rounded-xl glass-effect z-10 space-y-2'>
+            <ul className='absolute mt-16 md:w-[500px] md:p-4 rounded-xl linear-dark-purple  z-10 space-y-2'>
               <h1 className='text-white text-sm font-medium text-center md:w-full'>Founded <span className='font-bold' style={{ color: "#45FFCA" }}>{totalSearchResults}</span> results</h1>
               {suggestions
                 .slice(0, 5)
@@ -240,7 +245,7 @@ const Header = (header: HeaderProps) => {
               <Box textAlign='center' marginTop={4}>
                 <Button
                   variant="contained"
-                  className='md:m-auto hover:opacity-60 md:w-full font-poppins' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />} onClick={() => router.push(`/search?query=${searchQuery}`)}>
+                  className='md:m-auto hover:opacity-60 md:w-full text-sm' style={{ background: "#D61355", outline: "none", color: "#fff" }} startIcon={<AddIcon />} onClick={() => router.push(`/search?query=${searchQuery}`)}>
                   More
                 </Button>
               </Box>

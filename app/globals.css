@@ -14,7 +14,8 @@
 html {
   position: relative;
   /* font-family: "Noto Sans"; */
-  font-family: "SF Pro Display", sans-serif;
+  font-family: "SF Pro Display";
+  letter-spacing: 0.6px;
   /* font-family: "Poppins"; */
   /* background: #000; */
   /* background: radial-gradient(
@@ -59,7 +60,7 @@ body {
   background-repeat: no-repeat;
   width: 100vw;
   min-height: 100vh;
-  font-family: "SF Pro Display", sans-serif;
+  /* font-family: "SF Pro Display"; */
 }
 
 header {
