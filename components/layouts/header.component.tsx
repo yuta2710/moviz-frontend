@@ -278,6 +278,7 @@ const Header = (header: HeaderProps) => {
               <DropdownItem onClick={() => {
                 logout().then(() => {
                   router.refresh();
+                  router.push("/login");
                 });
               }} icon={<LogoutIcon className='md:ml-[1rem]' style={{ color: "#fff" }}></LogoutIcon>} text='Log out' />
             </ul>
