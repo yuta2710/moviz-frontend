@@ -122,19 +122,24 @@ export function AuthProvider({ children }: AuthProvideProps) {
   }
 
   const isAuthenticated = () => {
-    const token = localStorage.getItem("accessToken");
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem("accessToken");
 
-    if (!token) {
-      console.log("No token in here");
-      return false;
+      if (!token) {
+        console.log("No token in here");
+        return false;
+      }
+
+      const { exp } = jwtDecode(token);
+
+      if (Date.now() > Number(exp) * 1000) {
+        return false;
+      }
+
+      return true;
     }
-    const { exp } = jwtDecode(token);
 
-    if (Date.now() > Number(exp) * 1000) {
-      return false;
-    }
-
-    return true;
+    return false;
   }
 
   const getCurrentUser = async () => {
