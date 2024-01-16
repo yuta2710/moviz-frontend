@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import letterboxd from "letterboxd-api";
 
-export const HOST_PRODUCT = "http://51.44.23.58:8080";
+export const HOST_PRODUCT = "https://api.sepm-moviz.us";
 
 export const config = {
   HEADER_ITEM_PATH: [

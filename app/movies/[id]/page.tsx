@@ -88,10 +88,12 @@ export default function Page({ params }: { params: { id: string } }) {
     }
     setOpenDirectorInfo(true);
   }
+
   const handleCloseDirectorInfo = () => {
     setOpenDirectorInfo(false);
     setExpandedBiography(false);
   }
+
   const handleOpenPostReviewForm = () => setPostReviewForm(true);
   const handleClosePostReviewForm = () => setPostReviewForm(false);
 
