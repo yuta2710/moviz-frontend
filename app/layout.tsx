@@ -3,29 +3,9 @@
 import './globals.css'
 import { AuthProvider, useAuth } from '@/components/context/AuthContext'
 import Header from '@/components/layouts/header.component';
-import { getMe } from '@/utils/clients.utils';
+import { config, getMe } from '@/utils/clients.utils';
 import { useEffect, useState } from 'react';
 
-export const config = {
-  HEADER_ITEM_PATH: [
-    {
-      APPLICATION_PATH: "/home",
-      KEY: "home",
-    },
-    {
-      APPLICATION_PATH: "/movies",
-      KEY: "movies",
-    },
-    // {
-    //   APPLICATION_PATH: "/reviewsfeed",
-    //   KEY: "reviewsfeed",
-    // },
-    {
-      APPLICATION_PATH: "/news",
-      KEY: "news",
-    },
-  ],
-};
 
 export default function RootLayout({
   children,

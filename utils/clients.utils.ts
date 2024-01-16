@@ -11,6 +11,28 @@ import axios from "axios";
 import letterboxd from "letterboxd-api";
 
 export const HOST_PRODUCT = "http://51.44.23.58:8080";
+
+export const config = {
+  HEADER_ITEM_PATH: [
+    {
+      APPLICATION_PATH: "/home",
+      KEY: "home",
+    },
+    {
+      APPLICATION_PATH: "/movies",
+      KEY: "movies",
+    },
+    // {
+    //   APPLICATION_PATH: "/reviewsfeed",
+    //   KEY: "reviewsfeed",
+    // },
+    {
+      APPLICATION_PATH: "/news",
+      KEY: "news",
+    },
+  ],
+};
+
 // data
 export const saveUser = async (userData: UserRegisterRequestProps) => {
   try {
