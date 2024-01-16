@@ -86,9 +86,9 @@ export default function Page(): ReactElement {
     }
     else {
       setLoading(false);
-      // router.push("/login");
+      router.push("/login");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated()]);
 
 
   // Fetch all movies
