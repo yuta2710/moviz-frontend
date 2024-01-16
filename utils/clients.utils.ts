@@ -10,11 +10,12 @@ import {
 import axios from "axios";
 import letterboxd from "letterboxd-api";
 
+export const HOST_PRODUCT = "http://51.44.23.58:8080";
 // data
 export const saveUser = async (userData: UserRegisterRequestProps) => {
   try {
     return await axios
-      .post(`http://localhost:8080/api/v1/auth/register`, userData)
+      .post(`${HOST_PRODUCT}/api/v1/auth/register`, userData)
       .then((response) => {
         console.log(response);
         if (response.status === 200) {
@@ -30,7 +31,7 @@ export const saveUser = async (userData: UserRegisterRequestProps) => {
 };
 
 export const getUserById = async (userId: string) => {
-  const res = await axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
+  const res = await axios.get(`${HOST_PRODUCT}/api/v1/users/${userId}`, {
     headers: {
       authorization: `Bearer ${localStorage.getItem("accessToken")} `,
     },
@@ -49,7 +50,7 @@ export const getAuthConfig = () => ({
 
 export const login = async (props: UserLoginProps) => {
   try {
-    return await axios.post(`http://localhost:8080/api/v1/auth/login`, props);
+    return await axios.post(`${HOST_PRODUCT}/api/v1/auth/login`, props);
   } catch (error) {
     throw error;
   }
@@ -57,17 +58,14 @@ export const login = async (props: UserLoginProps) => {
 
 export const registerNewUser = async (props: UserRegisterRequestProps) => {
   try {
-    return await axios.post(
-      `http://localhost:8080/api/v1/auth/register`,
-      props
-    );
+    return await axios.post(`${HOST_PRODUCT}/api/v1/auth/register`, props);
   } catch (error) {
     throw error;
   }
 };
 
 export async function getMe() {
-  const res = await axios.get("http://localhost:8080/api/v1/auth/me", {
+  const res = await axios.get(`${HOST_PRODUCT}/api/v1/auth/me`, {
     headers: {
       authorization: `Bearer ${localStorage.getItem("accessToken")} `,
     },
@@ -81,7 +79,7 @@ export async function getMe() {
 }
 
 export async function getMovie(id: string) {
-  const url = `http://localhost:8080/api/v1/movies/${id}`;
+  const url = `${HOST_PRODUCT}/api/v1/movies/${id}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -158,7 +156,7 @@ export async function getRelatedMovies(id: string) {
 
 export async function getCasts(id: string) {
   const url = `https://api.themoviedb.org/3/movie/${id}/credits`;
-  const ENDPOINT = `http://localhost:8080/api/v1/movies/${id}/casts`;
+  const ENDPOINT = `${HOST_PRODUCT}/api/v1/movies/${id}/casts`;
   const options = {
     method: "GET",
     headers: {
@@ -293,7 +291,7 @@ export const getReviewsByMovieId = async (movieId: number) => {
   console.log("This is movieId = ", movieId);
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/movies/${movieId}/reviews`
+      `${HOST_PRODUCT}/api/v1/movies/${movieId}/reviews`
     );
 
     // console.log(response)
@@ -314,7 +312,7 @@ export const getReviewsByMovieId = async (movieId: number) => {
 
 export const getAllReviews = async () => {
   try {
-    const response = await fetch(`http://localhost:8080/api/v1/reviews`);
+    const response = await fetch(`${HOST_PRODUCT}/api/v1/reviews`);
 
     // console.log(response)
 
@@ -339,7 +337,7 @@ export const saveReviewsByMovieId = async (
   try {
     console.log("Film props = ", props);
     return axios
-      .post(`http://localhost:8080/api/v1/reviews/${movieId}`, props, {
+      .post(`${HOST_PRODUCT}/api/v1/reviews/${movieId}`, props, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -361,7 +359,7 @@ export const saveReviewsByMovieId = async (
 export async function fetchMovies(pageNumber: number) {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`
+      `${HOST_PRODUCT}/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`
     );
     const data = await response.json();
     return data;
@@ -422,7 +420,7 @@ export async function getRecommendations(id: string) {
 export const onFollow = async (visitorId: string) => {
   try {
     await axios.post(
-      `http://localhost:8080/api/v1/follow/${visitorId}`,
+      `${HOST_PRODUCT}/api/v1/follow/${visitorId}`,
       {},
       {
         headers: {
@@ -438,7 +436,7 @@ export const onFollow = async (visitorId: string) => {
 export const unFollow = async (visitorId: string) => {
   try {
     await axios.post(
-      `http://localhost:8080/api/v1/unfollow/${visitorId}`,
+      `${HOST_PRODUCT}/api/v1/unfollow/${visitorId}`,
       {},
       {
         headers: {
@@ -450,9 +448,6 @@ export const unFollow = async (visitorId: string) => {
     console.log(error);
   }
 };
-
-
-
 
 export const checkIsCurrentUserFollowOtherUser = (
   currentUser: User,

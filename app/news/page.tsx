@@ -1,7 +1,7 @@
 "use client";
 
 import { ArticleProps } from "@/types";
-import { getRandomPhotoUrl } from "@/utils/clients.utils";
+import { HOST_PRODUCT, getRandomPhotoUrl } from "@/utils/clients.utils";
 import { formatDate, formatHistoryDate } from "@/utils/convert.utils";
 import { CircularProgress, Pagination, styled } from "@mui/material";
 import Image from "next/image";
@@ -36,7 +36,7 @@ export default function Page() {
     }
     const fetchData = async (pageNumber: number) => {
       const response = await fetch(
-        `http://localhost:8080/api/v1/articles?page=${pageNumber}`
+        `${HOST_PRODUCT}/api/v1/articles?page=${pageNumber}`
       );
 
       const data = response.json();

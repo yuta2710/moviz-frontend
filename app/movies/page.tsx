@@ -3,7 +3,7 @@
 import { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { APPLICATION_PATH, getGenres, getMe, getMovies } from "@/utils/clients.utils";
+import { APPLICATION_PATH, HOST_PRODUCT, getGenres, getMe, getMovies } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
 import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
@@ -157,7 +157,7 @@ export default function Page(): ReactElement {
     //   router.push(/movies?page=${currentPage})
     // }
     const fetchData = async (rating: string, genre: string) => {
-      const response = await fetch(`http://localhost:8080/api/v1/movies?page=1&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
+      const response = await fetch(`${HOST_PRODUCT}/api/v1/movies?page=1&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
       const data = response.json();
       data.then(json => {
         const data = json.data;
@@ -213,7 +213,7 @@ export default function Page(): ReactElement {
     //   router.push(/movies?page=${currentPage})
     // }
     const fetchData = async (pageNumber: number) => {
-      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
+      const response = await fetch(`${HOST_PRODUCT}/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
       const data = response.json();
       // data.then(json => {
       //   const data = json.data;
