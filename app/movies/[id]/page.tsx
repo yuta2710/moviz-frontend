@@ -393,66 +393,6 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }, [choice]);
 
-  useEffect(() => {
-    const container = document.querySelector(".three_bg");
-    console.log("This is container = ", container);
-
-    const loader = new THREE.TextureLoader();
-    const scene = new THREE.Scene();
-    const camera: any = new THREE.PerspectiveCamera(
-      70,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGL1Renderer();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container?.appendChild(renderer.domElement);
-
-    const geometry: any = new THREE.BoxGeometry(5, 4, 1);
-    const material = new THREE.MeshBasicMaterial({
-      map: loader.load(
-        "https://www.ecommercestrategies.co.uk/wp-content/uploads/brand-green-blue-grainy-gradient.png"
-      ),
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-
-    const count = geometry.attributes.position.count;
-    const clock = new THREE.Clock();
-
-    const cleanup = () => {
-      // Dispose of resources when the component is unmounted
-      renderer.domElement.remove();
-      renderer.dispose();
-    };
-
-    const animate = () => {
-      const time = clock.getElapsedTime();
-
-      for (let i = 0; i < count; i++) {
-        const x = geometry.attributes.position.getX(i);
-        const y = geometry.attributes.position.getY(i);
-
-        const anim1 = 0.25 * Math.sin(x + time * 0.3);
-        const anim2 = 0.35 * Math.sin(x * 1 + time * 0.3);
-        const anim3 = 0.1 * Math.sin(y * 15 + time * 0.3);
-
-        geometry.attributes.position.setZ(i, anim1 + anim2 + anim3);
-        geometry.computeVertexNormals();
-        geometry.attributes.position.needsUpdate = true;
-      }
-      requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-    };
-
-    camera.position.z = 1;
-    animate();
-
-    return cleanup;
-  });
-
   if (!movie) {
     return <div className="text-white">Loading...</div>;
   }
@@ -474,7 +414,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <div className=" flex flex-col flex-wrap md:mt-8 justify-center container md:mx-auto">
-      {/* <div className='three_bg opacity-10 absolute top-0 transparent'></div> */}
       <div className=' grid grid-cols-1 md:grid-cols-4 gap-3'>
         <div className=" flex flex-col col-span-1">
           <div className="flex justify-center col-span-3 py-2"><Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={150} alt="" className="md:mx-auto"></Image></div>

@@ -19,8 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "/build/three.module.js": ["./node_modules/three"]
+      "@/*": ["./*"]
     },
     "allowImportingTsExtensions": true
   },

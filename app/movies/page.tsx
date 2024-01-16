@@ -8,7 +8,6 @@ import { FilmReviewProps, Genre, Movie, User } from "@/types";
 import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
 import gsap from "gsap";
-import * as THREE from "../../build/three.module";
 import { delay, map, set } from "lodash";
 import { useInView } from "react-intersection-observer";
 import { useAuth } from "@/components/context/AuthContext";
