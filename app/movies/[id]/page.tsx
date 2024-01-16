@@ -35,7 +35,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import gsap from "gsap";
 import { formatHistoryDate } from "@/utils/convert.utils";
 import axios from "axios";
-import * as THREE from "../../../build/three.module";
 import Link from "next/link";
 
 export default function Page({ params }: { params: { id: string } }) {
