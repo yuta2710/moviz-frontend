@@ -102,7 +102,7 @@ const Header = (header: HeaderProps) => {
       setLoading(false);
       // router.push("/login");
     }
-  }, [isAuthenticated()]);
+  }, [!isAuthenticated()]);
 
   // useEffect(() => {
   //   if (!isAuthenticated()) {

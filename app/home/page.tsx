@@ -86,7 +86,7 @@ export default function Page(): ReactElement {
     }
     else {
       setLoading(false);
-      router.push("/login");
+      // router.push("/login");
     }
   }, [isAuthenticated()]);
 
@@ -387,7 +387,6 @@ export default function Page(): ReactElement {
 
           </div>
         )}
-
 
         {recommendedMovies.length > 0 && (
           <div className="flex flex-col justify-center relative md:mt-16">
