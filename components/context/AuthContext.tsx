@@ -2,7 +2,7 @@
 
 import { User, UserLoginProps } from "@/types";
 import { createContext, useContext, ReactNode, useState, useEffect } from "react";
-import { login as onLogin } from "../../utils/clients.utils"
+import { HOST_PRODUCT, login as onLogin } from "../../utils/clients.utils"
 import { jwtDecode } from "jwt-decode";
 import axios, { AxiosResponse } from "axios";
 
@@ -138,7 +138,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
   }
 
   const getCurrentUser = async () => {
-    const res = await axios.get("http://localhost:8080/api/v1/auth/me", {
+    const res = await axios.get(`${HOST_PRODUCT}/api/v1/auth/me`, {
       headers: {
         authorization: `Bearer ${localStorage.getItem("accessToken")} `,
       },

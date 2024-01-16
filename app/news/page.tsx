@@ -1,7 +1,7 @@
 "use client";
 
 import { ArticleProps } from "@/types";
-import { getRandomPhotoUrl } from "@/utils/clients.utils";
+import { HOST_PRODUCT, getRandomPhotoUrl } from "@/utils/clients.utils";
 import { formatDate, formatHistoryDate } from "@/utils/convert.utils";
 import { CircularProgress, Pagination, styled } from "@mui/material";
 import Image from "next/image";
@@ -36,7 +36,7 @@ export default function Page() {
     }
     const fetchData = async (pageNumber: number) => {
       const response = await fetch(
-        `http://localhost:8080/api/v1/articles?page=${pageNumber}`
+        `${HOST_PRODUCT}/api/v1/articles?page=${pageNumber}`
       );
 
       const data = response.json();
@@ -63,7 +63,7 @@ export default function Page() {
       {/* <div className="blob relative"></div> */}
       <div className="blob-linear-yellow-blue relative"></div>
     </div>
-    <h1 className="text-white text-xl font-extrabold tracking-wide">Latest News</h1>
+    <h1 className="text-white text-xl font-semibold tracking-wide">Latest News</h1>
 
     <ul className="grid grid-cols-3 relative gap-3">
       {news.length > 0
@@ -71,9 +71,9 @@ export default function Page() {
           .slice(0, 3)
           .sort((a: ArticleProps, b: ArticleProps) => new Date(b.pub_date).getTime() - new Date(a.pub_date).getTime())
           .map((newsItem) =>
-            <div className="my-1 px-1 lg:my-4 lg:px-0 ">
+            <div className="my-1 px-1 lg:my-4 lg:px-0 util-box-shadow-light-mode rounded-lg">
               {/* <!-- Article --> */}
-              <article className="overflow-hidden rounded-lg shadow-lg">
+              <article className="overflow-hidden rounded-lg">
                 <Link href={newsItem.web_url} className="" target="_blanket">
                   <Image alt="Placeholder" className="block h-auto w-full" src={`https://www.nytimes.com/${newsItem.multimedia[5].url}`} width={120} height={0} style={{}}></Image>
                 </Link>
@@ -81,16 +81,16 @@ export default function Page() {
                 <header className="flex items-center justify-between leading-tight p-2 md:p-4 md:w-full overflow-hidden">
                   <h1 className="md:text-sm font-regular md:w-full">
                     <Link className="no-underline hover:underline text-white" href={newsItem.web_url} target="_blanket">
-                      <span className="text-white">{newsItem.abstract}</span>
+                      <span className="text-white md:text-sm text-[0.7rem]">{newsItem.abstract}</span>
                     </Link>
                   </h1>
                 </header>
-                <p className="text-white text-left ellipsis md:ml-4 text-sm">{newsItem.lead_paragraph}</p>
+                <p className="text-white text-left ellipsis md:ml-4 text-[0.7rem] md:p-0 px-2 md:text-sm">{newsItem.lead_paragraph}</p>
 
                 <footer className="flex items-center justify-between leading-none p-2 md:p-4">
                   <Link className="flex items-center no-underline hover:underline text-white" href={newsItem.web_url} target="_blanket">
                     <Image alt="Placeholder" className="block rounded-full" src={getRandomPhotoUrl(Math.floor(Math.random() * 131) + 1)} width={32} height={32} style={{ height: "32px" }}></Image>
-                    <p className="ml-2 text-sm">
+                    <p className="ml-2 md:text-sm text-[0.6rem]">
                       {newsItem.byline.original.split(" ")[0]} <span className="text-white font-semibold">{newsItem.byline.original.split(" ")[1]} {newsItem.byline.original.split(" ")[2]}</span>
                     </p>
                   </Link>
@@ -98,7 +98,7 @@ export default function Page() {
                   <span className="hidden">Like</span>
                   <i className="fa fa-heart"></i>
                 </a> */}
-                  <p className="text-white text-sm font-semibold">{formatHistoryDate(newsItem.pub_date)}</p>
+                  <p className="text-white text-[0.6rem] font-medium md:text-[0.8rem] ml-10 md:m-0">{formatHistoryDate(newsItem.pub_date)}</p>
                 </footer>
 
               </article>
@@ -108,11 +108,12 @@ export default function Page() {
         : <CircularProgress color="secondary" className="md:mt-2" />
       }
     </ul>
-    <h1 className="text-white text-xl font-extrabold tracking-wide md:mt-16">Another News</h1>
-    <div className="flex flex-wrap -mx-1 lg:-mx-4">
+    <h1 className="text-white text-xl font-semibold tracking-wide md:mt-16 mt-16">Another News</h1>
+    <div className="flex flex-wrap -mx-1 lg:-mx-4 mt-8 md:mt-0">
       {/* <!-- Column --> */}
       {news.length > 0
         ? news
+          .slice(3,)
           .sort((a: ArticleProps, b: ArticleProps) => new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime())
           .map((article, index) => (
             <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3 cursor-pointer">
@@ -158,7 +159,7 @@ export default function Page() {
 
     </div>
     {news.length > 0 && (
-      <div className="flex justify-center w-full">
+      <div className="flex justify-center w-full md:mt-16 mt-16">
         <StyledPagination
           count={Math.ceil(news.length / numberOfArticlesPerPage)}
           page={currentPage}

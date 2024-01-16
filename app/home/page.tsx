@@ -3,7 +3,7 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { APPLICATION_PATH, getAllReviews, getGenres, getMe, getMovie, getMovies, getRecommendations, getReviews } from "@/utils/clients.utils";
+import { APPLICATION_PATH, HOST_PRODUCT, getAllReviews, getGenres, getMe, getMovie, getMovies, getRecommendations, getReviews } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
 import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
@@ -98,7 +98,7 @@ export default function Page(): ReactElement {
     //   router.push(/movies?page=${currentPage})
     // }
     const fetchData = async (pageNumber: number) => {
-      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`);
+      const response = await fetch(`${HOST_PRODUCT}/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${new Date().getFullYear()}-01-01&primary_release_date.lte=${new Date().getFullYear()}-12-31&sort_by=popularity.desc`);
       const data = response.json();
       // data.then(json => {
       //   const data = json.data;
@@ -350,10 +350,11 @@ export default function Page(): ReactElement {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      router.refresh();
       router.push("/login")
     }
-  }, [currentUser === null])
+  }, [])
+
+  console.log(isAuthenticated());
 
   const movieListsHTML = (colIndex: number) => <ul className={`inline-grid grid-cols-1 md:grid-cols-2 relative justify-center items-center top-0 mx-auto gap-4`}>
     {
@@ -396,7 +397,7 @@ export default function Page(): ReactElement {
         {loading
           ? <div className="text-white text-center font-bold text-4xl absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] m-0">Loading <CircularProgress color="secondary" /></div>
           : <div className="relative flex flex-col top-0">
-            <h1 className="text-white text-center relative md:mt-16 text-2xl italic">Welcome back, <span onClick={() => router.push("/profile")} className="hover:scale-105 duration-500 cursor-pointer font-semibold text-ai4biz-green-quite-light">{customer?.username}</span>. Here’s what we’ve been watching…
+            <h1 className="text-white text-center relative md:mt-16 text-2xl italic">Welcome back, <span onClick={() => router.push("/profile")} className="hover:scale-105 duration-500 cursor-pointer font-semibold text-ai4biz-green-quite-light">{currentUser?.username}</span>. Here’s what we’ve been watching…
             </h1>
           </div>
         }

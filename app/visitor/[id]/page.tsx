@@ -4,7 +4,7 @@ import { useAuth } from "@/components/context/AuthContext";
 import MovieList from "@/components/movie-list.component";
 import ReviewList from "@/components/review-list.component";
 import { FilmReviewProps, User } from "@/types";
-import { APPLICATION_PATH, checkIsCurrentUserFollowOtherUser, getMe, getMovie, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
+import { APPLICATION_PATH, HOST_PRODUCT, checkIsCurrentUserFollowOtherUser, getMe, getMovie, getUserById, onFollow, unFollow } from "@/utils/clients.utils";
 import { Box, Modal, Pagination } from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
@@ -102,7 +102,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const checkFollowed = async () =>{
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/v1/check/${visitor?._id}`,
+          `${HOST_PRODUCT}/api/v1/check/${visitor?._id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

@@ -23,17 +23,17 @@ const Search = () => {
   }, [query])
   return (
     <div className='relative'>
-      <h1 className='text-3xl text-white text-center md:mt-10'>You searched for: <span className='font-bold' style={{ color: "#45FFCA" }}>"{query}"</span></h1>
+      <h1 className='text-xl md:text-3xl text-white text-center mt-10 md:mt-10'>You searched for: <span className='font-bold' style={{ color: "#45FFCA" }}>"{query}"</span></h1>
       <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8 md:px-20">
         {results &&
           results
             .map((movie) => movie.poster_path !== null && (
-              <li className="md:pb-8">
-                <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+              <li className="md:pb-8 pb-8">
+                <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg movie-obj">
                   <div className="">
-                    <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={500} objectFit="cover" alt="" className="md:mx-auto rounded-sm"></Image></div>
+                    <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={250} height={500} objectFit="cover" alt="" style={{ height: "300px" }} className="md:mx-auto rounded-xl md:rounded-xl util-box-shadow-purple-mode "></Image></div>
                 </Link>
-                <h3 className="text-white text-sm text-center font-semibold md:mt-1">{movie.title}</h3>
+                <h3 className="text-white text-sm text-center font-regular md:mt-1">{movie.title}</h3>
               </li>
             ))}
       </ul>

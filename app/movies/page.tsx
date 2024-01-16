@@ -3,7 +3,7 @@
 import { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { APPLICATION_PATH, getGenres, getMe, getMovies } from "@/utils/clients.utils";
+import { APPLICATION_PATH, HOST_PRODUCT, getGenres, getMe, getMovies } from "@/utils/clients.utils";
 import { FilmReviewProps, Genre, Movie, User } from "@/types";
 import { CircularProgress, Pagination } from "@mui/material";
 import Link from "next/link";
@@ -157,7 +157,7 @@ export default function Page(): ReactElement {
     //   router.push(/movies?page=${currentPage})
     // }
     const fetchData = async (rating: string, genre: string) => {
-      const response = await fetch(`http://localhost:8080/api/v1/movies?page=1&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
+      const response = await fetch(`${HOST_PRODUCT}/api/v1/movies?page=1&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
       const data = response.json();
       data.then(json => {
         const data = json.data;
@@ -213,7 +213,7 @@ export default function Page(): ReactElement {
     //   router.push(/movies?page=${currentPage})
     // }
     const fetchData = async (pageNumber: number) => {
-      const response = await fetch(`http://localhost:8080/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
+      const response = await fetch(`${HOST_PRODUCT}/api/v1/movies?page=${pageNumber}&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=${rating}&with_genres=${genre}`);
       const data = response.json();
       // data.then(json => {
       //   const data = json.data;
@@ -322,28 +322,28 @@ export default function Page(): ReactElement {
     <div className="relative">
       <div className="">
         {movies.length > 0 && (
-          <div className="flex flex-col justify-center relative md:mt-8">
-            <h1 className="text-white text-2xl font-bold tracking-wide relative text-center">Most Popular Films <span className="text-red-500 font-semibold">{title}</span></h1>
-            <div className="flex flex-row justify-center items-center relative md:mt-12">
+          <div className="flex flex-col justify-center relative mt-16 md:mt-8">
+            <h1 className="text-white text-2xl font-semibold tracking-wide relative text-center" style={{ zIndex: "-1" }}>Most Popular Films <span className="text-red-500 font-semibold">{title}</span></h1>
+            <div className="flex flex-row justify-center items-center relative mt-16 md:mt-12">
               <h1 className="text-white text-[1.2rem] font-semibold relative text-left">View By</h1>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
+              <select className="ml-6 md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px]  p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white" value={year} onChange={handleOnChangeYear}>
                 {yearOptions.map((option) => (
                   <option value={option.value} className="text-center">{option.label}</option>
                 ))}
               </select>
 
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={rating} onChange={handleOnChangeRating}>
+              <select className="ml-6 md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px]  p-1.5 md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={rating} onChange={handleOnChangeRating}>
                 <option value={rating} disabled selected className="text-center">Rating</option>
                 {ratingOptions.map((option) => (
                   <option value={option.value} className="text-center">{option.label}</option>
                 ))}
               </select>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={popular} onChange={handleOnChangePopular}>
+              <select className="ml-6 md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px]  p-1.5 md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={popular} onChange={handleOnChangePopular}>
                 {popularOptions.map((option) => (
                   <option value={option.value} className="text-center">{option.label}</option>
                 ))}
               </select>
-              <select className="md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px] md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={genre} onChange={handleOnChangeGenre}>
+              <select className="ml-6 md:ml-6 text-gray-900 text-sm relative rounded-2xl block md:w-[120px]  p-1.5 md:p-1.5 apple-linear-glass dark:placeholder-gray-400 dark:text-white " value={genre} onChange={handleOnChangeGenre}>
                 <option value="" disabled selected className="text-center">Genre</option>
                 {genres.map((genre) => (
                   <option value={genre.id} className="text-center">{genre.name}</option>
@@ -358,7 +358,7 @@ export default function Page(): ReactElement {
               {/* <div className="blob relative"></div> */}
               <div className="blob-linear-yellow-blue relative"></div>
             </div>
-            <ul className={`grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-1 justify-center items-center md:mt-8`}>
+            <ul className={`grid grid-cols-2 md:grid-cols-3 md:mx-auto relative gap-1 justify-center items-cente mt-16 md:mt-8`}>
               {[...movies]
                 .slice(0, 7)
                 .map((movie, index) => movie.poster_path !== null && (
@@ -368,19 +368,19 @@ export default function Page(): ReactElement {
                         <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={300} height={0} objectFit="cover" alt="" className="md:mx-auto rounded-2xl"></Image>
                       </div>
                     </Link>
-                    <h3 className="text-white text-[1rem] text-center font-semibold">{movie.title}</h3>
+                    <h3 className="text-white text-[1rem] text-center font-regular">{movie.title}</h3>
                   </li>
                 ))}
             </ul>
-            <h1 className="text-white text-2xl font-semibold relative text-center md:mt-24">Other Similar Films</h1>
+            <h1 className="text-white text-2xl font-semibold relative text-center mt-24 md:mt-24">Other Similar Films</h1>
             <ul className="grid grid-cols-2 md:grid-cols-6 md:mx-auto relative gap-4 justify-center items-center md:mt-8">
               {[...movies]
                 .slice(6,)
                 .map((movie) => movie.poster_path !== null && (
                   <li className="">
-                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg shadow movie-obj">
+                    <Link href={`/movies/${movie.id}`} className="block max-w-sm p-6 rounded-lg movie-obj">
                       <div className="">
-                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={500} objectFit="cover" alt="" className="md:mx-auto rounded-sm"></Image></div>
+                        <Image src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} width={200} height={500} objectFit="cover" alt="" style={{ height: "400px" }} className="md:mx-auto object-cover rounded-xl"></Image></div>
                     </Link>
                     <h3 className="text-white text-sm text-center font-semibold md:mt-1">{movie.title}</h3>
                   </li>

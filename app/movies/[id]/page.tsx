@@ -3,6 +3,7 @@ import React, { useState, useEffect, ReactElement, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { Cast, CrewProps, FilmReviewProps, Movie, User } from "@/types";
 import {
+  HOST_PRODUCT,
   getCasts,
   getMe,
   getMovie,
@@ -128,7 +129,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8080/api/v1/users/${id}/watchlists`,
+        `${HOST_PRODUCT}/api/v1/users/${id}/watchlists`,
         {},
         {
           headers: {
@@ -159,7 +160,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const handleRemoveFromWatchlist = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/v1/users/${id}/un-watchlists`,
+        `${HOST_PRODUCT}/api/v1/users/${id}/un-watchlists`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -648,7 +649,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
           <div className="block col-span-4">
             <div className="flex flex-row justify-start items-start md:mt-16 col-span-2">
-              <h1 className="text-2xl font-bold relative">Recent Reviews</h1>
+              <h1 className="text-2xl font-bold relative">Highest Rating Reviews</h1>
               <button
                 onClick={() => router.push(`/movies/${id}/reviews`)}
                 type="button"

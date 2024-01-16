@@ -30,6 +30,7 @@ const config: Config = {
       fontFamily: {
         poppins: "'Poppins', sans-serif",
         noto: "Noto Sans",
+        sf: "SF Pro Display",
       },
     },
   },

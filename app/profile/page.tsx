@@ -4,7 +4,7 @@ import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useAuth } from "../../components/context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { checkIsCurrentUserFollowOtherUser, getCurrentReviewsFromLetterboxdServer, getMe, getMovie } from "@/utils/clients.utils";
+import { HOST_PRODUCT, checkIsCurrentUserFollowOtherUser, getCurrentReviewsFromLetterboxdServer, getMe, getMovie } from "@/utils/clients.utils";
 import { FilmReviewProps, User } from "@/types";
 import letterboxd from "letterboxd-api";
 import axios from "axios";
@@ -122,7 +122,7 @@ export default function Page() {
       const formData = new FormData();
       formData.append('file', file);
       try {
-        const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/photo`, formData, {
+        const response = await axios.patch(`${HOST_PRODUCT}/api/v1/users/${customer?._id}/photo`, formData, {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             'Content-Type': 'multipart/form-data',
@@ -160,7 +160,7 @@ export default function Page() {
     };
 
     try {
-      const response = await axios.patch(`http://localhost:8080/api/v1/users/${customer?._id}/update-profile`, JSON.stringify(data), {
+      const response = await axios.patch(`${HOST_PRODUCT}/api/v1/users/${customer?._id}/update-profile`, JSON.stringify(data), {
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           'Content-Type': 'application/json',
@@ -207,11 +207,11 @@ export default function Page() {
             />
             <input className="hidden" type="file" id="fileInput" name="fileInput" onChange={handleFileChange}></input>
           </div>
-          <div className="grid col-span-2 gap-5 w2/3">
+          <div className="grid col-span-2 gap-5 w2/3 ">
             <div className="flex flex-row text-3xl font-medium my-auto grid grid-cols-3">
               <div className="col-span-3 md:col-span-1">
-                <h1 className="text-white text-center md:text-left ">
-                  {customer.username}
+                <h1 className="text-white text-center md:text-left s">
+                  {currentUser.username}
                 </h1>
               </div>
 
